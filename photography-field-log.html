@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Field Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0E0F0C;
+    --surface:  #181A15;
+    --card:     #1F2219;
+    --border:   #2E3228;
+    --border2:  #3A3E32;
+    --moss:     #5A7A3A;
+    --moss-lt:  #7AAA52;
+    --gold:     #C8A24A;
+    --gold-lt:  #E0C070;
+    --rust:     #B05030;
+    --sky:      #4A8AAA;
+    --chalk:    #E8E4D8;
+    --mid:      #888078;
+    --ghost:    #555048;
+    --white:    #F4F0E8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--chalk);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .app-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--moss-lt);
+  }
+
+  .app-version {
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ghost);
+  }
+
+  .topbar-right { display: flex; gap: 0.5rem; }
+
+  .icon-btn {
+    width: 38px; height: 38px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.15s;
+    color: var(--chalk);
+  }
+
+  .icon-btn:active { background: var(--border); transform: scale(0.95); }
+  .icon-btn.primary { background: var(--moss); border-color: var(--moss); }
+  .icon-btn.primary:active { background: var(--moss-lt); }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex: 1;
+    min-width: 80px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 0.5rem;
+    color: var(--ghost);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .tab.active { color: var(--moss-lt); border-bottom-color: var(--moss-lt); }
+  .tab:active { color: var(--chalk); }
+
+  /* ── PANELS ── */
+  .panel { display: none; padding: 1rem; padding-bottom: 5rem; }
+  .panel.active { display: block; animation: fadeUp 0.2s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: 0.6rem;
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-label:first-child { margin-top: 0; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── FORM ELEMENTS ── */
+  .field-group { margin-bottom: 0.85rem; }
+
+  label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 0.35rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--chalk);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 300;
+    padding: 0.75rem 0.85rem;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--moss-lt);
+  }
+
+  textarea {
+    resize: none;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888078' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.5rem;
+  }
+
+  /* GPS row */
+  .gps-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+  }
+
+  .gps-row .field-group { flex: 1; margin-bottom: 0; }
+
+  .gps-btn {
+    width: 48px; height: 48px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    color: var(--chalk);
+  }
+
+  .gps-btn:active { background: var(--moss); border-color: var(--moss); }
+  .gps-btn.locating { border-color: var(--gold); animation: pulse 1s infinite; }
+  .gps-btn.located  { border-color: var(--moss-lt); background: rgba(90,122,58,0.15); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .gps-status {
+    font-size: 0.62rem;
+    color: var(--mid);
+    margin-top: 0.3rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+    min-height: 1rem;
+  }
+
+  .gps-status.ok   { color: var(--moss-lt); }
+  .gps-status.err  { color: var(--rust); }
+  .gps-status.busy { color: var(--gold); }
+
+  /* Chip selects */
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .chip:active { transform: scale(0.95); }
+  .chip.selected { background: var(--moss); border-color: var(--moss); color: var(--white); }
+
+  /* Star rating */
+  .star-row {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .star {
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.12s, transform 0.12s;
+    user-select: none;
+  }
+
+  .star.lit { opacity: 1; }
+  .star:active { transform: scale(1.2); }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    background: var(--moss);
+    border: none;
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 1.25rem;
+  }
+
+  .submit-btn:active { background: var(--moss-lt); transform: scale(0.98); }
+
+  /* ── LOG ENTRIES ── */
+  .entry-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--ghost);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    text-align: right;
+  }
+
+  .entry-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .entry-card:active { border-color: var(--border2); }
+  .entry-card.open { border-color: var(--moss); }
+
+  .entry-top {
+    padding: 0.9rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .entry-type-badge {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--moss-lt);
+    margin-bottom: 0.25rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .entry-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--chalk);
+    line-height: 1.2;
+  }
+
+  .entry-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--ghost);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .entry-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0 1rem 0.75rem;
+  }
+
+  .entry-chip {
+    background: var(--border);
+    border-radius: 20px;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.65rem;
+    color: var(--mid);
+  }
+
+  .entry-chip.highlight { background: rgba(90,122,58,0.2); color: var(--moss-lt); }
+
+  .entry-detail {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 0.9rem 1rem;
+  }
+
+  .entry-card.open .entry-detail { display: block; }
+
+  .detail-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.55rem;
+    align-items: flex-start;
+  }
+
+  .detail-key {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    flex-shrink: 0;
+    width: 72px;
+    padding-top: 0.1rem;
+  }
+
+  .detail-val {
+    font-size: 0.8rem;
+    color: var(--mid);
+    line-height: 1.5;
+    flex: 1;
+    word-break: break-word;
+  }
+
+  .detail-val.highlight { color: var(--chalk); }
+
+  .entry-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .entry-act-btn {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--mid);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.6rem;
+    cursor: pointer;
+    transition: all 0.12s;
+    text-align: center;
+  }
+
+  .entry-act-btn:active { background: var(--border); }
+  .entry-act-btn.danger { color: var(--rust); border-color: rgba(176,80,48,0.3); }
+  .entry-act-btn.danger:active { background: rgba(176,80,48,0.15); }
+
+  /* ── STATS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
+
+  .stat-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--moss-lt);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .species-list { margin-bottom: 1.25rem; }
+
+  .species-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+
+  .species-row:last-child { border-bottom: none; }
+  .species-name { color: var(--chalk); }
+  .species-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--moss-lt);
+    background: rgba(90,122,58,0.15);
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+  }
+
+  /* ── EXPORT ── */
+  .export-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .export-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--chalk);
+    margin-bottom: 0.3rem;
+  }
+
+  .export-sub {
+    font-size: 0.73rem;
+    color: var(--mid);
+    line-height: 1.5;
+    margin-bottom: 0.9rem;
+  }
+
+  .export-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--chalk);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .export-btn:active { background: var(--border); transform: scale(0.98); }
+  .export-btn.green { border-color: var(--moss); color: var(--moss-lt); }
+  .export-btn.gold  { border-color: var(--gold); color: var(--gold-lt); }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--ghost);
+  }
+
+  .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.5; }
+
+  .empty-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 0.4rem;
+  }
+
+  .empty-sub { font-size: 0.75rem; line-height: 1.6; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--moss);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    padding: 0.65rem 1.25rem;
+    border-radius: 20px;
+    opacity: 0;
+    transition: all 0.25s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 999;
+  }
+
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { background: var(--rust); }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 0.5rem 0 0.75rem;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem 0;
+    transition: all 0.12s;
+  }
+
+  .nav-btn:active { transform: scale(0.9); }
+
+  .nav-icon { font-size: 1.3rem; }
+
+  .nav-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    transition: color 0.12s;
+  }
+
+  .nav-btn.active .nav-label { color: var(--moss-lt); }
+  .nav-btn.active .nav-icon { filter: none; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="app-name">FIELD LOG</div>
+    <div class="app-version">v1.0 · Nikon D850</div>
+  </div>
+  <div class="topbar-right">
+    <div class="icon-btn" onclick="showPanel('export')" title="Export">📤</div>
+    <div class="icon-btn primary" onclick="showPanel('new')" title="New Entry">＋</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showPanel('log')">📋 Log</button>
+  <button class="tab" onclick="showPanel('new')">＋ New</button>
+  <button class="tab" onclick="showPanel('stats')">📊 Stats</button>
+  <button class="tab" onclick="showPanel('export')">📤 Export</button>
+</div>
+
+<!-- ══════════ LOG PANEL ══════════ -->
+<div class="panel active" id="panel-log">
+  <div class="entry-count" id="entry-count">0 entries</div>
+  <div id="entries-list">
+    <div class="empty">
+      <div class="empty-icon">🦅</div>
+      <div class="empty-title">No entries yet</div>
+      <div class="empty-sub">Tap + to log your first shoot.<br>GPS, conditions, subject, notes — all in one place.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NEW ENTRY PANEL ══════════ -->
+<div class="panel" id="panel-new">
+
+  <div class="section-label">Session Info</div>
+
+  <div class="field-group">
+    <label>Date</label>
+    <input type="date" id="f-date">
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+    <div class="field-group">
+      <label>Time</label>
+      <input type="time" id="f-time">
+    </div>
+    <div class="field-group">
+      <label>Light</label>
+      <select id="f-light">
+        <option value="">— select —</option>
+        <option>Golden hour AM</option>
+        <option>Golden hour PM</option>
+        <option>Overcast flat</option>
+        <option>Midday harsh</option>
+        <option>Cloudy bright</option>
+        <option>Blue hour</option>
+        <option>Dusk</option>
+        <option>Night</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section-label">Location</div>
+
+  <div class="field-group">
+    <label>Location Name</label>
+    <input type="text" id="f-location" placeholder="e.g. Abandoned barn off Hwy 6, Nephi canyon wash…">
+  </div>
+
+  <div class="field-group">
+    <label>GPS Coordinates</label>
+    <div class="gps-row">
+      <div class="field-group">
+        <input type="text" id="f-gps" placeholder="tap 📍 to capture" readonly>
+      </div>
+      <button class="gps-btn" id="gps-btn" onclick="getGPS()">📍</button>
+    </div>
+    <div class="gps-status" id="gps-status"></div>
+  </div>
+
+  <div class="field-group">
+    <label>Return Notes</label>
+    <input type="text" id="f-return" placeholder="e.g. Come back winter morning fog, needs overcast…">
+  </div>
+
+  <div class="section-label">Subject Type</div>
+
+  <div class="chip-row" id="type-chips">
+    <div class="chip" onclick="toggleChip(this,'type')">🦅 Raptor</div>
+    <div class="chip" onclick="toggleChip(this,'type')">🏚️ Abandoned</div>
+    <div class="chip" onclick="toggleChip(this,'type')">🌄 Landscape</div>
+    <div class="chip" onclick="toggleChip(this,'type')">🌿 Decay / Texture</div>
+    <div class="chip" onclick="toggleChip(this,'type')">🐦 Other Wildlife</div>
+    <div class="chip" onclick="toggleChip(this,'type')">⛪ Structure</div>
+    <div class="chip" onclick="toggleChip(this,'type')">☁️ Sky / Weather</div>
+  </div>
+
+  <div class="section-label" id="species-section" style="display:none">Raptor / Species</div>
+
+  <div class="field-group" id="species-field" style="display:none">
+    <label>Species</label>
+    <select id="f-species">
+      <option value="">— select species —</option>
+      <option>Red-tailed Hawk</option>
+      <option>Ferruginous Hawk</option>
+      <option>Rough-legged Hawk</option>
+      <option>Cooper's Hawk</option>
+      <option>Sharp-shinned Hawk</option>
+      <option>Northern Harrier</option>
+      <option>Swainson's Hawk</option>
+      <option>Golden Eagle</option>
+      <option>Bald Eagle</option>
+      <option>American Kestrel</option>
+      <option>Prairie Falcon</option>
+      <option>Peregrine Falcon</option>
+      <option>Great Horned Owl</option>
+      <option>Barn Owl</option>
+      <option>Short-eared Owl</option>
+      <option>Long-eared Owl</option>
+      <option>Unknown / Other</option>
+    </select>
+  </div>
+
+  <div class="field-group" id="raptor-detail" style="display:none">
+    <label>Behavior Observed</label>
+    <div class="chip-row">
+      <div class="chip" onclick="toggleChip(this,'behavior')">Perched</div>
+      <div class="chip" onclick="toggleChip(this,'behavior')">Hunting</div>
+      <div class="chip" onclick="toggleChip(this,'behavior')">In flight</div>
+      <div class="chip" onclick="toggleChip(this,'behavior')">Soaring</div>
+      <div class="chip" onclick="toggleChip(this,'behavior')">Stooping</div>
+      <div class="chip" onclick="toggleChip(this,'behavior')">Carrying prey</div>
+      <div class="chip" onclick="toggleChip(this,'behavior')">Nesting</div>
+      <div class="chip" onclick="toggleChip(this,'behavior')">Vocalizing</div>
+    </div>
+  </div>
+
+  <div class="section-label">Gear Used</div>
+
+  <div class="chip-row" id="lens-chips">
+    <div class="chip" onclick="toggleChip(this,'lens')">50mm</div>
+    <div class="chip" onclick="toggleChip(this,'lens')">85mm</div>
+    <div class="chip" onclick="toggleChip(this,'lens')">105mm Macro</div>
+    <div class="chip" onclick="toggleChip(this,'lens')">120–600mm</div>
+  </div>
+
+  <div style="margin-top:0.65rem;">
+    <div class="chip-row">
+      <div class="chip" onclick="toggleChip(this,'support')">Handheld</div>
+      <div class="chip" onclick="toggleChip(this,'support')">Tripod</div>
+      <div class="chip" onclick="toggleChip(this,'support')">Monopod</div>
+      <div class="chip" onclick="toggleChip(this,'support')">Vehicle rest</div>
+    </div>
+  </div>
+
+  <div class="section-label">Conditions</div>
+
+  <div class="chip-row">
+    <div class="chip" onclick="toggleChip(this,'weather')">Clear</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Partly cloudy</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Overcast</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Windy</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Hazy</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Fog</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Rain / Snow</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Cold</div>
+    <div class="chip" onclick="toggleChip(this,'weather')">Hot</div>
+  </div>
+
+  <div class="section-label">Shot Quality</div>
+
+  <label style="margin-bottom:0.5rem;">Overall session rating</label>
+  <div class="star-row" id="star-row">
+    <span class="star" onclick="setStars(1)">★</span>
+    <span class="star" onclick="setStars(2)">★</span>
+    <span class="star" onclick="setStars(3)">★</span>
+    <span class="star" onclick="setStars(4)">★</span>
+    <span class="star" onclick="setStars(5)">★</span>
+  </div>
+
+  <div style="margin-top:0.85rem;">
+    <div class="chip-row">
+      <div class="chip" onclick="toggleChip(this,'outcome')">🌟 Keeper shots</div>
+      <div class="chip" onclick="toggleChip(this,'outcome')">📤 Posted to Glass</div>
+      <div class="chip" onclick="toggleChip(this,'outcome')">📁 In edit queue</div>
+      <div class="chip" onclick="toggleChip(this,'outcome')">❌ Nothing usable</div>
+      <div class="chip" onclick="toggleChip(this,'outcome')">🔄 Return needed</div>
+    </div>
+  </div>
+
+  <div class="section-label">Notes</div>
+
+  <div class="field-group">
+    <label>Field Notes</label>
+    <textarea id="f-notes" placeholder="What did you see, feel, notice? What worked? What didn't?"></textarea>
+  </div>
+
+  <div class="field-group">
+    <label>Caption Seed</label>
+    <input type="text" id="f-caption" placeholder="First words or image that came to mind on site…">
+  </div>
+
+  <button class="submit-btn" onclick="saveEntry()">Save Entry →</button>
+
+</div>
+
+<!-- ══════════ STATS PANEL ══════════ -->
+<div class="panel" id="panel-stats">
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="s-total">0</div><div class="stat-label">Total Sessions</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-keepers">0</div><div class="stat-label">Keeper Sessions</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-raptors">0</div><div class="stat-label">Raptor Sessions</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-locations">0</div><div class="stat-label">Locations</div></div>
+  </div>
+
+  <div class="section-label">Species Logged</div>
+  <div class="species-list" id="species-list">
+    <div style="font-size:0.75rem;color:var(--ghost);padding:0.5rem 0;">No raptor sessions yet.</div>
+  </div>
+
+  <div class="section-label">Top Lenses Used</div>
+  <div class="species-list" id="lens-list">
+    <div style="font-size:0.75rem;color:var(--ghost);padding:0.5rem 0;">No sessions yet.</div>
+  </div>
+
+  <div class="section-label">Best Light Conditions</div>
+  <div class="species-list" id="light-list">
+    <div style="font-size:0.75rem;color:var(--ghost);padding:0.5rem 0;">No sessions yet.</div>
+  </div>
+</div>
+
+<!-- ══════════ EXPORT PANEL ══════════ -->
+<div class="panel" id="panel-export">
+
+  <div class="export-card">
+    <div class="export-title">📊 Export to Google Sheets</div>
+    <div class="export-sub">Downloads a CSV file you can import directly into Google Sheets or Excel. All fields export as columns — date, time, location, GPS, subject, species, gear, conditions, rating, notes, and caption seed.</div>
+    <button class="export-btn green" onclick="exportCSV()">⬇ Download CSV for Google Sheets</button>
+  </div>
+
+  <div class="export-card">
+    <div class="export-title">📄 Export as Plain Text</div>
+    <div class="export-sub">Downloads a readable text file — good for archiving, printing, or pasting into a document. Each entry formatted like a field journal page.</div>
+    <button class="export-btn gold" onclick="exportTXT()">⬇ Download Plain Text Log</button>
+  </div>
+
+  <div class="export-card">
+    <div class="export-title">🗂️ Backup (JSON)</div>
+    <div class="export-sub">Downloads a complete backup of all entries as a JSON file. Save this to Google Drive weekly. You can restore from this file if you ever need to move devices or clear the browser.</div>
+    <button class="export-btn" onclick="exportJSON()">⬇ Download Full Backup (JSON)</button>
+    <button class="export-btn" onclick="importJSON()" style="margin-top:0;">⬆ Restore from Backup</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
+  </div>
+
+  <div class="export-card" style="border-color:rgba(176,80,48,0.3);">
+    <div class="export-title" style="color:var(--rust);">⚠️ Clear All Data</div>
+    <div class="export-sub">Permanently deletes all entries from this device. Export a backup first.</div>
+    <button class="export-btn" style="border-color:rgba(176,80,48,0.4);color:var(--rust);" onclick="clearAllData()">Delete All Entries</button>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-log" onclick="showPanel('log')">
+    <span class="nav-icon">📋</span>
+    <span class="nav-label">Log</span>
+  </button>
+  <button class="nav-btn" id="nav-new" onclick="showPanel('new')">
+    <span class="nav-icon">＋</span>
+    <span class="nav-label">New</span>
+  </button>
+  <button class="nav-btn" id="nav-stats" onclick="showPanel('stats')">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">Stats</span>
+  </button>
+  <button class="nav-btn" id="nav-export" onclick="showPanel('export')">
+    <span class="nav-icon">📤</span>
+    <span class="nav-label">Export</span>
+  </button>
+</div>
+
+<script>
+// ── STATE ──
+let entries = [];
+let currentStars = 0;
+let selectedChips = {};
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  loadEntries();
+  setDefaultDateTime();
+  renderLog();
+  renderStats();
+});
+
+function setDefaultDateTime() {
+  const now = new Date();
+  document.getElementById('f-date').value = now.toISOString().split('T')[0];
+  document.getElementById('f-time').value = now.toTimeString().slice(0,5);
+}
+
+// ── NAVIGATION ──
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+
+  // sync tabs
+  const tabMap = { log: 0, new: 1, stats: 2, export: 3 };
+  const tabs = document.querySelectorAll('.tab');
+  if (tabMap[id] !== undefined) tabs[tabMap[id]].classList.add('active');
+
+  // sync nav
+  const nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+
+  if (id === 'stats') renderStats();
+  if (id === 'log') renderLog();
+}
+
+// ── GPS ──
+function getGPS() {
+  const btn = document.getElementById('gps-btn');
+  const status = document.getElementById('gps-status');
+  const field = document.getElementById('f-gps');
+
+  if (!navigator.geolocation) {
+    status.textContent = 'GPS not available on this device';
+    status.className = 'gps-status err';
+    return;
+  }
+
+  btn.classList.add('locating');
+  status.textContent = 'Acquiring signal…';
+  status.className = 'gps-status busy';
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      const acc = Math.round(pos.coords.accuracy);
+      field.value = `${lat}, ${lng}`;
+      status.textContent = `± ${acc}m accuracy`;
+      status.className = 'gps-status ok';
+      btn.classList.remove('locating');
+      btn.classList.add('located');
+    },
+    (err) => {
+      btn.classList.remove('locating');
+      const msgs = {
+        1: 'Location permission denied — check browser settings',
+        2: 'Position unavailable',
+        3: 'GPS timeout — try again outdoors'
+      };
+      status.textContent = msgs[err.code] || 'GPS error';
+      status.className = 'gps-status err';
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
+}
+
+// ── CHIPS ──
+function toggleChip(el, group) {
+  if (!selectedChips[group]) selectedChips[group] = new Set();
+
+  // type chips are single-select
+  if (group === 'type') {
+    document.querySelectorAll('#type-chips .chip').forEach(c => c.classList.remove('selected'));
+    selectedChips[group] = new Set();
+    // show/hide raptor fields
+    const isRaptor = el.textContent.includes('Raptor');
+    document.getElementById('species-section').style.display = isRaptor ? 'flex' : 'none';
+    document.getElementById('species-field').style.display = isRaptor ? 'block' : 'none';
+    document.getElementById('raptor-detail').style.display = isRaptor ? 'block' : 'none';
+  }
+
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) {
+    selectedChips[group].add(el.textContent.trim());
+  } else {
+    selectedChips[group].delete(el.textContent.trim());
+  }
+}
+
+// ── STARS ──
+function setStars(n) {
+  currentStars = n;
+  document.querySelectorAll('.star').forEach((s, i) => {
+    s.classList.toggle('lit', i < n);
+  });
+}
+
+// ── SAVE ENTRY ──
+function saveEntry() {
+  const date = document.getElementById('f-date').value;
+  const location = document.getElementById('f-location').value.trim();
+
+  if (!date) { showToast('Date required', true); return; }
+  if (!location) { showToast('Location name required', true); return; }
+
+  const entry = {
+    id: Date.now(),
+    date,
+    time:     document.getElementById('f-time').value,
+    light:    document.getElementById('f-light').value,
+    location,
+    gps:      document.getElementById('f-gps').value,
+    returnNote: document.getElementById('f-return').value.trim(),
+    type:     [...(selectedChips['type'] || [])].join(', '),
+    species:  document.getElementById('f-species') ? document.getElementById('f-species').value : '',
+    behavior: [...(selectedChips['behavior'] || [])].join(', '),
+    lens:     [...(selectedChips['lens'] || [])].join(', '),
+    support:  [...(selectedChips['support'] || [])].join(', '),
+    weather:  [...(selectedChips['weather'] || [])].join(', '),
+    rating:   currentStars,
+    outcome:  [...(selectedChips['outcome'] || [])].join(', '),
+    notes:    document.getElementById('f-notes').value.trim(),
+    caption:  document.getElementById('f-caption').value.trim(),
+  };
+
+  entries.unshift(entry);
+  saveEntries();
+  resetForm();
+  renderLog();
+  showPanel('log');
+  showToast('Entry saved ✓');
+}
+
+function resetForm() {
+  document.getElementById('f-location').value = '';
+  document.getElementById('f-gps').value = '';
+  document.getElementById('f-return').value = '';
+  document.getElementById('f-light').value = '';
+  document.getElementById('f-notes').value = '';
+  document.getElementById('f-caption').value = '';
+  document.getElementById('f-species').value = '';
+  document.getElementById('gps-status').textContent = '';
+  document.getElementById('gps-btn').className = 'gps-btn';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('species-section').style.display = 'none';
+  document.getElementById('species-field').style.display = 'none';
+  document.getElementById('raptor-detail').style.display = 'none';
+  selectedChips = {};
+  currentStars = 0;
+  setStars(0);
+  setDefaultDateTime();
+}
+
+// ── RENDER LOG ──
+function renderLog() {
+  const list = document.getElementById('entries-list');
+  const countEl = document.getElementById('entry-count');
+
+  countEl.textContent = entries.length === 0 ? 'No entries' :
+    entries.length === 1 ? '1 entry' : `${entries.length} entries`;
+
+  if (entries.length === 0) {
+    list.innerHTML = `<div class="empty">
+      <div class="empty-icon">🦅</div>
+      <div class="empty-title">No entries yet</div>
+      <div class="empty-sub">Tap + to log your first shoot.<br>GPS, conditions, subject, notes — all in one place.</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = entries.map(e => {
+    const chips = [e.type, e.species, e.weather, e.lens]
+      .filter(Boolean)
+      .flatMap(s => s.split(', '))
+      .filter(Boolean)
+      .slice(0, 5);
+
+    const stars = e.rating ? '★'.repeat(e.rating) + '☆'.repeat(5 - e.rating) : '';
+    const isKeeper = e.outcome && e.outcome.includes('Keeper');
+
+    return `<div class="entry-card" onclick="toggleEntry(this)">
+      <div class="entry-top">
+        <div>
+          <div class="entry-type-badge">${e.type || 'Session'} ${stars}</div>
+          <div class="entry-title">${e.location}</div>
+        </div>
+        <div class="entry-date">${formatDate(e.date)}<br>${e.time || ''}</div>
+      </div>
+      <div class="entry-chips">
+        ${chips.map(c => `<div class="entry-chip ${isKeeper ? 'highlight' : ''}">${c}</div>`).join('')}
+        ${e.gps ? '<div class="entry-chip">📍 GPS</div>' : ''}
+        ${e.caption ? '<div class="entry-chip">✏️ Caption seed</div>' : ''}
+      </div>
+      <div class="entry-detail">
+        ${e.gps ? detailRow('GPS', `<a href="https://maps.google.com/?q=${e.gps}" target="_blank" style="color:var(--moss-lt)">${e.gps}</a>`) : ''}
+        ${e.light ? detailRow('Light', e.light) : ''}
+        ${e.species ? detailRow('Species', e.species, true) : ''}
+        ${e.behavior ? detailRow('Behavior', e.behavior) : ''}
+        ${e.lens ? detailRow('Lens', e.lens) : ''}
+        ${e.support ? detailRow('Support', e.support) : ''}
+        ${e.weather ? detailRow('Conditions', e.weather) : ''}
+        ${e.outcome ? detailRow('Outcome', e.outcome, true) : ''}
+        ${e.returnNote ? detailRow('Return', e.returnNote, true) : ''}
+        ${e.notes ? detailRow('Notes', e.notes) : ''}
+        ${e.caption ? detailRow('Caption seed', `<em style="color:var(--gold-lt)">"${e.caption}"</em>`) : ''}
+        <div class="entry-actions">
+          <button class="entry-act-btn danger" onclick="deleteEntry(event, ${e.id})">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function detailRow(key, val, highlight = false) {
+  return `<div class="detail-row">
+    <div class="detail-key">${key}</div>
+    <div class="detail-val ${highlight ? 'highlight' : ''}">${val}</div>
+  </div>`;
+}
+
+function toggleEntry(card) { card.classList.toggle('open'); }
+
+function formatDate(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m)-1]} ${parseInt(day)}`;
+}
+
+function deleteEntry(e, id) {
+  e.stopPropagation();
+  if (!confirm('Delete this entry?')) return;
+  entries = entries.filter(en => en.id !== id);
+  saveEntries();
+  renderLog();
+  showToast('Entry deleted');
+}
+
+// ── STATS ──
+function renderStats() {
+  if (entries.length === 0) return;
+
+  document.getElementById('s-total').textContent = entries.length;
+  document.getElementById('s-keepers').textContent = entries.filter(e => e.outcome && e.outcome.includes('Keeper')).length;
+  document.getElementById('s-raptors').textContent = entries.filter(e => e.type && e.type.includes('Raptor')).length;
+  const locs = new Set(entries.map(e => e.location.toLowerCase().trim()));
+  document.getElementById('s-locations').textContent = locs.size;
+
+  // Species
+  const specCount = {};
+  entries.forEach(e => { if (e.species) specCount[e.species] = (specCount[e.species]||0) + 1; });
+  const specSorted = Object.entries(specCount).sort((a,b) => b[1]-a[1]);
+  document.getElementById('species-list').innerHTML = specSorted.length === 0
+    ? '<div style="font-size:0.75rem;color:var(--ghost);padding:0.5rem 0;">No raptor sessions yet.</div>'
+    : specSorted.map(([sp, n]) => `<div class="species-row"><span class="species-name">${sp}</span><span class="species-count">${n}</span></div>`).join('');
+
+  // Lenses
+  const lensCount = {};
+  entries.forEach(e => {
+    if (e.lens) e.lens.split(', ').forEach(l => { if(l) lensCount[l] = (lensCount[l]||0) + 1; });
+  });
+  const lensSorted = Object.entries(lensCount).sort((a,b) => b[1]-a[1]);
+  document.getElementById('lens-list').innerHTML = lensSorted.length === 0
+    ? '<div style="font-size:0.75rem;color:var(--ghost);padding:0.5rem 0;">No sessions yet.</div>'
+    : lensSorted.map(([l, n]) => `<div class="species-row"><span class="species-name">${l}</span><span class="species-count">${n}</span></div>`).join('');
+
+  // Light
+  const lightCount = {};
+  entries.forEach(e => { if (e.light) lightCount[e.light] = (lightCount[e.light]||0) + 1; });
+  const lightSorted = Object.entries(lightCount).sort((a,b) => b[1]-a[1]);
+  document.getElementById('light-list').innerHTML = lightSorted.length === 0
+    ? '<div style="font-size:0.75rem;color:var(--ghost);padding:0.5rem 0;">No sessions yet.</div>'
+    : lightSorted.map(([l, n]) => `<div class="species-row"><span class="species-name">${l}</span><span class="species-count">${n}</span></div>`).join('');
+}
+
+// ── STORAGE ──
+function saveEntries() {
+  try { localStorage.setItem('fieldlog_entries', JSON.stringify(entries)); } catch(e) {}
+}
+
+function loadEntries() {
+  try {
+    const raw = localStorage.getItem('fieldlog_entries');
+    if (raw) entries = JSON.parse(raw);
+  } catch(e) { entries = []; }
+}
+
+// ── EXPORT ──
+function exportCSV() {
+  if (entries.length === 0) { showToast('No entries to export', true); return; }
+
+  const headers = ['Date','Time','Location','GPS','Light','Subject Type','Species','Behavior','Lens','Support','Weather','Rating','Outcome','Return Notes','Field Notes','Caption Seed'];
+
+  const rows = entries.map(e => [
+    e.date, e.time, e.location, e.gps, e.light,
+    e.type, e.species, e.behavior, e.lens, e.support,
+    e.weather, e.rating, e.outcome, e.returnNote, e.notes, e.caption
+  ].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`));
+
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  downloadFile(csv, `field-log-${today()}.csv`, 'text/csv');
+  showToast('CSV downloaded ✓');
+}
+
+function exportTXT() {
+  if (entries.length === 0) { showToast('No entries to export', true); return; }
+
+  const txt = entries.map(e => {
+    const lines = [
+      `═══════════════════════════`,
+      `${e.date}  ${e.time || ''}`,
+      `📍 ${e.location}${e.gps ? ` (${e.gps})` : ''}`,
+      e.type ? `Subject: ${e.type}` : null,
+      e.species ? `Species: ${e.species}` : null,
+      e.behavior ? `Behavior: ${e.behavior}` : null,
+      e.light ? `Light: ${e.light}` : null,
+      e.weather ? `Conditions: ${e.weather}` : null,
+      e.lens ? `Lens: ${e.lens}` : null,
+      e.support ? `Support: ${e.support}` : null,
+      e.rating ? `Rating: ${'★'.repeat(e.rating)}` : null,
+      e.outcome ? `Outcome: ${e.outcome}` : null,
+      e.returnNote ? `Return note: ${e.returnNote}` : null,
+      e.notes ? `\nNotes:\n${e.notes}` : null,
+      e.caption ? `\nCaption seed: "${e.caption}"` : null,
+    ].filter(Boolean).join('\n');
+    return lines;
+  }).join('\n\n');
+
+  downloadFile(txt, `field-log-${today()}.txt`, 'text/plain');
+  showToast('Text log downloaded ✓');
+}
+
+function exportJSON() {
+  if (entries.length === 0) { showToast('No entries to export', true); return; }
+  downloadFile(JSON.stringify(entries, null, 2), `field-log-backup-${today()}.json`, 'application/json');
+  showToast('Backup downloaded ✓');
+}
+
+function importJSON() {
+  document.getElementById('import-file').click();
+}
+
+function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      if (!Array.isArray(imported)) throw new Error('Invalid format');
+      if (confirm(`Import ${imported.length} entries? This will merge with existing entries.`)) {
+        const existingIds = new Set(entries.map(e => e.id));
+        const newEntries = imported.filter(e => !existingIds.has(e.id));
+        entries = [...entries, ...newEntries].sort((a,b) => b.id - a.id);
+        saveEntries();
+        renderLog();
+        showPanel('log');
+        showToast(`Imported ${newEntries.length} entries ✓`);
+      }
+    } catch(err) {
+      showToast('Invalid backup file', true);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function clearAllData() {
+  if (entries.length === 0) { showToast('Nothing to delete', true); return; }
+  if (!confirm(`Delete all ${entries.length} entries permanently? Export a backup first.`)) return;
+  entries = [];
+  saveEntries();
+  renderLog();
+  showPanel('log');
+  showToast('All entries deleted');
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ── TOAST ──
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+
+</body>
+</html>

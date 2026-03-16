@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRON THREE // Strength</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --concrete: #D6D1C8;
+    --light-concrete: #E8E4DC;
+    --dark: #141414;
+    --mid: #2E2E2E;
+    --groove: #444;
+    --ghost: #888;
+    --accent-bb: #C0392B;
+    --accent-kb: #1A5276;
+    --accent-bw: #1E8449;
+    --white: #F5F2EE;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--concrete);
+    color: var(--dark);
+    font-family: 'Archivo', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* Concrete texture */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--dark);
+    color: var(--white);
+    padding: 0;
+    border-bottom: 6px solid var(--accent-bb);
+  }
+
+  .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 2rem;
+    padding: 2.5rem 2.5rem 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .program-tag {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid;
+  }
+
+  .tag-bb { color: var(--accent-bb); border-color: var(--accent-bb); }
+  .tag-kb { color: var(--accent-kb); border-color: #3498DB; }
+  .tag-bw { color: var(--accent-bw); border-color: var(--accent-bw); }
+
+  h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 9vw, 6.5rem);
+    line-height: 0.88;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+
+  h1 .line2 { color: var(--accent-bb); display: block; }
+
+  .header-right {
+    text-align: right;
+    padding-bottom: 0.5rem;
+  }
+
+  .stat-block {
+    margin-bottom: 1rem;
+  }
+
+  .stat-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-top: 0.1rem;
+  }
+
+  .header-sub {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+    line-height: 1.7;
+    border-top: 1px solid var(--groove);
+    padding-top: 0.75rem;
+  }
+
+  /* ── WEEK STATS BAR ── */
+  .stats-bar {
+    background: var(--mid);
+    color: var(--white);
+    display: flex;
+    padding: 0;
+    overflow-x: auto;
+  }
+
+  .stats-bar-item {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    border-right: 1px solid var(--groove);
+  }
+
+  .stats-bar-item:last-child { border-right: none; }
+
+  .sbi-val {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .sbi-val.red { color: var(--accent-bb); }
+  .sbi-val.blue { color: #3498DB; }
+  .sbi-val.green { color: var(--accent-bw); }
+
+  .sbi-key {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-top: 0.2rem;
+  }
+
+  /* ── DAY NAV ── */
+  .day-nav {
+    background: var(--light-concrete);
+    display: flex;
+    border-bottom: 3px solid var(--dark);
+    overflow-x: auto;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .day-tab {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-right: 2px solid var(--concrete);
+    padding: 0.9rem 1.2rem;
+    color: var(--ghost);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .day-tab:hover { color: var(--dark); background: var(--concrete); }
+
+  .day-tab.active {
+    color: var(--white);
+    background: var(--dark);
+  }
+
+  .day-tab.rest-tab.active {
+    background: var(--groove);
+    color: var(--ghost);
+  }
+
+  .day-tab .done-pip {
+    display: none;
+    width: 5px;
+    height: 5px;
+    background: var(--accent-bb);
+    border-radius: 50%;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+  }
+
+  .day-tab.marked .done-pip { display: block; }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem 4rem;
+  }
+
+  .day-panel { display: none; animation: fadeUp 0.22s ease; }
+  .day-panel.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DAY HEADER ── */
+  .day-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    border-bottom: 3px solid var(--dark);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0;
+    gap: 1rem;
+  }
+
+  .day-focus {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-bb);
+    margin-bottom: 0.3rem;
+  }
+
+  .day-name {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+
+  .day-right {
+    text-align: right;
+    padding-top: 0.25rem;
+  }
+
+  .day-duration {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.8rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .day-dur-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ghost);
+  }
+
+  /* Progress strip */
+  .progress-strip {
+    height: 4px;
+    background: var(--concrete);
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--groove);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--dark);
+    width: 0%;
+    transition: width 0.35s ease;
+  }
+
+  /* ── TIMER ── */
+  .timer-block {
+    background: var(--dark);
+    color: var(--white);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .timer-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: 0.35rem;
+  }
+
+  .timer-disp {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 3.2rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    transition: color 0.3s;
+  }
+
+  .timer-disp.warn { color: var(--accent-bb); }
+  .timer-disp.done-col { color: var(--ghost); }
+
+  .timer-right { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-end; }
+
+  .timer-presets { display: flex; gap: 0.4rem; }
+
+  .tbtn {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--groove);
+    color: var(--ghost);
+    padding: 0.45rem 0.85rem;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+
+  .tbtn:hover { border-color: var(--white); color: var(--white); }
+  .tbtn.primary { background: var(--accent-bb); border-color: var(--accent-bb); color: var(--white); }
+  .tbtn.primary:hover { background: #E74C3C; border-color: #E74C3C; }
+
+  /* ── PHASE LABEL ── */
+  .phase-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0 0.6rem;
+  }
+
+  .phase-text {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    white-space: nowrap;
+  }
+
+  .phase-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--groove);
+  }
+
+  /* ── EXERCISE CARD ── */
+  .ex-card {
+    background: var(--light-concrete);
+    border-left: 4px solid transparent;
+    margin-bottom: 0.4rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .ex-card:hover { background: var(--white); }
+  .ex-card.done { opacity: 0.4; background: var(--concrete); }
+
+  .ex-card.bb { border-left-color: var(--accent-bb); }
+  .ex-card.kb { border-left-color: var(--accent-kb); }
+  .ex-card.bw { border-left-color: var(--accent-bw); }
+  .ex-card.done { border-left-color: var(--ghost) !important; }
+
+  /* Checkbox */
+  .ex-chk {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--dark);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    transition: all 0.15s;
+  }
+
+  .ex-card.done .ex-chk { background: var(--dark); color: var(--white); }
+
+  .ex-info {}
+
+  .ex-name {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.92rem;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .ex-note {
+    font-size: 0.68rem;
+    color: var(--ghost);
+    margin-top: 0.2rem;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .ex-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .tool-badge {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.12rem 0.35rem;
+    border: 1px solid currentColor;
+  }
+
+  .bb-badge { color: var(--accent-bb); }
+  .kb-badge { color: var(--accent-kb); }
+  .bw-badge { color: var(--accent-bw); }
+
+  .ex-weight-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .ex-weight-wrap input {
+    width: 56px;
+    border: none;
+    border-bottom: 1.5px solid var(--groove);
+    background: transparent;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.72rem;
+    color: var(--dark);
+    padding: 0.1rem 0.2rem;
+    text-align: right;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .ex-weight-wrap input:focus { border-bottom-color: var(--accent-bb); }
+  .ex-weight-wrap input::placeholder { color: var(--ghost); font-family: 'Archivo', sans-serif; font-weight: 300; font-size: 0.65rem; }
+  .ex-weight-wrap span { font-size: 0.6rem; color: var(--ghost); }
+
+  .ex-scheme {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1rem;
+    text-align: right;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  /* ── REST DAY ── */
+  .rest-panel {
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .rest-big {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 10vw, 6rem);
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    color: var(--groove);
+    line-height: 0.9;
+    margin-bottom: 1rem;
+  }
+
+  .rest-sub {
+    font-size: 0.8rem;
+    color: var(--ghost);
+    max-width: 320px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── COMPLETE BUTTON ── */
+  .complete-btn {
+    width: 100%;
+    margin-top: 1.5rem;
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    padding: 1.1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .complete-btn:hover { background: var(--accent-bb); }
+  .complete-btn:disabled { background: var(--groove); color: var(--ghost); cursor: default; }
+
+  /* ── NOTES STRIP ── */
+  .notes-strip {
+    margin-top: 2.5rem;
+    border-top: 2px solid var(--dark);
+    padding-top: 1.25rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .note-item {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    color: var(--ghost);
+    font-style: italic;
+    line-height: 1.5;
+    align-items: flex-start;
+  }
+
+  .note-bullet {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 0.8rem;
+    color: var(--accent-bb);
+    flex-shrink: 0;
+    font-style: normal;
+    margin-top: -1px;
+  }
+
+  @media (max-width: 560px) {
+    .main { padding: 1.5rem 1rem 3rem; }
+    header { padding: 0; }
+    .header-inner { padding: 1.75rem 1rem 1.25rem; grid-template-columns: 1fr; }
+    .header-right { display: none; }
+    .notes-strip { grid-template-columns: 1fr; }
+    .timer-block { flex-direction: column; align-items: flex-start; }
+    .timer-right { align-items: flex-start; width: 100%; }
+    .timer-presets { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="program-tag">
+        <span class="tag tag-bb">Barbell</span>
+        <span class="tag tag-kb">Kettlebell</span>
+        <span class="tag tag-bw">Bodyweight</span>
+      </div>
+      <h1>IRON<span class="line2">THREE</span></h1>
+      <div class="header-sub">
+        5-day strength program · No planks · Log your weights · Add load each week.
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="stat-block">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Days / Week</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">35–50</div>
+        <div class="stat-label">Min / Session</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── STATS BAR ── -->
+<div class="stats-bar">
+  <div class="stats-bar-item">
+    <div class="sbi-val red" id="days-done">0</div>
+    <div class="sbi-key">Days Done</div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="sbi-val" id="ex-done">0</div>
+    <div class="sbi-key">Exercises</div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="sbi-val blue" id="bb-count">0</div>
+    <div class="sbi-key">Barbell Sets</div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="sbi-val green" id="kb-count">0</div>
+    <div class="sbi-key">KB / BW Sets</div>
+  </div>
+</div>
+
+<!-- ── DAY NAV ── -->
+<nav class="day-nav">
+  <button class="day-tab active" onclick="switchDay(0)" id="tab-0">Mon<div class="done-pip"></div></button>
+  <button class="day-tab" onclick="switchDay(1)" id="tab-1">Tue<div class="done-pip"></div></button>
+  <button class="day-tab rest-tab" onclick="switchDay(2)" id="tab-2">Wed<div class="done-pip"></div></button>
+  <button class="day-tab" onclick="switchDay(3)" id="tab-3">Thu<div class="done-pip"></div></button>
+  <button class="day-tab" onclick="switchDay(4)" id="tab-4">Fri<div class="done-pip"></div></button>
+  <button class="day-tab rest-tab" onclick="switchDay(5)" id="tab-5">Sat<div class="done-pip"></div></button>
+  <button class="day-tab" onclick="switchDay(6)" id="tab-6">Sun<div class="done-pip"></div></button>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- TIMER -->
+  <div class="timer-block">
+    <div>
+      <div class="timer-label">Rest Timer — 2–3 min between strength sets</div>
+      <div class="timer-disp" id="timer-disp">03:00</div>
+    </div>
+    <div class="timer-right">
+      <div class="timer-presets">
+        <button class="tbtn" onclick="setTimer(90)">90s</button>
+        <button class="tbtn" onclick="setTimer(120)">2 min</button>
+        <button class="tbtn" onclick="setTimer(180)">3 min</button>
+        <button class="tbtn" onclick="setTimer(300)">5 min</button>
+      </div>
+      <div style="display:flex;gap:0.4rem;">
+        <button class="tbtn primary" id="timer-btn" onclick="toggleTimer()">START</button>
+        <button class="tbtn" onclick="resetTimer()">RESET</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── DAY 0: MONDAY — Lower Body Barbell ─────────── -->
+  <div class="day-panel active" id="day-0">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Lower Body — Barbell Focus</div>
+        <div class="day-name">Monday</div>
+      </div>
+      <div class="day-right">
+        <div class="day-duration">40</div>
+        <div class="day-dur-label">minutes</div>
+      </div>
+    </div>
+    <div class="progress-strip"><div class="progress-fill" id="prog-0"></div></div>
+
+    <div class="phase-label"><span class="phase-text">Warm-Up</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Bodyweight Squat</div>
+        <div class="ex-note">Slow and deliberate — find depth, open hips</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">2 × 10</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Hip Hinge</div>
+        <div class="ex-note">Push hips back, soft knees — prime the posterior chain</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">2 × 10</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Main Work — 3 sets each, rest 2–3 min</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Back Squat</div>
+        <div class="ex-note">Below parallel. Brace hard. Drive the floor away.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 5</div>
+    </div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Romanian Deadlift</div>
+        <div class="ex-note">Bar close to body. Hinge, don't squat. Feel the hamstrings load.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 6</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Reverse Lunge</div>
+        <div class="ex-note">Step back, not forward. Torso upright. Alternate legs.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × 8ea</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Accessory — rest 90s</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Goblet Squat</div>
+        <div class="ex-note">Hold bell at chest. Elbows inside knees at bottom.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 10</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Glute Bridge</div>
+        <div class="ex-note">Drive through heels. Squeeze at top. 1-second hold.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × 12</div>
+    </div>
+
+    <button class="complete-btn" id="complete-0" onclick="completeDay(0)">Mark Monday Complete</button>
+  </div>
+
+  <!-- ─────────── DAY 1: TUESDAY — Upper Push ─────────── -->
+  <div class="day-panel" id="day-1">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Upper Body — Push</div>
+        <div class="day-name">Tuesday</div>
+      </div>
+      <div class="day-right">
+        <div class="day-duration">40</div>
+        <div class="day-dur-label">minutes</div>
+      </div>
+    </div>
+    <div class="progress-strip"><div class="progress-fill" id="prog-1"></div></div>
+
+    <div class="phase-label"><span class="phase-text">Warm-Up</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Arm Circles + Shoulder CARs</div>
+        <div class="ex-note">Controlled articular rotations — full range, slow</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">2 min</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Push-Up</div>
+        <div class="ex-note">Light sets — waking up the chest and triceps</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">2 × 8</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Main Work — 3 sets each, rest 2–3 min</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Bench Press</div>
+        <div class="ex-note">Feet flat. Slight arch. Bar path to lower chest. Don't bounce.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 5</div>
+    </div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Overhead Press</div>
+        <div class="ex-note">Squeeze glutes and abs. Press in a straight line. No leg drive.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 5</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Accessory — rest 90s</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Single-Arm Press</div>
+        <div class="ex-note">Clean to rack, press strict. Each arm independently.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 8ea</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Dips</div>
+        <div class="ex-note">Lean forward slightly for chest. Stay controlled on the descent.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × 8</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Diamond Push-Up</div>
+        <div class="ex-note">Hands close together. Elbows track back, not out.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × 10</div>
+    </div>
+
+    <button class="complete-btn" id="complete-1" onclick="completeDay(1)">Mark Tuesday Complete</button>
+  </div>
+
+  <!-- ─────────── DAY 2: WEDNESDAY — REST ─────────── -->
+  <div class="day-panel" id="day-2">
+    <div class="rest-panel">
+      <div class="rest-big">REST<br>DAY</div>
+      <p class="rest-sub">Muscle is built during recovery, not during the session. Walk, stretch, eat, sleep. Come back Thursday ready to pull.</p>
+    </div>
+  </div>
+
+  <!-- ─────────── DAY 3: THURSDAY — Pull ─────────── -->
+  <div class="day-panel" id="day-3">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Upper Body — Pull</div>
+        <div class="day-name">Thursday</div>
+      </div>
+      <div class="day-right">
+        <div class="day-duration">40</div>
+        <div class="day-dur-label">minutes</div>
+      </div>
+    </div>
+    <div class="progress-strip"><div class="progress-fill" id="prog-3"></div></div>
+
+    <div class="phase-label"><span class="phase-text">Warm-Up</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Dead Hang</div>
+        <div class="ex-note">From a bar — decompress the spine, load the grip</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × 30s</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Main Work — 3 sets each, rest 2–3 min</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Deadlift</div>
+        <div class="ex-note">Pull the slack out first. Hips and shoulders rise together. No heaving.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 5</div>
+    </div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Bent-Over Row</div>
+        <div class="ex-note">Hinge 45°. Pull to lower chest. Squeeze the lats at the top.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 6</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Pull-Up / Chin-Up</div>
+        <div class="ex-note">Full dead hang start. Chin clears the bar. No kipping.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × max</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Accessory — rest 90s</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Single-Arm Row</div>
+        <div class="ex-note">Brace on a bench. Drive the elbow back, not up.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 10ea</div>
+    </div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Face Pull (high pull)</div>
+        <div class="ex-note">Pull to forehead, elbows flare high. Rear delts and rotator cuff.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 12</div>
+    </div>
+
+    <button class="complete-btn" id="complete-3" onclick="completeDay(3)">Mark Thursday Complete</button>
+  </div>
+
+  <!-- ─────────── DAY 4: FRIDAY — Full Body Strength ─────────── -->
+  <div class="day-panel" id="day-4">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Full Body — Compound Strength</div>
+        <div class="day-name">Friday</div>
+      </div>
+      <div class="day-right">
+        <div class="day-duration">50</div>
+        <div class="day-dur-label">minutes</div>
+      </div>
+    </div>
+    <div class="progress-strip"><div class="progress-fill" id="prog-4"></div></div>
+
+    <div class="phase-label"><span class="phase-text">Warm-Up</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Swing</div>
+        <div class="ex-note">Hip hinge power. Bell floats at the top. Not a squat.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 15</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Main Work — 3 sets each, rest 2–3 min</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Front Squat</div>
+        <div class="ex-note">Elbows high. Upright torso. More quad than back squat.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 5</div>
+    </div>
+
+    <div class="ex-card bb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Push Press</div>
+        <div class="ex-note">Small dip and drive — use legs to initiate, press to lockout.</div>
+        <div class="ex-meta">
+          <span class="tool-badge bb-badge">Barbell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="5"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 5</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Pull-Up</div>
+        <div class="ex-note">Weighted if bodyweight is easy. Add a belt, not bad form.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × 5</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Accessory — rest 90s</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Turkish Get-Up</div>
+        <div class="ex-note">Go slow. Every position matters. Look at the bell. 3 per side.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 3ea</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Bulgarian Split Squat</div>
+        <div class="ex-note">Rear foot elevated. Sink straight down. Don't let the front knee cave.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">3 × 8ea</div>
+    </div>
+
+    <button class="complete-btn" id="complete-4" onclick="completeDay(4)">Mark Friday Complete</button>
+  </div>
+
+  <!-- ─────────── DAY 5: SATURDAY — REST ─────────── -->
+  <div class="day-panel" id="day-5">
+    <div class="rest-panel">
+      <div class="rest-big">FULL<br>REST</div>
+      <p class="rest-sub">Full rest. You've hit 4 hard sessions this week. Let the body adapt. Sunday is a short finisher — show up fresh.</p>
+    </div>
+  </div>
+
+  <!-- ─────────── DAY 6: SUNDAY — KB + BW Strength Finisher ─────────── -->
+  <div class="day-panel" id="day-6">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">KB + Bodyweight — Strength Finisher</div>
+        <div class="day-name">Sunday</div>
+      </div>
+      <div class="day-right">
+        <div class="day-duration">35</div>
+        <div class="day-dur-label">minutes</div>
+      </div>
+    </div>
+    <div class="progress-strip"><div class="progress-fill" id="prog-6"></div></div>
+
+    <div class="phase-label"><span class="phase-text">Warm-Up</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">World's Greatest Stretch</div>
+        <div class="ex-note">Lunge + thoracic rotation. 5 reps each side, slow</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">2 × 5ea</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Main Work — 4 sets each, rest 90s</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Clean + Press</div>
+        <div class="ex-note">Clean to rack, press overhead. Alternate or both together.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">4 × 5ea</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Pistol Squat (or Assisted)</div>
+        <div class="ex-note">Hold a post or doorframe if needed. Work the single-leg strength.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">4 × 5ea</div>
+    </div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Swing</div>
+        <div class="ex-note">Power output. Drive hard. Let the bell float at the top.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">4 × 15</div>
+    </div>
+
+    <div class="ex-card bw" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">Chin-Up</div>
+        <div class="ex-note">Supinated grip. Pull from the lats. Controlled descent.</div>
+        <div class="ex-meta"><span class="tool-badge bw-badge">BW</span></div>
+      </div>
+      <div class="ex-scheme">4 × max</div>
+    </div>
+
+    <div class="phase-label"><span class="phase-text">Finisher</span><div class="phase-rule"></div></div>
+
+    <div class="ex-card kb" onclick="toggleEx(this)">
+      <div class="ex-chk">✓</div>
+      <div class="ex-info">
+        <div class="ex-name">KB Farmer Carry</div>
+        <div class="ex-note">Heavy as possible. Chest tall. Walk 30m, turn, walk back.</div>
+        <div class="ex-meta">
+          <span class="tool-badge kb-badge">Kettlebell</span>
+          <div class="ex-weight-wrap"><input type="number" placeholder="wt" step="4"><span>lbs</span></div>
+        </div>
+      </div>
+      <div class="ex-scheme">3 × 30m</div>
+    </div>
+
+    <button class="complete-btn" id="complete-6" onclick="completeDay(6)">Mark Sunday Complete</button>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes-strip">
+    <div class="note-item"><span class="note-bullet">→</span><span>Add 5 lbs to barbell lifts each week as long as all reps are clean.</span></div>
+    <div class="note-item"><span class="note-bullet">→</span><span>KB progressions: move up one bell size when sets feel controlled and easy.</span></div>
+    <div class="note-item"><span class="note-bullet">→</span><span>Pull-ups lagging? Do 5 sets of near-max every session instead of 3.</span></div>
+    <div class="note-item"><span class="note-bullet">→</span><span>Rest 2–3 min for barbell work, 90s for KB/BW accessory. Timer is above.</span></div>
+  </div>
+
+</main>
+
+<script>
+  let completedDays = new Set();
+  let totalEx = 0;
+  let bbSets = 0;
+  let kbBwSets = 0;
+
+  function switchDay(idx) {
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('day-' + idx).classList.add('active');
+    document.getElementById('tab-' + idx).classList.add('active');
+  }
+
+  function toggleEx(card) {
+    card.classList.toggle('done');
+    const isBB = card.classList.contains('bb');
+    const isKB = card.classList.contains('kb') || card.classList.contains('bw');
+
+    if (card.classList.contains('done')) {
+      totalEx++;
+      if (isBB) bbSets++;
+      if (isKB) kbBwSets++;
+    } else {
+      totalEx = Math.max(0, totalEx - 1);
+      if (isBB) bbSets = Math.max(0, bbSets - 1);
+      if (isKB) kbBwSets = Math.max(0, kbBwSets - 1);
+    }
+
+    document.getElementById('ex-done').textContent = totalEx;
+    document.getElementById('bb-count').textContent = bbSets;
+    document.getElementById('kb-count').textContent = kbBwSets;
+
+    // Update progress bars for all panels
+    for (let d of [0,1,3,4,6]) {
+      const panel = document.getElementById('day-' + d);
+      if (!panel) continue;
+      const all = panel.querySelectorAll('.ex-card').length;
+      const done = panel.querySelectorAll('.ex-card.done').length;
+      const bar = document.getElementById('prog-' + d);
+      if (bar && all > 0) bar.style.width = (done / all * 100) + '%';
+    }
+  }
+
+  function completeDay(d) {
+    if (completedDays.has(d)) return;
+    completedDays.add(d);
+    document.getElementById('tab-' + d).classList.add('marked');
+    document.getElementById('days-done').textContent = completedDays.size;
+    const btn = document.getElementById('complete-' + d);
+    if (btn) { btn.textContent = '✓ Complete'; btn.disabled = true; }
+  }
+
+  // ── TIMER ──
+  let timerSecs = 180;
+  let timerRunning = false;
+  let timerInterval = null;
+
+  function setTimer(s) {
+    resetTimer();
+    timerSecs = s;
+    updateDisp();
+  }
+
+  function toggleTimer() {
+    if (timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('timer-btn').textContent = 'RESUME';
+    } else {
+      timerRunning = true;
+      document.getElementById('timer-btn').textContent = 'PAUSE';
+      timerInterval = setInterval(() => {
+        timerSecs--;
+        const disp = document.getElementById('timer-disp');
+        updateDisp();
+        if (timerSecs <= 10) disp.classList.add('warn');
+        if (timerSecs <= 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('timer-btn').textContent = 'START';
+          disp.classList.remove('warn');
+          disp.classList.add('done-col');
+          disp.textContent = 'GO';
+          setTimeout(() => {
+            disp.classList.remove('done-col');
+            timerSecs = 180;
+            updateDisp();
+          }, 1500);
+        }
+      }, 1000);
+    }
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerSecs = 180;
+    document.getElementById('timer-btn').textContent = 'START';
+    const disp = document.getElementById('timer-disp');
+    disp.className = 'timer-disp';
+    updateDisp();
+  }
+
+  function updateDisp() {
+    const m = Math.floor(timerSecs / 60).toString().padStart(2, '0');
+    const s = (timerSecs % 60).toString().padStart(2, '0');
+    document.getElementById('timer-disp').textContent = m + ':' + s;
+  }
+</script>
+
+</body>
+</html>

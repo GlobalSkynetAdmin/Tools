@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fat Burn // Home Routine</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #FF4500;
+    --ember: #FF8C00;
+    --coal: #1A1A1A;
+    --ash: #2E2E2E;
+    --smoke: #444;
+    --light: #F5F0EA;
+    --dim: #A09890;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--coal);
+    color: var(--light);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  header {
+    padding: 3rem 2rem 1.5rem;
+    border-bottom: 1px solid var(--ash);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: 'BURN';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14rem;
+    color: var(--fire);
+    opacity: 0.04;
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+
+  .header-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fire);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--light);
+  }
+
+  h1 span {
+    color: var(--fire);
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.2rem;
+  }
+
+  .meta-pill {
+    background: var(--ash);
+    border: 1px solid var(--smoke);
+    border-radius: 2px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .meta-pill strong { color: var(--light); }
+
+  /* Week nav */
+  .week-nav {
+    display: flex;
+    padding: 1.5rem 2rem 0;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--ash);
+  }
+
+  .day-tab {
+    flex: 1;
+    padding: 0.75rem 0.25rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--dim);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .day-tab:hover { color: var(--light); }
+
+  .day-tab.active {
+    color: var(--fire);
+    border-bottom-color: var(--fire);
+  }
+
+  .day-tab.rest { opacity: 0.5; }
+  .day-tab.rest.active { color: var(--dim); border-bottom-color: var(--dim); opacity: 1; }
+
+  .day-tab.completed .day-check {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--fire);
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+    margin-bottom: 2px;
+  }
+
+  /* Main content */
+  .main {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .day-panel { display: none; }
+  .day-panel.active { display: block; animation: fadeUp 0.3s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .day-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .day-focus {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--fire);
+  }
+
+  .day-duration {
+    font-size: 0.8rem;
+    color: var(--dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    background: var(--ash);
+    height: 3px;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--fire), var(--ember));
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  /* Workout phase */
+  .phase {
+    margin-bottom: 1.5rem;
+  }
+
+  .phase-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.75rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--ash);
+  }
+
+  /* Exercise card */
+  .exercise-card {
+    background: var(--ash);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exercise-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--fire);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+    transform-origin: bottom;
+  }
+
+  .exercise-card:hover { border-color: var(--smoke); }
+  .exercise-card:hover::before { transform: scaleY(1); }
+
+  .exercise-card.done {
+    opacity: 0.5;
+    border-color: transparent;
+  }
+
+  .exercise-card.done::before {
+    transform: scaleY(1);
+    background: #555;
+  }
+
+  .ex-check {
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid var(--smoke);
+    border-radius: 2px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.75rem;
+  }
+
+  .exercise-card.done .ex-check {
+    background: var(--smoke);
+    border-color: var(--smoke);
+    color: var(--dim);
+  }
+
+  .ex-info { flex: 1; }
+
+  .ex-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 0.15rem;
+  }
+
+  .ex-detail {
+    font-size: 0.75rem;
+    color: var(--dim);
+    font-weight: 300;
+  }
+
+  .ex-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--fire);
+    white-space: nowrap;
+  }
+
+  .exercise-card.done .ex-badge { color: var(--smoke); }
+
+  /* Timer */
+  .timer-section {
+    background: var(--ash);
+    border: 1px solid var(--smoke);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .timer-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .timer-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: var(--fire);
+    margin-bottom: 1rem;
+  }
+
+  .timer-controls {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    padding: 0.6rem 1.5rem;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--fire);
+    color: var(--light);
+  }
+  .btn-primary:hover { background: var(--ember); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--dim);
+    border: 1px solid var(--smoke);
+  }
+  .btn-ghost:hover { color: var(--light); border-color: var(--dim); }
+
+  /* Complete day button */
+  .complete-btn {
+    width: 100%;
+    margin-top: 1.5rem;
+    background: var(--fire);
+    color: var(--light);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    border: none;
+    padding: 1rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .complete-btn:hover { background: var(--ember); transform: translateY(-1px); }
+
+  /* Rest day */
+  .rest-panel {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .rest-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+
+  .rest-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .rest-sub {
+    font-size: 0.85rem;
+    color: var(--dim);
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* Tips */
+  .tips {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--ash);
+  }
+
+  .tips-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 1rem;
+  }
+
+  .tip {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--dim);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .tip-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--fire);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.55rem;
+  }
+
+  /* Weekly stats bar */
+  .week-stats {
+    display: flex;
+    gap: 1px;
+    padding: 1rem 2rem;
+    background: var(--ash);
+    border-bottom: 1px solid var(--smoke);
+  }
+
+  .stat {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--fire);
+    letter-spacing: 0.05em;
+  }
+
+  .stat-key {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-top: 0.1rem;
+  }
+
+  @media (max-width: 480px) {
+    .week-nav { padding: 1rem 1rem 0; }
+    .main { padding: 1.5rem 1rem; }
+    .day-tab { font-size: 0.9rem; }
+    header { padding: 2rem 1rem 1.2rem; }
+    .week-stats { padding: 0.75rem 1rem; }
+    header::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Weekly Program</div>
+  <h1>FAT<span>BURN</span><br>HOME</h1>
+  <div class="header-meta">
+    <div class="meta-pill"><strong>5</strong> days/week</div>
+    <div class="meta-pill"><strong>20–30</strong> min</div>
+    <div class="meta-pill"><strong>Zero</strong> equipment</div>
+  </div>
+</header>
+
+<div class="week-stats">
+  <div class="stat">
+    <div class="stat-val" id="days-done">0</div>
+    <div class="stat-key">Days Done</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="ex-done">0</div>
+    <div class="stat-key">Exercises</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="cal-burned">0</div>
+    <div class="stat-key">~Cal Burned</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="streak">0</div>
+    <div class="stat-key">Streak</div>
+  </div>
+</div>
+
+<nav class="week-nav">
+  <button class="day-tab active" onclick="switchDay(0)" id="tab-0">Mon<span class="day-check"></span></button>
+  <button class="day-tab" onclick="switchDay(1)" id="tab-1">Tue<span class="day-check"></span></button>
+  <button class="day-tab rest" onclick="switchDay(2)" id="tab-2">Wed<span class="day-check"></span></button>
+  <button class="day-tab" onclick="switchDay(3)" id="tab-3">Thu<span class="day-check"></span></button>
+  <button class="day-tab" onclick="switchDay(4)" id="tab-4">Fri<span class="day-check"></span></button>
+  <button class="day-tab rest" onclick="switchDay(5)" id="tab-5">Sat<span class="day-check"></span></button>
+  <button class="day-tab" onclick="switchDay(6)" id="tab-6">Sun<span class="day-check"></span></button>
+</nav>
+
+<main class="main">
+
+  <!-- TIMER -->
+  <div class="timer-section">
+    <div class="timer-label">⏱ Interval Timer</div>
+    <div class="timer-display" id="timer-display">00:40</div>
+    <div class="timer-controls">
+      <button class="btn btn-primary" id="timer-btn" onclick="toggleTimer()">START</button>
+      <button class="btn btn-ghost" onclick="setTimer(40)">40s Work</button>
+      <button class="btn btn-ghost" onclick="setTimer(20)">20s Rest</button>
+      <button class="btn btn-ghost" onclick="resetTimer()">Reset</button>
+    </div>
+  </div>
+
+  <!-- DAY 1: MONDAY — Full Body HIIT -->
+  <div class="day-panel active" id="day-0">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Full Body HIIT</div>
+        <div class="day-title">Monday</div>
+      </div>
+      <div class="day-duration">~25 min</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-0"></div></div>
+
+    <div class="phase">
+      <div class="phase-label">Warm-Up — 3 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">March in Place</div><div class="ex-detail">High knees, arms pumping</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Arm Circles + Hip Rolls</div><div class="ex-detail">Loosen shoulders and hips</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Leg Swings</div><div class="ex-detail">Forward/back each leg</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Main Circuit — 3 rounds × 40s on / 20s off</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Jumping Jacks</div><div class="ex-detail">Full range, land softly</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Squat to Stand</div><div class="ex-detail">Bodyweight squat, pause at bottom</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Push-Ups</div><div class="ex-detail">Knee variation if needed</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">High Knees</div><div class="ex-detail">Drive knees to waist height</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Plank Hold</div><div class="ex-detail">Tight core, neutral spine</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Cool-Down — 2 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Standing Forward Fold</div><div class="ex-detail">Breathe deep, hang loose</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Seated Spinal Twist</div><div class="ex-detail">Each side</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="completeDay(0)">Mark Day Complete →</button>
+  </div>
+
+  <!-- DAY 2: TUESDAY — Lower Body Burn -->
+  <div class="day-panel" id="day-1">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Lower Body Burn</div>
+        <div class="day-title">Tuesday</div>
+      </div>
+      <div class="day-duration">~25 min</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-1"></div></div>
+
+    <div class="phase">
+      <div class="phase-label">Warm-Up — 3 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Jumping Jacks</div><div class="ex-detail">Easy pace to raise heart rate</div></div>
+        <div class="ex-badge">90s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Hip Circles</div><div class="ex-detail">10 each direction</div></div>
+        <div class="ex-badge">90s</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Main Circuit — 3 rounds × 40s on / 20s off</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Reverse Lunges</div><div class="ex-detail">Alternate legs, keep torso upright</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Sumo Squats</div><div class="ex-detail">Wide stance, toes out 45°</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Glute Bridges</div><div class="ex-detail">Squeeze at top, 1s hold</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Squat Jumps</div><div class="ex-detail">Land soft — low impact option: pulse squats</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Donkey Kicks</div><div class="ex-detail">On all fours, drive heel to ceiling</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Cool-Down — 2 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Standing Quad Stretch</div><div class="ex-detail">Hold each side 30s</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Figure-4 Stretch</div><div class="ex-detail">Seated glute stretch each side</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="completeDay(1)">Mark Day Complete →</button>
+  </div>
+
+  <!-- DAY 3: WEDNESDAY — REST -->
+  <div class="day-panel" id="day-2">
+    <div class="rest-panel">
+      <div class="rest-icon">🔥</div>
+      <div class="rest-title">Active Rest</div>
+      <p class="rest-sub">Your body is rebuilding and burning. Take a walk, do some light stretching, or just breathe. Recovery is where the fat loss happens.</p>
+    </div>
+  </div>
+
+  <!-- DAY 4: THURSDAY — Core + Cardio -->
+  <div class="day-panel" id="day-3">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Core + Cardio Blast</div>
+        <div class="day-title">Thursday</div>
+      </div>
+      <div class="day-duration">~25 min</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-3"></div></div>
+
+    <div class="phase">
+      <div class="phase-label">Warm-Up — 3 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Step Touches</div><div class="ex-detail">Side-to-side with arm reach</div></div>
+        <div class="ex-badge">90s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Cat-Cow</div><div class="ex-detail">Slow and deliberate</div></div>
+        <div class="ex-badge">90s</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Main Circuit — 3 rounds × 40s on / 20s off</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Mountain Climbers</div><div class="ex-detail">Drive knees fast, hips level</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Bicycle Crunches</div><div class="ex-detail">Slow and controlled, no neck strain</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Burpee (no jump)</div><div class="ex-detail">Step back and step forward</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Plank to Downdog</div><div class="ex-detail">Flow between positions</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Flutter Kicks</div><div class="ex-detail">Lying flat, low back pressed down</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Cool-Down — 2 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Child's Pose</div><div class="ex-detail">Deep belly breaths</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Lying Twist Stretch</div><div class="ex-detail">Each side</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="completeDay(3)">Mark Day Complete →</button>
+  </div>
+
+  <!-- DAY 5: FRIDAY — Upper Body + HIIT -->
+  <div class="day-panel" id="day-4">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Upper Body + HIIT</div>
+        <div class="day-title">Friday</div>
+      </div>
+      <div class="day-duration">~25 min</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-4"></div></div>
+
+    <div class="phase">
+      <div class="phase-label">Warm-Up — 3 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Shoulder Rolls + Chest Opener</div><div class="ex-detail">Loosen upper body</div></div>
+        <div class="ex-badge">90s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Slow Inchworms</div><div class="ex-detail">Walk hands out to plank, back up</div></div>
+        <div class="ex-badge">90s</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Main Circuit — 3 rounds × 40s on / 20s off</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Wide Push-Ups</div><div class="ex-detail">Chest focus, elbows flare out</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Tricep Dips</div><div class="ex-detail">Use a chair or the floor</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Lateral Shuffles</div><div class="ex-detail">Quick side-to-side, stay low</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Plank Shoulder Taps</div><div class="ex-detail">Slow, anti-rotation control</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Squat + Reach</div><div class="ex-detail">Add overhead push at top</div></div>
+        <div class="ex-badge">40s × 3</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Cool-Down — 2 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Doorway Chest Stretch</div><div class="ex-detail">Hold 30s each side</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Thread the Needle</div><div class="ex-detail">Thoracic rotation stretch</div></div>
+        <div class="ex-badge">60s</div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="completeDay(4)">Mark Day Complete →</button>
+  </div>
+
+  <!-- DAY 6: SATURDAY — REST -->
+  <div class="day-panel" id="day-5">
+    <div class="rest-panel">
+      <div class="rest-icon">💤</div>
+      <div class="rest-title">Full Rest</div>
+      <p class="rest-sub">You've earned it. Hydrate, sleep well, and come back Sunday for your final burn of the week.</p>
+    </div>
+  </div>
+
+  <!-- DAY 7: SUNDAY — Endurance Finisher -->
+  <div class="day-panel" id="day-6">
+    <div class="day-header">
+      <div>
+        <div class="day-focus">Endurance Finisher</div>
+        <div class="day-title">Sunday</div>
+      </div>
+      <div class="day-duration">~30 min</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-6"></div></div>
+
+    <div class="phase">
+      <div class="phase-label">Warm-Up — 4 min</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Slow Marching</div><div class="ex-detail">Full arm swing, breathe through nose</div></div>
+        <div class="ex-badge">2 min</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Dynamic Stretching</div><div class="ex-detail">Leg swings, torso twists, neck rolls</div></div>
+        <div class="ex-badge">2 min</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Main Block — 4 rounds × 45s on / 15s off (full body)</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Alternating Reverse Lunge</div><div class="ex-detail">Controlled pace, full range</div></div>
+        <div class="ex-badge">45s × 4</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Push-Up to T-Rotation</div><div class="ex-detail">Push up, rotate, arm to sky</div></div>
+        <div class="ex-badge">45s × 4</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Skater Hops</div><div class="ex-detail">Side-to-side, low impact: slow step version</div></div>
+        <div class="ex-badge">45s × 4</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Dead Bug</div><div class="ex-detail">Opposite arm-leg lower slowly</div></div>
+        <div class="ex-badge">45s × 4</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Cool-Down — 4 min full stretch</div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Pigeon Pose</div><div class="ex-detail">Hold each side 60s</div></div>
+        <div class="ex-badge">2 min</div>
+      </div>
+      <div class="exercise-card" onclick="toggleExercise(this)">
+        <div class="ex-check">✓</div>
+        <div class="ex-info"><div class="ex-name">Supine Full Body Stretch</div><div class="ex-detail">Arms overhead, point toes, breathe</div></div>
+        <div class="ex-badge">2 min</div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="completeDay(6)">Mark Day Complete →</button>
+  </div>
+
+  <!-- Tips -->
+  <div class="tips">
+    <div class="tips-label">📋 Program Notes</div>
+    <div class="tip"><div class="tip-dot"></div><span>Use the <strong>40s Work / 20s Rest</strong> timer above for all main circuits.</span></div>
+    <div class="tip"><div class="tip-dot"></div><span><strong>Low-impact swaps</strong> are listed for any jumping movement — use them freely.</span></div>
+    <div class="tip"><div class="tip-dot"></div><span>Aim for <strong>intensity over speed</strong> — controlled reps burn more than sloppy sprints.</span></div>
+    <div class="tip"><div class="tip-dot"></div><span>Drink water before and after. Fat loss happens in the kitchen too — aim for a modest caloric deficit.</span></div>
+    <div class="tip"><div class="tip-dot"></div><span>Progress by adding a 4th round after 3 weeks, or reducing rest intervals to 15s.</span></div>
+  </div>
+
+</main>
+
+<script>
+  let currentDay = 0;
+  let timerInterval = null;
+  let timerSeconds = 40;
+  let timerRunning = false;
+  let completedDays = new Set();
+
+  // Stats
+  let totalExDone = 0;
+  const dayCalories = [240, 220, 0, 230, 210, 0, 260];
+
+  function switchDay(idx) {
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('day-' + idx).classList.add('active');
+    document.getElementById('tab-' + idx).classList.add('active');
+    currentDay = idx;
+    resetTimer();
+  }
+
+  function toggleExercise(card) {
+    const wasDone = card.classList.contains('done');
+    card.classList.toggle('done');
+    totalExDone += wasDone ? -1 : 1;
+    if (totalExDone < 0) totalExDone = 0;
+    document.getElementById('ex-done').textContent = totalExDone;
+    updateProgress();
+  }
+
+  function updateProgress() {
+    for (let d = 0; d < 7; d++) {
+      const panel = document.getElementById('day-' + d);
+      if (!panel) continue;
+      const cards = panel.querySelectorAll('.exercise-card');
+      const done = panel.querySelectorAll('.exercise-card.done');
+      const bar = document.getElementById('prog-' + d);
+      if (bar && cards.length > 0) {
+        bar.style.width = (done.length / cards.length * 100) + '%';
+      }
+    }
+  }
+
+  function completeDay(dayIdx) {
+    if (completedDays.has(dayIdx)) return;
+    completedDays.add(dayIdx);
+    document.getElementById('tab-' + dayIdx).classList.add('completed');
+    document.getElementById('days-done').textContent = completedDays.size;
+
+    let totalCal = 0;
+    completedDays.forEach(d => { totalCal += dayCalories[d] || 0; });
+    document.getElementById('cal-burned').textContent = totalCal;
+
+    // Simple streak: consecutive days from Mon
+    let streak = 0;
+    for (let i = 0; i < 7; i++) {
+      if (completedDays.has(i) || i === 2 || i === 5) streak++;
+      else break;
+    }
+    document.getElementById('streak').textContent = streak;
+
+    // Flash feedback
+    const btn = document.querySelector('#day-' + dayIdx + ' .complete-btn');
+    if (btn) {
+      btn.textContent = '✓ Day Complete';
+      btn.style.background = '#333';
+      btn.style.color = '#666';
+      btn.disabled = true;
+    }
+  }
+
+  // Timer
+  function setTimer(s) {
+    resetTimer();
+    timerSeconds = s;
+    updateTimerDisplay();
+  }
+
+  function toggleTimer() {
+    if (timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('timer-btn').textContent = 'RESUME';
+    } else {
+      timerRunning = true;
+      document.getElementById('timer-btn').textContent = 'PAUSE';
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        updateTimerDisplay();
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('timer-btn').textContent = 'START';
+          document.getElementById('timer-display').style.color = '#FF8C00';
+          setTimeout(() => {
+            document.getElementById('timer-display').style.color = 'var(--fire)';
+          }, 800);
+        }
+      }, 1000);
+    }
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerSeconds = 40;
+    document.getElementById('timer-btn').textContent = 'START';
+    updateTimerDisplay();
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+    const s = (timerSeconds % 60).toString().padStart(2, '0');
+    document.getElementById('timer-display').textContent = m + ':' + s;
+  }
+</script>
+
+</body>
+</html>

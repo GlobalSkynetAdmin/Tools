@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fresh Week // Summer Salad Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;1,300;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sun:     #E8A020;
+    --sun-lt:  #F5C96A;
+    --peach:   #F2D5B0;
+    --berry:   #7B3F6E;
+    --grass:   #3A7D44;
+    --grass-lt:#6DB57A;
+    --sky:     #2E86AB;
+    --cream:   #FDFAF4;
+    --warm:    #F7F0E2;
+    --parchment:#EDE5D0;
+    --ink:     #1A1A14;
+    --mid:     #5C5848;
+    --ghost:   #9C9680;
+    --rule:    #DDD5C0;
+    --white:   #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 80%, rgba(232,160,32,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 20%, rgba(58,125,68,0.15) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  /* Decorative fruit shapes */
+  header::after {
+    content: '🍓🍋🍇🍑';
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 5rem;
+    opacity: 0.07;
+    letter-spacing: 0.5rem;
+    pointer-events: none;
+    filter: grayscale(1);
+  }
+
+  .header-inner { max-width: 1000px; margin: 0 auto; position: relative; }
+
+  .header-kicker {
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sun-lt);
+    margin-bottom: 0.85rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+
+  h1 .line2 {
+    font-style: italic;
+    color: var(--sun);
+    display: block;
+    font-weight: 300;
+  }
+
+  .header-desc {
+    font-size: 0.82rem;
+    color: rgba(253,250,244,0.65);
+    margin-top: 1.1rem;
+    max-width: 540px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .header-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(253,250,244,0.65);
+    border-radius: 20px;
+  }
+
+  .badge.fruit { border-color: var(--sun); color: var(--sun-lt); }
+  .badge.veg   { border-color: var(--grass-lt); color: var(--grass-lt); }
+  .badge.chick { border-color: rgba(255,255,255,0.35); }
+
+  /* ── TABS ── */
+  .tabs {
+    background: var(--parchment);
+    border-bottom: 2px solid var(--rule);
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .tab {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.95rem 1.4rem;
+    color: var(--ghost);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    margin-bottom: -2px;
+  }
+
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--grass); border-bottom-color: var(--grass); }
+
+  /* ── PANELS ── */
+  .panel { display: none; animation: fadeUp 0.2s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem 2.5rem 4rem;
+  }
+
+  .section-heading {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    margin-top: 2.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .section-heading:first-child { margin-top: 0; }
+
+  .section-sub {
+    font-size: 0.75rem;
+    color: var(--ghost);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  /* ── MEAL CARDS ── */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .meal-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 4px;
+  }
+
+  .meal-card:hover { border-color: var(--grass-lt); box-shadow: 0 6px 24px rgba(58,125,68,0.1); transform: translateY(-2px); }
+  .meal-card.open { border-color: var(--grass); }
+
+  /* Color stripe by type */
+  .meal-card .stripe {
+    height: 4px;
+    width: 100%;
+  }
+
+  .stripe-chicken { background: linear-gradient(90deg, var(--sun), var(--sun-lt)); }
+  .stripe-veg     { background: linear-gradient(90deg, var(--grass), var(--grass-lt)); }
+  .stripe-fruit   { background: linear-gradient(90deg, var(--berry), #C06090); }
+  .stripe-grill   { background: linear-gradient(90deg, #555, #888); }
+
+  .meal-card-top { padding: 1.25rem 1.25rem 1rem; }
+
+  .meal-day-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.35rem;
+  }
+
+  .meal-day {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grass);
+    font-weight: 500;
+  }
+
+  .type-pill {
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border-radius: 20px;
+    border: 1px solid currentColor;
+    font-weight: 500;
+  }
+
+  .pill-chicken { color: var(--sun); }
+  .pill-veg     { color: var(--grass); }
+  .pill-fruit   { color: var(--berry); }
+  .pill-grill   { color: var(--mid); }
+
+  .meal-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.3rem;
+  }
+
+  .meal-sub {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .meal-meta {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 0.9rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ghost);
+  }
+
+  .meta-item span {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 0.05rem;
+    line-height: 1;
+  }
+
+  .meal-expand {
+    padding: 1.25rem;
+    display: none;
+    background: #F8FBF8;
+    border-top: 1px solid #D8EDD8;
+  }
+
+  .meal-card.open .meal-expand { display: block; }
+
+  .expand-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grass);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .expand-label:first-child { margin-top: 0; }
+  .expand-label::after { content: ''; flex: 1; height: 1px; background: #C8E4C8; }
+
+  .ingredient-list { list-style: none; }
+
+  .ingredient-list li {
+    font-size: 0.77rem;
+    color: var(--mid);
+    padding: 0.22rem 0 0.22rem 0.9rem;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .ingredient-list li::before { content: '·'; position: absolute; left: 0; color: var(--grass-lt); font-weight: 700; font-size: 1rem; line-height: 1.1; }
+
+  .ingredient-list li.fruit-note {
+    color: var(--berry);
+    font-weight: 400;
+  }
+
+  .ingredient-list li.fruit-note::before { content: '🍓'; font-size: 0.7rem; }
+
+  .ingredient-list li.tip-note {
+    color: var(--sun);
+    font-style: italic;
+  }
+
+  .ingredient-list li.tip-note::before { content: '↳'; color: var(--sun); }
+
+  .steps-list { list-style: none; counter-reset: steps; }
+
+  .steps-list li {
+    counter-increment: steps;
+    font-size: 0.78rem;
+    color: var(--mid);
+    padding: 0.45rem 0 0.45rem 1.8rem;
+    position: relative;
+    border-bottom: 1px solid rgba(58,125,68,0.1);
+    line-height: 1.55;
+  }
+
+  .steps-list li:last-child { border-bottom: none; }
+
+  .steps-list li::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--grass);
+    line-height: 1.3;
+    width: 1.3rem;
+    text-align: center;
+  }
+
+  .steps-list li.tip-step {
+    color: var(--sun);
+    font-style: italic;
+    border-bottom: none;
+    padding-left: 1.5rem;
+  }
+
+  .steps-list li.tip-step::before { content: '★'; color: var(--sun); font-size: 0.65rem; top: 0.6rem; font-style: normal; }
+
+  .nut-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .nut-pill {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.65rem;
+    color: var(--mid);
+  }
+
+  .nut-pill strong { color: var(--ink); font-weight: 500; }
+
+  /* ── DRINKS ── */
+  .drinks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .drink-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .drink-card:hover { border-color: var(--sky); box-shadow: 0 4px 16px rgba(46,134,171,0.1); transform: translateY(-1px); }
+  .drink-card.open { border-color: var(--sky); }
+
+  .drink-stripe { height: 3px; }
+  .ds-1 { background: linear-gradient(90deg, #E85D75, #F5A0B0); }
+  .ds-2 { background: linear-gradient(90deg, #F5A020, #F5CC70); }
+  .ds-3 { background: linear-gradient(90deg, #7B3F6E, #C06090); }
+  .ds-4 { background: linear-gradient(90deg, var(--grass), var(--grass-lt)); }
+  .ds-5 { background: linear-gradient(90deg, var(--sky), #6ABEDC); }
+  .ds-6 { background: linear-gradient(90deg, #E05030, #F08060); }
+
+  .drink-body { padding: 1.1rem 1.2rem 1rem; }
+
+  .drink-top { display: flex; align-items: flex-start; gap: 0.75rem; }
+  .drink-emoji { font-size: 1.6rem; flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
+
+  .drink-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .drink-sub {
+    font-size: 0.7rem;
+    color: var(--ghost);
+    font-style: italic;
+    margin-top: 0.2rem;
+  }
+
+  .drink-tags {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.7rem;
+    flex-wrap: wrap;
+  }
+
+  .dtag {
+    font-size: 0.57rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border-radius: 20px;
+    border: 1px solid currentColor;
+    font-weight: 500;
+  }
+
+  .dtag-kf   { color: var(--grass); }
+  .dtag-low  { color: var(--sun); }
+  .dtag-pair { color: var(--sky); }
+  .dtag-zc   { color: var(--ghost); }
+
+  .drink-expand {
+    display: none;
+    padding: 1rem 1.2rem 1.2rem;
+    border-top: 1px solid var(--rule);
+    background: #F5F8FF;
+  }
+
+  .drink-card.open .drink-expand { display: block; }
+
+  .drink-recipe-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sky);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .drink-ings { list-style: none; margin-bottom: 0.75rem; }
+
+  .drink-ings li {
+    font-size: 0.75rem;
+    color: var(--mid);
+    padding: 0.15rem 0 0.15rem 0.8rem;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .drink-ings li::before { content: '·'; position: absolute; left: 0; color: var(--sky); font-weight: 700; font-size: 1rem; line-height: 0.9; }
+
+  .drink-method {
+    font-size: 0.75rem;
+    color: var(--mid);
+    line-height: 1.65;
+    font-style: italic;
+  }
+
+  /* ── GROCERY ── */
+  .grocery-intro {
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.75;
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+
+  .store-section { margin-bottom: 2.5rem; }
+
+  .store-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .store-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .store-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    border: 1px solid var(--rule);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  .cat-label {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.55rem;
+    margin-top: 1.1rem;
+    padding-left: 0.2rem;
+  }
+
+  .grocery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 0.35rem;
+  }
+
+  .grocery-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+    border-radius: 3px;
+  }
+
+  .grocery-item:hover { background: var(--white); border-color: var(--grass-lt); }
+  .grocery-item.checked { opacity: 0.38; }
+  .grocery-item.checked .g-name { text-decoration: line-through; }
+
+  .g-check {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--rule);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem;
+    color: var(--grass);
+    transition: all 0.12s;
+    border-radius: 2px;
+  }
+
+  .grocery-item.checked .g-check { background: var(--grass); border-color: var(--grass); color: white; }
+
+  .g-info { flex: 1; }
+  .g-name { font-size: 0.82rem; font-weight: 400; line-height: 1.2; }
+  .g-qty  { font-size: 0.67rem; color: var(--ghost); margin-top: 0.1rem; }
+
+  .g-cat {
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-left: 2px solid var(--rule);
+    padding-left: 0.4rem;
+    white-space: nowrap;
+  }
+
+  .cat-produce { border-color: var(--grass-lt); color: var(--grass); }
+  .cat-fruit   { border-color: var(--sun); color: var(--sun); }
+  .cat-protein { border-color: #DAA520; color: #B8860B; }
+  .cat-pantry  { border-color: var(--mid); color: var(--mid); }
+  .cat-dairy   { border-color: #7AADE0; color: #4A7DB0; }
+  .cat-drinks  { border-color: var(--sky); color: var(--sky); }
+
+  .grocery-actions {
+    display: flex; gap: 0.75rem;
+    margin-bottom: 1.5rem; flex-wrap: wrap;
+  }
+
+  .gbtn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border: 1px solid var(--rule); background: transparent;
+    color: var(--mid); padding: 0.5rem 1rem;
+    cursor: pointer; transition: all 0.12s; border-radius: 3px;
+  }
+
+  .gbtn:hover { color: var(--ink); border-color: var(--mid); }
+
+  .progress-note {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    margin-top: 1rem;
+    font-style: italic;
+  }
+
+  /* ── PREP ── */
+  .prep-intro {
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.75;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    border-left: 3px solid var(--sun);
+    padding-left: 1rem;
+  }
+
+  .prep-block {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+
+  .prep-header {
+    background: var(--warm);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .prep-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .prep-sub {
+    font-size: 0.7rem;
+    color: var(--ghost);
+    font-style: italic;
+    margin-top: 0.1rem;
+  }
+
+  .prep-badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grass);
+    border: 1px solid var(--grass-lt);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .prep-body { padding: 1.1rem 1.25rem; }
+
+  .prep-step {
+    display: flex;
+    gap: 0.85rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+  }
+
+  .prep-step:last-child { border-bottom: none; }
+
+  .prep-icon { font-size: 1.1rem; flex-shrink: 0; line-height: 1.3; }
+
+  .prep-text { font-size: 0.78rem; color: var(--mid); line-height: 1.55; }
+  .prep-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ── TIPS ── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .tip-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.25rem;
+  }
+
+  .tip-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.65rem;
+  }
+
+  .tip-body {
+    font-size: 0.76rem;
+    color: var(--mid);
+    line-height: 1.7;
+  }
+
+  .tip-body ul { list-style: none; }
+
+  .tip-body li {
+    padding: 0.2rem 0 0.2rem 0.9rem;
+    position: relative;
+  }
+
+  .tip-body li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--grass-lt);
+    font-size: 0.62rem; top: 0.32rem;
+  }
+
+  @media (max-width: 600px) {
+    .panel-inner { padding: 1.5rem 1rem 3rem; }
+    header { padding: 2rem 1rem 1.75rem; }
+    header::after { display: none; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .tab { padding: 0.85rem 0.9rem; font-size: 0.68rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-kicker">Week Two · Chicken &amp; Vegetarian · Spring &amp; Summer Edition</div>
+    <h1>The Fresh<span class="line2">Week</span></h1>
+    <div class="header-desc">
+      Seven bright, fruit-forward salads built for warm weather — light enough to feel like summer, hearty enough to fuel your training. Chicken and vegetarian only, every ingredient from Macey's or Costco, nothing exotic.
+    </div>
+    <div class="header-badges">
+      <span class="badge fruit">🍓 Fruit-Forward</span>
+      <span class="badge veg">🌿 Vegetarian Options</span>
+      <span class="badge chick">🍗 Rotisserie-Friendly</span>
+      <span class="badge">Family of 3–4</span>
+      <span class="badge">One Shopping Trip</span>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('meals', this)">📋 Meal Plan</button>
+  <button class="tab" onclick="switchTab('drinks', this)">🥤 Drink Pairings</button>
+  <button class="tab" onclick="switchTab('grocery', this)">🛒 Grocery List</button>
+  <button class="tab" onclick="switchTab('prep', this)">🔪 Prep Guide</button>
+  <button class="tab" onclick="switchTab('tips', this)">💡 Tips</button>
+</div>
+
+<!-- ══════════ MEALS ══════════ -->
+<div class="panel active" id="panel-meals">
+  <div class="panel-inner">
+    <div class="week-grid">
+
+      <!-- MONDAY: Grilled Chicken & Strawberry Spinach -->
+      <div class="meal-card" onclick="toggleCard(this)">
+        <div class="stripe stripe-chicken"></div>
+        <div class="meal-card-top">
+          <div class="meal-day-row">
+            <div class="meal-day">Monday</div>
+            <span class="type-pill pill-chicken">Chicken · Fruit</span>
+          </div>
+          <div class="meal-name">Grilled Chicken &amp; Strawberry Spinach Salad</div>
+          <div class="meal-sub">Fresh strawberries, candied walnuts, feta, and a sweet balsamic glaze</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~480</span>Cal</div>
+            <div class="meta-item"><span>44g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-label">Ingredients (serves 4)</div>
+          <ul class="ingredient-list">
+            <li>2 lbs chicken breasts (grilled) or 1 rotisserie chicken, sliced</li>
+            <li>10 oz fresh baby spinach</li>
+            <li class="fruit-note">2 cups fresh strawberries, hulled and sliced</li>
+            <li>½ cup crumbled feta cheese</li>
+            <li>½ cup walnuts (toast in a dry pan 3–4 min, sprinkle with 1 tsp sugar while warm)</li>
+            <li>¼ red onion, very thinly sliced</li>
+            <li>3 tbsp balsamic vinegar, 2 tbsp olive oil, 1 tsp honey, pinch of salt</li>
+          </ul>
+          <div class="expand-label">How to Make</div>
+          <ol class="steps-list">
+            <li>If grilling: season chicken with salt, pepper, olive oil. Grill over medium-high 6–7 min per side. Rest 5 min, slice thin.</li>
+            <li>Toast walnuts in a dry skillet over medium heat, stirring constantly, 3–4 min until fragrant. Sprinkle with 1 tsp sugar in last 30 seconds — they'll get a light candy coating. Spread on parchment to cool.</li>
+            <li>Whisk balsamic, olive oil, honey, and salt into a simple glaze dressing.</li>
+            <li>Pile spinach in a large bowl. Add strawberries, red onion, feta, cooled walnuts.</li>
+            <li>Lay sliced chicken over the top. Drizzle the balsamic glaze. Serve immediately — spinach wilts fast once dressed.</li>
+            <li class="tip-step">The candied walnut trick takes 2 extra minutes and makes this feel like a restaurant salad.</li>
+          </ol>
+          <div class="expand-label">Nutrition Estimate</div>
+          <div class="nut-row">
+            <div class="nut-pill"><strong>~480</strong> cal</div>
+            <div class="nut-pill"><strong>44g</strong> protein</div>
+            <div class="nut-pill"><strong>24g</strong> fat</div>
+            <div class="nut-pill"><strong>26g</strong> carbs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TUESDAY: Mango Chicken Salad with Avocado -->
+      <div class="meal-card" onclick="toggleCard(this)">
+        <div class="stripe stripe-chicken"></div>
+        <div class="meal-card-top">
+          <div class="meal-day-row">
+            <div class="meal-day">Tuesday</div>
+            <span class="type-pill pill-chicken">Chicken · Fruit</span>
+          </div>
+          <div class="meal-name">Mango &amp; Avocado Chicken Salad</div>
+          <div class="meal-sub">Juicy mango, creamy avocado, and a honey-lime chili dressing — bright tropical flavor</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>20 min</span>Prep</div>
+            <div class="meta-item"><span>~510</span>Cal</div>
+            <div class="meta-item"><span>42g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-label">Ingredients (serves 4)</div>
+          <ul class="ingredient-list">
+            <li>Rotisserie chicken — pull breast and thigh, shred or chop</li>
+            <li>2 heads Romaine, chopped</li>
+            <li class="fruit-note">2 ripe mangoes, diced (or 1 bag frozen mango chunks, thawed and diced)</li>
+            <li>2 avocados, diced</li>
+            <li>1 cup cherry tomatoes, halved</li>
+            <li>¼ red onion, minced fine</li>
+            <li>Fresh cilantro, small handful (optional — skip if the family doesn't like it)</li>
+            <li>3 tbsp lime juice, 2 tbsp olive oil, 1 tsp honey, ¼ tsp chili powder, pinch of salt</li>
+          </ul>
+          <div class="expand-label">How to Make</div>
+          <ol class="steps-list">
+            <li>Whisk lime juice, olive oil, honey, chili powder, and salt into a dressing. Taste — should be bright, slightly sweet, little heat.</li>
+            <li>Dice mango and avocado. Toss avocado with a squeeze of lime to keep it from browning.</li>
+            <li>Arrange Romaine in bowls. Top with mango, avocado, tomatoes, red onion.</li>
+            <li>Add shredded rotisserie chicken on top.</li>
+            <li>Drizzle the honey-lime dressing over everything. Scatter cilantro if using.</li>
+            <li class="tip-step">Frozen mango from Costco works perfectly here and is way cheaper than fresh — just thaw it the night before.</li>
+          </ol>
+          <div class="expand-label">Nutrition Estimate</div>
+          <div class="nut-row">
+            <div class="nut-pill"><strong>~510</strong> cal</div>
+            <div class="nut-pill"><strong>42g</strong> protein</div>
+            <div class="nut-pill"><strong>28g</strong> fat</div>
+            <div class="nut-pill"><strong>34g</strong> carbs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEDNESDAY: Watermelon Feta Mint (Vegetarian) -->
+      <div class="meal-card" onclick="toggleCard(this)">
+        <div class="stripe stripe-veg"></div>
+        <div class="meal-card-top">
+          <div class="meal-day-row">
+            <div class="meal-day">Wednesday</div>
+            <span class="type-pill pill-veg">Vegetarian · Fruit</span>
+          </div>
+          <div class="meal-name">Watermelon, Feta &amp; Mint Salad</div>
+          <div class="meal-sub">The ultimate summer salad — sweet, salty, cooling, and shockingly filling with chickpeas</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>15 min</span>Prep</div>
+            <div class="meta-item"><span>~420</span>Cal</div>
+            <div class="meta-item"><span>18g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-label">Ingredients (serves 4)</div>
+          <ul class="ingredient-list">
+            <li>½ small seedless watermelon — cubed into bite-sized pieces (about 6 cups)</li>
+            <li class="fruit-note">This is a fruit-first salad — the watermelon IS the base</li>
+            <li>5 oz arugula or spring mix</li>
+            <li>1 cup crumbled feta cheese</li>
+            <li>1 can chickpeas, drained, rinsed, and patted dry</li>
+            <li>Small bunch fresh mint, leaves torn</li>
+            <li>¼ red onion, sliced paper thin</li>
+            <li>3 tbsp olive oil, 2 tbsp lime juice, 1 tsp honey, salt, black pepper</li>
+            <li>Optional: 1 English cucumber, sliced</li>
+          </ul>
+          <div class="expand-label">How to Make</div>
+          <ol class="steps-list">
+            <li>Pat chickpeas completely dry with paper towels. Toss with 1 tbsp olive oil and a pinch of salt. Roast at 400°F for 20–25 min until crispy — this is key, soft chickpeas are sad, crispy chickpeas are great.</li>
+            <li>While chickpeas roast, cube the watermelon. Refrigerate if you want it extra cold at serving.</li>
+            <li>Whisk olive oil, lime juice, honey, salt, and a crack of black pepper for dressing.</li>
+            <li>Lay arugula in a wide bowl or platter. Add watermelon, cucumber if using, red onion, and mint leaves.</li>
+            <li>Scatter crispy chickpeas and feta over the top. Drizzle dressing. Serve immediately.</li>
+            <li class="tip-step">Don't dress this ahead — watermelon releases a lot of juice fast. Build it and eat it.</li>
+          </ol>
+          <div class="expand-label">Nutrition Estimate</div>
+          <div class="nut-row">
+            <div class="nut-pill"><strong>~420</strong> cal</div>
+            <div class="nut-pill"><strong>18g</strong> protein</div>
+            <div class="nut-pill"><strong>20g</strong> fat</div>
+            <div class="nut-pill"><strong>48g</strong> carbs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THURSDAY: Grilled Peach & Chicken -->
+      <div class="meal-card" onclick="toggleCard(this)">
+        <div class="stripe stripe-grill"></div>
+        <div class="meal-card-top">
+          <div class="meal-day-row">
+            <div class="meal-day">Thursday</div>
+            <span class="type-pill pill-grill">Grill · Chicken · Fruit</span>
+          </div>
+          <div class="meal-name">Grilled Peach &amp; Chicken Salad</div>
+          <div class="meal-sub">Charcoal-grilled peaches get caramelized and smoky — serve over arugula with goat cheese</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>30 min</span>Prep</div>
+            <div class="meta-item"><span>~490</span>Cal</div>
+            <div class="meta-item"><span>42g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-label">Ingredients (serves 4)</div>
+          <ul class="ingredient-list">
+            <li>2 lbs chicken thighs (boneless, skinless) — thighs stay juicier on the grill</li>
+            <li class="fruit-note">4 ripe but firm peaches, halved and pitted (firm = they hold up on the grill)</li>
+            <li>5 oz arugula or spring mix</li>
+            <li>½ cup crumbled goat cheese (or feta if easier to find)</li>
+            <li>¼ cup pecans or sliced almonds</li>
+            <li>3 tbsp balsamic vinegar, 3 tbsp olive oil, 1 tsp honey, 1 tsp Dijon mustard, salt, pepper</li>
+          </ul>
+          <div class="expand-label">How to Make</div>
+          <ol class="steps-list">
+            <li>Light the charcoal. Season chicken thighs with salt, pepper, and olive oil. Grill 5–6 min per side over medium-high heat. Rest 5 min.</li>
+            <li>While chicken rests: brush peach halves with a little olive oil and honey. Grill cut-side down over direct heat 3–4 min until you get grill marks and the flesh softens slightly. Don't move them — let them caramelize. Flip 1 min. Remove and slice into wedges.</li>
+            <li>Whisk balsamic, olive oil, honey, Dijon, salt, and pepper into a vinaigrette.</li>
+            <li>Arrange arugula in bowls. Slice chicken thin and lay over the greens.</li>
+            <li>Add grilled peach wedges, scatter goat cheese and pecans. Drizzle balsamic vinaigrette generously.</li>
+            <li class="tip-step">Grilled fruit is a genuine revelation if you haven't done it. The smoke + caramelized sugar is something else.</li>
+          </ol>
+          <div class="expand-label">Nutrition Estimate</div>
+          <div class="nut-row">
+            <div class="nut-pill"><strong>~490</strong> cal</div>
+            <div class="nut-pill"><strong>42g</strong> protein</div>
+            <div class="nut-pill"><strong>26g</strong> fat</div>
+            <div class="nut-pill"><strong>28g</strong> carbs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRIDAY: BBQ Chicken Apple Crunch Salad -->
+      <div class="meal-card" onclick="toggleCard(this)">
+        <div class="stripe stripe-chicken"></div>
+        <div class="meal-card-top">
+          <div class="meal-day-row">
+            <div class="meal-day">Friday</div>
+            <span class="type-pill pill-chicken">Chicken · Fruit</span>
+          </div>
+          <div class="meal-name">Apple Crunch BBQ Chicken Salad</div>
+          <div class="meal-sub">Rotisserie in BBQ sauce, crisp apple, candied pecans, and creamy honey-mustard</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>15 min</span>Prep</div>
+            <div class="meta-item"><span>~530</span>Cal</div>
+            <div class="meta-item"><span>44g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-label">Ingredients (serves 4)</div>
+          <ul class="ingredient-list">
+            <li>Rotisserie chicken — shred generously, warm in a pan with ¼ cup BBQ sauce</li>
+            <li>2 heads Romaine, chopped</li>
+            <li class="fruit-note">2 large Honeycrisp or Fuji apples, cored and thinly sliced</li>
+            <li>½ cup shredded cheddar</li>
+            <li>½ cup pecans (toast with 1 tsp sugar same as the Monday walnut trick)</li>
+            <li>¼ red onion, sliced thin</li>
+            <li>Dressing: 3 tbsp honey mustard, 2 tbsp apple cider vinegar, 2 tbsp olive oil, salt</li>
+          </ul>
+          <div class="expand-label">How to Make</div>
+          <ol class="steps-list">
+            <li>Warm shredded rotisserie chicken in a skillet with BBQ sauce, 2–3 min on medium. It should be sticky and a little caramelized on the edges.</li>
+            <li>Toast pecans with a touch of sugar in a dry skillet — 3 min, watch carefully. Cool on parchment.</li>
+            <li>Whisk honey mustard, apple cider vinegar, olive oil, and salt into a dressing.</li>
+            <li>Slice apples thin just before serving — toss with a little lemon juice to prevent browning.</li>
+            <li>Assemble: Romaine, apples, cheddar, red onion, candied pecans, warm BBQ chicken on top. Drizzle honey-mustard dressing.</li>
+            <li class="tip-step">Apple + BBQ + honey-mustard is one of those combinations that shouldn't work as well as it does. It really works.</li>
+          </ol>
+          <div class="expand-label">Nutrition Estimate</div>
+          <div class="nut-row">
+            <div class="nut-pill"><strong>~530</strong> cal</div>
+            <div class="nut-pill"><strong>44g</strong> protein</div>
+            <div class="nut-pill"><strong>26g</strong> fat</div>
+            <div class="nut-pill"><strong>36g</strong> carbs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SATURDAY: Blueberry Chicken Quinoa -->
+      <div class="meal-card" onclick="toggleCard(this)">
+        <div class="stripe stripe-fruit"></div>
+        <div class="meal-card-top">
+          <div class="meal-day-row">
+            <div class="meal-day">Saturday</div>
+            <span class="type-pill pill-fruit">Chicken · Berry</span>
+          </div>
+          <div class="meal-name">Blueberry Chicken &amp; Quinoa Power Salad</div>
+          <div class="meal-sub">Antioxidant-loaded and genuinely filling — blueberries, quinoa, spinach, almonds</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~520</span>Cal</div>
+            <div class="meta-item"><span>46g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-label">Ingredients (serves 4)</div>
+          <ul class="ingredient-list">
+            <li>Rotisserie chicken — pull breast meat, slice</li>
+            <li>1 cup dry quinoa (makes ~3 cups cooked) — rinse before cooking</li>
+            <li>8 oz baby spinach</li>
+            <li class="fruit-note">1½ cups fresh or frozen blueberries (thaw if frozen)</li>
+            <li>½ cup sliced almonds</li>
+            <li>½ cup crumbled feta</li>
+            <li>Dressing: 3 tbsp lemon juice, 2 tbsp olive oil, 1 tbsp honey, 1 tsp Dijon mustard, salt, pepper</li>
+          </ul>
+          <div class="expand-label">How to Make</div>
+          <ol class="steps-list">
+            <li>Cook quinoa: 1 cup quinoa to 2 cups water, bring to boil, reduce to simmer, cover 15 min. Fluff with fork. Let cool to warm — not hot or it'll wilt the spinach.</li>
+            <li>Toast sliced almonds in a dry skillet 2–3 min, shaking constantly. They go from toasted to burnt fast.</li>
+            <li>Whisk lemon juice, olive oil, honey, Dijon, salt, and pepper into dressing.</li>
+            <li>In a large bowl, combine warm quinoa and spinach — the heat will lightly wilt the spinach just slightly, which is perfect.</li>
+            <li>Add blueberries, sliced chicken, feta, and toasted almonds. Drizzle dressing and toss gently.</li>
+            <li class="tip-step">This one holds up better than most dressed salads — quinoa keeps it from going soggy. Leftovers are good the next day.</li>
+          </ol>
+          <div class="expand-label">Nutrition Estimate</div>
+          <div class="nut-row">
+            <div class="nut-pill"><strong>~520</strong> cal</div>
+            <div class="nut-pill"><strong>46g</strong> protein</div>
+            <div class="nut-pill"><strong>22g</strong> fat</div>
+            <div class="nut-pill"><strong>38g</strong> carbs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUNDAY: Caprese Chicken Salad -->
+      <div class="meal-card" onclick="toggleCard(this)">
+        <div class="stripe stripe-veg"></div>
+        <div class="meal-card-top">
+          <div class="meal-day-row">
+            <div class="meal-day">Sunday</div>
+            <span class="type-pill pill-veg">Chicken · Simple</span>
+          </div>
+          <div class="meal-name">Big Caprese Chicken Salad</div>
+          <div class="meal-sub">Tomato, fresh mozzarella, basil, balsamic glaze — Italian simplicity at its best</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>15 min</span>Prep</div>
+            <div class="meta-item"><span>~470</span>Cal</div>
+            <div class="meta-item"><span>46g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-label">Ingredients (serves 4)</div>
+          <ul class="ingredient-list">
+            <li>Rotisserie chicken — pull and slice or shred whatever's left, or grab a fresh bird</li>
+            <li>5 oz spring mix or arugula</li>
+            <li>2 cups cherry tomatoes, halved (or 3 large tomatoes, sliced)</li>
+            <li>8 oz fresh mozzarella — the ball kind, sliced (find in the deli section at Macey's)</li>
+            <li>Large handful fresh basil leaves</li>
+            <li>3 tbsp good balsamic vinegar, 2 tbsp olive oil, salt, cracked black pepper</li>
+            <li>Optional: balsamic glaze (thick reduction — Macey's usually stocks it near the vinegar)</li>
+          </ul>
+          <div class="expand-label">How to Make</div>
+          <ol class="steps-list">
+            <li>Slice fresh mozzarella, halve tomatoes, tear basil leaves. These three are the heart of it — buy the best versions Macey's has.</li>
+            <li>Lay spring mix on a large serving platter — go wide, not deep. This is a platter salad.</li>
+            <li>Arrange tomatoes and mozzarella slices over the greens, alternating and overlapping.</li>
+            <li>Lay sliced rotisserie chicken over the top.</li>
+            <li>Scatter torn basil leaves. Drizzle olive oil, then balsamic. Hit with good salt and cracked pepper.</li>
+            <li>Drizzle balsamic glaze over everything at the end if you have it — it's the finishing touch that makes this look spectacular.</li>
+            <li class="tip-step">Sunday night, don't stress. This is the easiest salad of the week and possibly the most impressive-looking one.</li>
+          </ol>
+          <div class="expand-label">Nutrition Estimate</div>
+          <div class="nut-row">
+            <div class="nut-pill"><strong>~470</strong> cal</div>
+            <div class="nut-pill"><strong>46g</strong> protein</div>
+            <div class="nut-pill"><strong>26g</strong> fat</div>
+            <div class="nut-pill"><strong>14g</strong> carbs</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <p style="font-size:0.72rem;color:var(--ghost);font-style:italic;">Click any card to expand the full recipe and nutrition info.</p>
+  </div>
+</div>
+
+<!-- ══════════ DRINKS ══════════ -->
+<div class="panel" id="panel-drinks">
+  <div class="panel-inner">
+    <div class="section-heading">Summer Drink Lineup</div>
+    <div class="section-sub">All kid-friendly, low-calorie, and built around the same fruit you're already buying for the salads. Zero waste, maximum fun.</div>
+
+    <div class="drinks-grid">
+
+      <div class="drink-card" onclick="toggleCard(this)">
+        <div class="drink-stripe ds-1"></div>
+        <div class="drink-body">
+          <div class="drink-top">
+            <div class="drink-emoji">🍓</div>
+            <div>
+              <div class="drink-name">Strawberry Lemonade Sparkler</div>
+              <div class="drink-sub">Pairs with Monday's strawberry spinach salad perfectly</div>
+            </div>
+          </div>
+          <div class="drink-tags">
+            <span class="dtag dtag-kf">Kid Favorite</span>
+            <span class="dtag dtag-low">~55 cal</span>
+            <span class="dtag dtag-pair">Best with: Mon, Fri</span>
+          </div>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (serves 4)</div>
+          <ul class="drink-ings">
+            <li>1 cup fresh strawberries, blended smooth</li>
+            <li>½ cup fresh lemon juice (~4 lemons)</li>
+            <li>2 tbsp honey</li>
+            <li>2 cups sparkling water</li>
+            <li>1 cup cold water</li>
+            <li>Ice, fresh strawberry slices to garnish</li>
+          </ul>
+          <div class="drink-method">Blend strawberries with a splash of water until completely smooth. Strain through a fine mesh strainer. Combine with lemon juice, honey, and cold water. Stir well. Pour over ice, top with a splash of sparkling water right before serving. The bubbles make it feel special. Kids will ask for this every night once you make it once.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleCard(this)">
+        <div class="drink-stripe ds-2"></div>
+        <div class="drink-body">
+          <div class="drink-top">
+            <div class="drink-emoji">🥭</div>
+            <div>
+              <div class="drink-name">Mango Lime Agua Fresca</div>
+              <div class="drink-sub">Bright, tropical, and zero-stress to make</div>
+            </div>
+          </div>
+          <div class="drink-tags">
+            <span class="dtag dtag-kf">Kid Friendly</span>
+            <span class="dtag dtag-low">~40 cal</span>
+            <span class="dtag dtag-pair">Best with: Tue, Wed</span>
+          </div>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (serves 4)</div>
+          <ul class="drink-ings">
+            <li>2 cups frozen mango chunks (thawed) — same bag as Tuesday's salad</li>
+            <li>Juice of 2 limes</li>
+            <li>1 tbsp honey</li>
+            <li>4 cups cold water</li>
+            <li>Pinch of salt</li>
+            <li>Ice, lime wheels to serve</li>
+          </ul>
+          <div class="drink-method">Blend thawed mango with 1 cup water until silky smooth. Strain into a pitcher. Add remaining water, lime juice, honey, and a pinch of salt. Stir well and refrigerate. The pinch of salt is what makes it taste like restaurant agua fresca rather than watered-down mango juice. Uses the exact same frozen mango as Tuesday's salad — zero extra shopping.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleCard(this)">
+        <div class="drink-stripe ds-3"></div>
+        <div class="drink-body">
+          <div class="drink-top">
+            <div class="drink-emoji">🫐</div>
+            <div>
+              <div class="drink-name">Blueberry Mint Lemonade</div>
+              <div class="drink-sub">Deep purple, gorgeous color, antioxidant powerhouse</div>
+            </div>
+          </div>
+          <div class="drink-tags">
+            <span class="dtag dtag-kf">Kid Favorite</span>
+            <span class="dtag dtag-low">~50 cal</span>
+            <span class="dtag dtag-pair">Best with: Sat, Sun</span>
+          </div>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (serves 4)</div>
+          <ul class="drink-ings">
+            <li>1 cup blueberries — same bag as Saturday's salad</li>
+            <li>½ cup fresh lemon juice</li>
+            <li>2 tbsp honey</li>
+            <li>4 cups cold water</li>
+            <li>6–8 fresh mint leaves</li>
+            <li>Ice</li>
+          </ul>
+          <div class="drink-method">Muddle (smash) blueberries in the bottom of a pitcher with the mint leaves and honey until the blueberries release their juice. Add lemon juice and cold water. Stir well and taste — add more honey if you want it sweeter. Strain out the blueberry skins if you want it smooth, or leave them for a more rustic look. The color is a deep violet purple that kids absolutely love. Make it in a clear pitcher so everyone can see it.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleCard(this)">
+        <div class="drink-stripe ds-4"></div>
+        <div class="drink-body">
+          <div class="drink-top">
+            <div class="drink-emoji">🍵</div>
+            <div>
+              <div class="drink-name">Cold Brew Mint Green Tea</div>
+              <div class="drink-sub">Make Sunday night — drinks itself all week from the fridge</div>
+            </div>
+          </div>
+          <div class="drink-tags">
+            <span class="dtag dtag-zc">~0 cal</span>
+            <span class="dtag dtag-pair">Pairs with everything</span>
+            <span class="dtag dtag-kf">Family Staple</span>
+          </div>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (makes 1 pitcher)</div>
+          <ul class="drink-ings">
+            <li>5 green tea bags</li>
+            <li>1 liter cold water (not hot — cold brew method)</li>
+            <li>Small bunch fresh mint</li>
+            <li>Optional: 1–2 tbsp honey to sweeten</li>
+            <li>Lemon slices to serve</li>
+          </ul>
+          <div class="drink-method">Drop tea bags and mint into a pitcher of cold water. Refrigerate overnight — minimum 6 hours, ideally 8–12. Remove bags and mint. Sweeten with honey if desired. That's it. Cold-brewing green tea produces a much smoother, less bitter flavor than hot-brewing. It's so easy that once you start doing this you'll keep a pitcher going all summer. Zero calories if you skip the honey, barely any if you don't.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleCard(this)">
+        <div class="drink-stripe ds-5"></div>
+        <div class="drink-body">
+          <div class="drink-top">
+            <div class="drink-emoji">🍑</div>
+            <div>
+              <div class="drink-name">Peach Ginger Lemonade</div>
+              <div class="drink-sub">Warm weather in a glass — pairs beautifully with the grilled peach salad</div>
+            </div>
+          </div>
+          <div class="drink-tags">
+            <span class="dtag dtag-kf">Kid Friendly</span>
+            <span class="dtag dtag-low">~45 cal</span>
+            <span class="dtag dtag-pair">Best with: Thu, Fri</span>
+          </div>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (serves 4)</div>
+          <ul class="drink-ings">
+            <li>2 ripe peaches, chopped (or ½ cup peach jam as a shortcut)</li>
+            <li>½ cup lemon juice</li>
+            <li>1 tsp fresh ginger, grated (or ¼ tsp ground ginger)</li>
+            <li>2 tbsp honey</li>
+            <li>4 cups cold water</li>
+            <li>Ice, peach slices to garnish</li>
+          </ul>
+          <div class="drink-method">If using fresh peaches: blend with a splash of water until smooth, strain. Combine with lemon juice, grated ginger, honey, and cold water. Taste and adjust — the ginger should be a background note, not the star. If using peach jam: whisk 2–3 tbsp jam directly into the lemon water with ginger and honey — easier and works just as well. Serve over ice.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleCard(this)">
+        <div class="drink-stripe ds-6"></div>
+        <div class="drink-body">
+          <div class="drink-top">
+            <div class="drink-emoji">🍉</div>
+            <div>
+              <div class="drink-name">Watermelon Lime Cooler</div>
+              <div class="drink-sub">Made from Wednesday's watermelon — literally no extra shopping</div>
+            </div>
+          </div>
+          <div class="drink-tags">
+            <span class="dtag dtag-kf">Kid Absolute Favorite</span>
+            <span class="dtag dtag-low">~35 cal</span>
+            <span class="dtag dtag-pair">Best with: Wed, Thu</span>
+          </div>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (serves 4)</div>
+          <ul class="drink-ings">
+            <li>4 cups watermelon chunks — cubed from Wednesday's salad watermelon</li>
+            <li>Juice of 2 limes</li>
+            <li>Pinch of salt</li>
+            <li>1 cup sparkling water (optional but great)</li>
+            <li>Ice, lime wheels, fresh mint</li>
+          </ul>
+          <div class="drink-method">Blend watermelon until smooth — it blends almost instantly. Strain through a fine strainer to remove pulp. Add lime juice and a pinch of salt. Serve over ice with a splash of sparkling water if you want it lighter and more refreshing. This is the simplest drink on the list and consistently the biggest hit with kids. Buy a slightly larger watermelon Wednesday and save a quarter of it specifically for this drink.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="background:var(--warm);border:1px solid var(--rule);border-radius:4px;padding:1.25rem;font-size:0.78rem;color:var(--mid);line-height:1.75;">
+      <strong style="color:var(--ink);font-family:'Fraunces',serif;font-size:1rem;">The zero-waste drink strategy:</strong> Every drink this week is built from fruit you're already buying for the salads. Blueberries (Sat salad → Blueberry lemonade), mango (Tue salad → Agua fresca), watermelon (Wed salad → Watermelon cooler), peaches (Thu salad → Peach lemonade), strawberries (Mon salad → Sparkler). Buy slightly more of each fruit than the salad needs and you have drinks covered for the whole week. One list. One trip.
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ GROCERY ══════════ -->
+<div class="panel" id="panel-grocery">
+  <div class="panel-inner">
+    <p class="grocery-intro">All chicken this week comes from rotisserie birds at Costco — 2 should cover the week. The big wins are the fruit section and the fresh herbs. Stock up on the canned/pantry items and most of them carry into future weeks.</p>
+
+    <div class="grocery-actions">
+      <button class="gbtn" onclick="clearAll()">Clear All</button>
+      <button class="gbtn" onclick="checkAll()">Check All</button>
+    </div>
+
+    <!-- COSTCO -->
+    <div class="store-section">
+      <div class="store-header">
+        <div class="store-name">Costco <span style="font-style:italic;color:var(--ghost);font-weight:300;">— Spanish Fork</span></div>
+        <div class="store-tag">Bulk + rotisserie</div>
+      </div>
+
+      <span class="cat-label" style="color:#B8860B;">Protein</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Rotisserie Chickens</div><div class="g-qty">2 birds — covers Tue, Fri, Sat, Sun</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Chicken Thighs, boneless skinless</div><div class="g-qty">~2 lbs — Thu grilled peach salad</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Chicken Breasts, boneless skinless</div><div class="g-qty">~2 lbs — Mon strawberry spinach</div></div><div class="g-cat cat-protein">Protein</div></div>
+      </div>
+
+      <span class="cat-label" style="color:var(--sun);">Fruit</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Frozen Mango Chunks</div><div class="g-qty">Large bag — Tue salad + agua fresca</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Frozen Blueberries</div><div class="g-qty">Large bag — Sat salad + lemonade</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Baby Spinach</div><div class="g-qty">Large bag — Mon + Sat salads</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Romaine Lettuce Hearts</div><div class="g-qty">6-pack</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Cherry Tomatoes</div><div class="g-qty">Large container</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Olive Oil</div><div class="g-qty">Large bottle if running low</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sparkling Water (LaCroix/Bubly)</div><div class="g-qty">Case — drinks all week</div></div><div class="g-cat cat-drinks">Drinks</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sliced Almonds</div><div class="g-qty">Large bag — Sat salad</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+      </div>
+    </div>
+
+    <!-- MACEY'S -->
+    <div class="store-section">
+      <div class="store-header">
+        <div class="store-name">Macey's <span style="font-style:italic;color:var(--ghost);font-weight:300;">— Santaquin</span></div>
+        <div class="store-tag">Produce, dairy, pantry</div>
+      </div>
+
+      <span class="cat-label" style="color:var(--sun);">Fresh Fruit</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Strawberries</div><div class="g-qty">2 pints — Mon salad + Sparkler drink</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Watermelon (seedless)</div><div class="g-qty">1 small — Wed salad + Cooler drink</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Peaches</div><div class="g-qty">6–8 firm but ripe — Thu salad + Peach lemonade</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Apples (Honeycrisp or Fuji)</div><div class="g-qty">4 large — Fri salad</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Mangoes (fresh)</div><div class="g-qty">2 ripe — Tue salad (supplement frozen)</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Avocados</div><div class="g-qty">4 — Tue salad, buy firm</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Lemons</div><div class="g-qty">8 — salad dressings + drinks</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Limes</div><div class="g-qty">6 — dressings + drinks</div></div><div class="g-cat cat-fruit">Fruit</div></div>
+      </div>
+
+      <span class="cat-label" style="color:var(--grass);">Produce</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Arugula or Spring Mix</div><div class="g-qty">2 bags (5 oz each) — Wed, Thu, Sun</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Red Onion</div><div class="g-qty">2 medium</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">English Cucumber</div><div class="g-qty">1–2 (Wed salad option)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Mint</div><div class="g-qty">2 bunches — Wed salad + drinks</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Basil</div><div class="g-qty">1 bunch — Sun Caprese</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Cilantro</div><div class="g-qty">1 bunch — Tue salad (optional)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Ginger</div><div class="g-qty">Small knob — Peach lemonade</div></div><div class="g-cat cat-produce">Produce</div></div>
+      </div>
+
+      <span class="cat-label" style="color:#4A7DB0;">Dairy / Cheese</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Crumbled Feta Cheese</div><div class="g-qty">2 containers — Mon, Wed, Sat</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Mozzarella Ball</div><div class="g-qty">8 oz — Sun Caprese</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Goat Cheese (crumbled)</div><div class="g-qty">1 container — Thu grilled peach</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Shredded Cheddar</div><div class="g-qty">1 bag — Fri apple crunch</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+      </div>
+
+      <span class="cat-label" style="color:var(--mid);">Pantry</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Chickpeas (canned)</div><div class="g-qty">2 cans — Wed watermelon salad</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Quinoa</div><div class="g-qty">1 bag — Sat blueberry power salad</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Walnuts</div><div class="g-qty">1 bag — Mon candied walnuts</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Pecans</div><div class="g-qty">1 bag — Thu + Fri candied pecans</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Balsamic Vinegar</div><div class="g-qty">1 bottle — Mon, Thu, Sun</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Balsamic Glaze</div><div class="g-qty">1 bottle — Sun Caprese finishing touch</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Honey Mustard</div><div class="g-qty">1 jar — Fri apple salad dressing</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Apple Cider Vinegar</div><div class="g-qty">1 bottle — Fri dressing</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Dijon Mustard</div><div class="g-qty">1 jar — Thu + Sat dressings</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">BBQ Sauce</div><div class="g-qty">1 bottle — Fri chicken</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Honey</div><div class="g-qty">Large bottle — dressings + all drinks</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Green Tea Bags</div><div class="g-qty">1 box — cold brew all week</div></div><div class="g-cat cat-drinks">Drinks</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Chili Powder</div><div class="g-qty">1 jar — Tue mango dressing</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+      </div>
+    </div>
+
+    <p class="progress-note" id="grocery-progress">Click items to check them off as you shop.</p>
+  </div>
+</div>
+
+<!-- ══════════ PREP ══════════ -->
+<div class="panel" id="panel-prep">
+  <div class="panel-inner">
+    <p class="prep-intro">
+      The fruit-forward nature of this week actually makes prep faster — most of the "work" is washing and slicing, not cooking. Sunday prep sets you up for the full week in about 30 minutes flat.
+    </p>
+
+    <div class="prep-block">
+      <div class="prep-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-title">Sunday Evening Batch Prep</div>
+          <div class="prep-sub">30 minutes that makes the whole week feel effortless</div>
+        </div>
+        <div class="prep-badge">~30 min</div>
+      </div>
+      <div class="prep-body">
+        <div class="prep-step"><div class="prep-icon">🥬</div><div class="prep-text"><strong>Wash and dry all greens.</strong> Spinach bags (Mon + Sat), arugula/spring mix bags (Wed, Thu, Sun), and Romaine hearts (Tue, Fri). Dry completely, store each in a zip-lock with a paper towel. This is the single most important prep step.</div></div>
+        <div class="prep-step"><div class="prep-icon">🫐</div><div class="prep-text"><strong>Set frozen mango and blueberries to thaw in the fridge.</strong> Put them in bowls Sunday night so they're ready Tuesday and Saturday. Frozen fruit is perfectly fine and often better quality than off-season fresh.</div></div>
+        <div class="prep-step"><div class="prep-icon">🫙</div><div class="prep-text"><strong>Mix the dressings that keep.</strong> Make Monday's balsamic glaze dressing, Thursday's balsamic-Dijon vinaigrette, and Saturday's lemon-honey dressing now. Store in small jars in the fridge. They last 1–2 weeks. Shake before using.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍵</div><div class="prep-text"><strong>Start the cold brew green tea.</strong> Drop 5 green tea bags and a handful of mint into a pitcher of cold water. Refrigerate overnight. By Monday evening you have a pitcher of cold brew tea ready for the week.</div></div>
+        <div class="prep-step"><div class="prep-icon">🌾</div><div class="prep-text"><strong>Cook quinoa for Saturday.</strong> Rinse 1 cup quinoa, cook in 2 cups water — boil, cover, simmer 15 min. Cool completely, store in the fridge. Cooked quinoa keeps 5 days refrigerated and Saturday's prep time drops to under 10 min.</div></div>
+        <div class="prep-step"><div class="prep-icon">🥜</div><div class="prep-text"><strong>Candy the nuts for the week.</strong> Toast walnuts (Mon) and pecans (Thu, Fri) in the same pan with a sprinkle of sugar. Do them all at once Sunday so you're not doing the same skillet trick three nights in a row. Store cooled nuts in a small jar — they keep at room temp all week.</div></div>
+      </div>
+    </div>
+
+    <div class="prep-block">
+      <div class="prep-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-title">Fruit Handling Guide</div>
+          <div class="prep-sub">How to buy, ripen, and time each fruit right</div>
+        </div>
+        <div class="prep-badge">Reference</div>
+      </div>
+      <div class="prep-body">
+        <div class="prep-step"><div class="prep-icon">🍓</div><div class="prep-text"><strong>Strawberries (Monday):</strong> Buy the day of or day before. They go fast. Don't wash until you're ready to use them — moisture accelerates mold. Hull and slice right before serving.</div></div>
+        <div class="prep-step"><div class="prep-icon">🥭</div><div class="prep-text"><strong>Mangoes and avocados (Tuesday):</strong> Buy avocados firm Sunday — they'll be perfectly ripe by Tuesday. Buy mangoes slightly soft. If using frozen mango, thaw in the fridge overnight Monday.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍉</div><div class="prep-text"><strong>Watermelon (Wednesday):</strong> Buy the smallest seedless you can find — you don't need a whole giant melon. Cube what you need for the salad, save the rest for the Watermelon Lime Cooler. Refrigerate cut watermelon in a sealed container.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍑</div><div class="prep-text"><strong>Peaches (Thursday):</strong> Buy firm but fragrant. Leave them on the counter — don't refrigerate unripe peaches. You want them firm enough to hold grill marks but ripe enough to caramelize. Smell them at Macey's — a good peach smells like a peach.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍎</div><div class="prep-text"><strong>Apples (Friday):</strong> Honeycrisp or Fuji — buy whichever looks best. Slice right before serving and toss with a little lemon juice to prevent browning. These keep easily in the fridge all week — no timing pressure.</div></div>
+        <div class="prep-step"><div class="prep-icon">🫐</div><div class="prep-text"><strong>Blueberries (Saturday):</strong> If using frozen, pull them out Saturday morning to thaw. If fresh, rinse gently right before using. Fresh or frozen both work perfectly in this salad — the quinoa is the star anyway.</div></div>
+      </div>
+    </div>
+
+    <div class="prep-block">
+      <div class="prep-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-title">Thursday Grill Night Notes</div>
+          <div class="prep-sub">Getting grilled fruit right the first time</div>
+        </div>
+        <div class="prep-badge">Grill Tips</div>
+      </div>
+      <div class="prep-body">
+        <div class="prep-step"><div class="prep-icon">🔥</div><div class="prep-text"><strong>Light the charcoal 25 min before dinner.</strong> You want a medium-hot fire for this one — slightly lower than steak temp. Peaches burn fast on super-high heat.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍑</div><div class="prep-text"><strong>Brush peaches with olive oil and honey right before grilling.</strong> Cut side down on the grill, no peeking for 3–4 minutes. You need the grill mark contact to caramelize the sugar. They'll release naturally when they're ready.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍗</div><div class="prep-text"><strong>Cook chicken thighs first, then peaches while chicken rests.</strong> Thighs need 5–6 min per side. Slide them to indirect heat while you grill the peaches. Everything hits the table at the same time with no reheating needed.</div></div>
+        <div class="prep-step"><div class="prep-icon">⚡</div><div class="prep-text"><strong>Don't overcomplicate it.</strong> Grilled fruit sounds fancy but it's genuinely one of the easiest things you can do on a grill. If a peach half falls apart, just slice it and put it on anyway — it'll still taste incredible.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ TIPS ══════════ -->
+<div class="panel" id="panel-tips">
+  <div class="panel-inner">
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-title">🍓 Working with Fresh Fruit in Salads</div>
+        <div class="tip-body"><ul>
+          <li>Always add fruit right before serving — it releases juice fast once cut.</li>
+          <li>Toss sliced apples, avocado, and peaches with a squeeze of lemon to prevent browning.</li>
+          <li>Slightly underripe fruit holds up better in salads than very soft fruit — it won't turn mushy.</li>
+          <li>Frozen fruit (mango, blueberries) is often superior to off-season fresh — picked at peak ripeness and frozen immediately.</li>
+          <li>Wash strawberries right before using, not before storing — moisture speeds up mold.</li>
+          <li>Watermelon: buy firm, cube cold, serve immediately. Don't let it sit in the bowl.</li>
+        </ul></div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">💪 Nutrition Notes for Training</div>
+        <div class="tip-body"><ul>
+          <li>The fruit carbs in these salads are ideal for post-workout — fast-digesting natural sugars replenish glycogen quickly.</li>
+          <li>Wednesday's vegetarian watermelon salad is lower in protein (18g) — add a can of chickpeas and a couple of hard-boiled eggs if you need more.</li>
+          <li>Saturday's blueberry quinoa is your highest-antioxidant meal of the week — great timing if Saturday is a heavy training day.</li>
+          <li>Rotisserie chicken thigh meat has more fat and flavor than breast — both are excellent protein sources.</li>
+          <li>The honey in dressings is a feature, not a flaw — small amounts of natural sugar help fat-soluble vitamins absorb from the salad greens.</li>
+        </ul></div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🛒 Eureka Shopping Notes</div>
+        <div class="tip-body"><ul>
+          <li>Summer produce quality at Macey's is genuinely good — check the strawberries and peaches in person before buying.</li>
+          <li>Costco's frozen fruit section is excellent and a fraction of the cost of fresh off-season fruit.</li>
+          <li>Watermelon: one small seedless does the job — you don't need a full-size one for a family of 4.</li>
+          <li>Fresh mozzarella is usually in the deli section at Macey's, not with regular cheese — ask if you can't find it.</li>
+          <li>Goat cheese: check both the regular cheese section and the deli. If Macey's is out, feta makes a perfect substitute in every recipe.</li>
+          <li>Quinoa: look in the grain/rice aisle. It cooks exactly like rice — don't let it intimidate you.</li>
+        </ul></div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🔄 Easy Swaps</div>
+        <div class="tip-body"><ul>
+          <li>No goat cheese? Feta works in every single recipe this week.</li>
+          <li>Kids don't like arugula (too peppery)? Swap for spring mix or Romaine in any recipe.</li>
+          <li>Cilantro skeptics: just leave it out — the Tuesday mango salad is great either way.</li>
+          <li>Quinoa takes 15 min — if you're short on time Saturday, skip it and double the spinach. Still excellent.</li>
+          <li>No peaches available? Nectarines grill identically and taste almost the same.</li>
+          <li>Wednesday vegetarian not filling enough? Add grilled halloumi cheese or a pan of crispy chickpeas to boost it significantly.</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleCard(card) { card.classList.toggle('open'); }
+
+  function toggleGrocery(item) {
+    item.classList.toggle('checked');
+    const total = document.querySelectorAll('.grocery-item').length;
+    const checked = document.querySelectorAll('.grocery-item.checked').length;
+    const el = document.getElementById('grocery-progress');
+    if (checked === 0) el.textContent = 'Click items to check them off as you shop.';
+    else if (checked === total) el.textContent = "✓ Cart is packed — you're ready for the week.";
+    else el.textContent = `${checked} of ${total} items checked.`;
+  }
+
+  function clearAll() {
+    document.querySelectorAll('.grocery-item').forEach(i => i.classList.remove('checked'));
+    document.getElementById('grocery-progress').textContent = 'Click items to check them off as you shop.';
+  }
+
+  function checkAll() {
+    document.querySelectorAll('.grocery-item').forEach(i => i.classList.add('checked'));
+    const t = document.querySelectorAll('.grocery-item').length;
+    document.getElementById('grocery-progress').textContent = `✓ ${t} of ${t} items checked.`;
+  }
+
+  function togglePrep(header) {
+    const body = header.nextElementSibling;
+    body.style.display = body.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>

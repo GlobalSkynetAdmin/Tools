@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starting Strength // Rippetoe</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --iron: #C0C0C0;
+    --steel: #8A8A8A;
+    --chalk: #F0EDE8;
+    --plate: #1C1C1C;
+    --bar: #111111;
+    --rust: #B5451B;
+    --yellow: #D4A017;
+    --groove: #2A2A2A;
+    --mid: #333;
+    --dim: #666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bar);
+    color: var(--chalk);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Diagonal stripe texture background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 12px,
+      rgba(255,255,255,0.012) 12px,
+      rgba(255,255,255,0.012) 13px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  * { position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    background: var(--plate);
+    border-bottom: 4px solid var(--rust);
+    padding: 2.5rem 2rem 2rem;
+    overflow: hidden;
+  }
+
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .program-stamp {
+    display: inline-block;
+    border: 2px solid var(--rust);
+    color: var(--rust);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    margin-bottom: 1rem;
+    transform: rotate(-0.5deg);
+  }
+
+  h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--chalk);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--rust);
+  }
+
+  .header-byline {
+    font-size: 0.75rem;
+    color: var(--steel);
+    letter-spacing: 0.1em;
+    margin-top: 0.75rem;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .hstat {
+    background: var(--groove);
+    border: 1px solid var(--mid);
+    padding: 0.4rem 0.9rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--steel);
+  }
+
+  .hstat strong { color: var(--iron); }
+
+  .big-ss {
+    position: absolute;
+    right: -1rem;
+    bottom: -2rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 16rem;
+    font-weight: 700;
+    color: var(--rust);
+    opacity: 0.05;
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+
+  /* WEEK SWITCHER */
+  .week-bar {
+    background: var(--plate);
+    border-bottom: 2px solid var(--groove);
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .week-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    padding: 0 1.25rem;
+    white-space: nowrap;
+    border-right: 1px solid var(--groove);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+  }
+
+  .week-btn {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--groove);
+    color: var(--dim);
+    padding: 0.85rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .week-btn:hover { color: var(--iron); background: var(--groove); }
+  .week-btn.active { color: var(--chalk); background: var(--groove); border-bottom: 3px solid var(--rust); }
+
+  /* MAIN */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* Alternating schedule row */
+  .schedule-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .sched-cell {
+    background: var(--plate);
+    border: 1px solid var(--groove);
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+
+  .sched-day {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+
+  .sched-workout {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .sched-cell.A .sched-workout { color: var(--rust); }
+  .sched-cell.B .sched-workout { color: var(--yellow); }
+
+  /* Section headers */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    margin-top: 1.75rem;
+  }
+
+  .section-head:first-child { margin-top: 0; }
+
+  .section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dim);
+    white-space: nowrap;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--groove);
+  }
+
+  /* Workout panel toggle */
+  .workout-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .wtab {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 1.5rem;
+    background: var(--groove);
+    border: 1px solid var(--mid);
+    color: var(--steel);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .wtab:hover { color: var(--chalk); }
+  .wtab.A.active { background: var(--rust); border-color: var(--rust); color: var(--chalk); }
+  .wtab.B.active { background: var(--yellow); border-color: var(--yellow); color: var(--bar); }
+
+  /* Lift card */
+  .lift-card {
+    background: var(--plate);
+    border: 1px solid var(--groove);
+    border-left: 4px solid var(--groove);
+    margin-bottom: 0.6rem;
+    padding: 1rem 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.15s;
+    cursor: default;
+  }
+
+  .lift-card.A-card { border-left-color: var(--rust); }
+  .lift-card.B-card { border-left-color: var(--yellow); }
+  .lift-card.accessory-card { border-left-color: var(--steel); }
+
+  .lift-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--chalk);
+  }
+
+  .lift-sub {
+    font-size: 0.72rem;
+    color: var(--dim);
+    margin-top: 0.2rem;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .lift-sets {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--iron);
+    text-align: right;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+
+  /* Weight input */
+  .weight-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+  }
+
+  .weight-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .weight-input {
+    background: var(--groove);
+    border: 1px solid var(--mid);
+    color: var(--chalk);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    width: 80px;
+    text-align: right;
+    padding: 0.35rem 0.5rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .weight-input:focus { border-color: var(--rust); }
+  .weight-input::placeholder { color: var(--mid); font-size: 0.85rem; }
+
+  .weight-unit {
+    font-size: 0.65rem;
+    color: var(--dim);
+    text-align: right;
+  }
+
+  /* Set tracker dots */
+  .set-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 0.85rem;
+    grid-column: 1 / -1;
+  }
+
+  .set-dot {
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--mid);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    color: var(--dim);
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .set-dot:hover { border-color: var(--steel); color: var(--iron); }
+  .set-dot.done { background: var(--rust); border-color: var(--rust); color: var(--chalk); }
+  .lift-card.B-card .set-dot.done { background: var(--yellow); border-color: var(--yellow); color: var(--bar); }
+  .lift-card.accessory-card .set-dot.done { background: var(--steel); border-color: var(--steel); color: var(--bar); }
+
+  .set-dot-label { font-size: 0.6rem; letter-spacing: 0.05em; }
+
+  /* Progression indicator */
+  .prog-row {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--dim);
+  }
+
+  .prog-check {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--mid);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .prog-check.done { background: var(--rust); border-color: var(--rust); color: white; }
+  .lift-card.B-card .prog-check.done { background: var(--yellow); border-color: var(--yellow); color: var(--bar); }
+
+  /* Timer */
+  .rest-timer {
+    background: var(--plate);
+    border: 1px solid var(--groove);
+    border-top: 3px solid var(--rust);
+    padding: 1.5rem;
+    margin-bottom: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .rest-timer-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .rest-timer-display {
+    font-family: 'Oswald', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    color: var(--rust);
+    transition: color 0.3s;
+  }
+
+  .rest-timer-display.warning { color: var(--yellow); }
+  .rest-timer-display.done-color { color: var(--steel); }
+
+  .timer-btns {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tbtn {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--mid);
+    background: var(--groove);
+    color: var(--steel);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tbtn:hover { color: var(--chalk); border-color: var(--steel); }
+  .tbtn.primary { background: var(--rust); border-color: var(--rust); color: var(--chalk); }
+  .tbtn.primary:hover { background: #c94e1f; }
+
+  .preset-btns { display: flex; gap: 0.4rem; }
+  .preset-btns .tbtn { font-size: 0.7rem; padding: 0.4rem 0.7rem; }
+
+  /* Execution rules */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .rule-card {
+    background: var(--plate);
+    border: 1px solid var(--groove);
+    padding: 0.9rem 1rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .rule-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--groove);
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: -0.1rem;
+  }
+
+  .rule-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--iron);
+    margin-bottom: 0.25rem;
+  }
+
+  .rule-text {
+    font-size: 0.72rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  /* Nutrition callout */
+  .nutrition-box {
+    background: var(--plate);
+    border: 1px solid var(--yellow);
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nutrition-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .nutrition-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+  }
+
+  .nutrition-body {
+    font-size: 0.75rem;
+    color: var(--steel);
+    line-height: 1.6;
+  }
+
+  .nutrition-body strong { color: var(--chalk); }
+
+  /* Friday note */
+  .friday-note {
+    background: var(--groove);
+    border-left: 3px solid var(--steel);
+    padding: 0.75rem 1rem;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .friday-note strong { color: var(--iron); font-family: 'Oswald', sans-serif; letter-spacing: 0.05em; }
+
+  /* Week panel */
+  .week-panel { display: none; animation: fadeIn 0.25s ease; }
+  .week-panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 540px) {
+    .rules-grid { grid-template-columns: 1fr; }
+    .main { padding: 1.25rem 1rem; }
+    h1 { font-size: 2.8rem; }
+    .big-ss { display: none; }
+    .rest-timer { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="program-stamp">Mark Rippetoe // Novice Linear Progression</div>
+    <h1>Starting<br><em>Strength</em></h1>
+    <div class="header-byline">3 days / week &nbsp;·&nbsp; A/B alternating &nbsp;·&nbsp; Linear progression</div>
+    <div class="header-stats">
+      <div class="hstat"><strong>2</strong> Workouts</div>
+      <div class="hstat"><strong>5</strong> Core Lifts</div>
+      <div class="hstat"><strong>+5–10 lbs</strong> each session</div>
+      <div class="hstat"><strong>3×5</strong> Sets × Reps</div>
+    </div>
+    <div class="big-ss">SS</div>
+  </div>
+</header>
+
+<!-- Week switcher -->
+<div class="week-bar">
+  <div class="week-label">WEEK</div>
+  <button class="week-btn active" onclick="switchWeek(1)">Week 1</button>
+  <button class="week-btn" onclick="switchWeek(2)">Week 2</button>
+  <button class="week-btn" onclick="switchWeek(3)">Week 3</button>
+  <button class="week-btn" onclick="switchWeek(4)">Week 4+</button>
+</div>
+
+<main class="main">
+
+  <!-- REST TIMER -->
+  <div class="rest-timer">
+    <div>
+      <div class="rest-timer-label">⏱ Rest Timer — Recommended: 3–5 min between heavy sets</div>
+      <div class="rest-timer-display" id="timer-disp">05:00</div>
+      <div class="preset-btns" style="margin-top:0.6rem;">
+        <button class="tbtn" onclick="setRest(180)">3 min</button>
+        <button class="tbtn" onclick="setRest(240)">4 min</button>
+        <button class="tbtn" onclick="setRest(300)">5 min</button>
+        <button class="tbtn" onclick="setRest(600)">10 min</button>
+      </div>
+    </div>
+    <div class="timer-btns">
+      <button class="tbtn primary" id="timer-start" onclick="toggleTimer()">START</button>
+      <button class="tbtn" onclick="resetTimer()">RESET</button>
+    </div>
+  </div>
+
+  <!-- WEEK 1 -->
+  <div class="week-panel active" id="week-1">
+    <div class="schedule-row">
+      <div class="sched-cell A"><div class="sched-day">Monday</div><div class="sched-workout">Workout A</div></div>
+      <div class="sched-cell B"><div class="sched-day">Wednesday</div><div class="sched-workout">Workout B</div></div>
+      <div class="sched-cell A"><div class="sched-day">Friday</div><div class="sched-workout">Workout A</div></div>
+    </div>
+    <div class="workout-tabs">
+      <button class="wtab A active" id="w1-tab-A" onclick="switchWorkout(1,'A')">Workout A</button>
+      <button class="wtab B" id="w1-tab-B" onclick="switchWorkout(1,'B')">Workout B</button>
+    </div>
+
+    <!-- W1 Workout A -->
+    <div id="w1-A" class="workout-content">
+      <div class="section-head"><div class="section-title">Main Lifts</div><div class="section-line"></div></div>
+
+      <div class="lift-card A-card">
+        <div><div class="lift-name">Squat</div><div class="lift-sub">Below parallel. No bounce. Sets across — same weight all 3 sets.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="135" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+        <div class="prog-row"><div class="prog-check" onclick="toggleProg(this)"></div><span>All reps complete with good form? Add 5 lbs next session.</span></div>
+      </div>
+
+      <div class="lift-card A-card">
+        <div><div class="lift-name">Bench Press</div><div class="lift-sub">Feet on floor. Do not bounce off chest. Sets across.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="95" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+        <div class="prog-row"><div class="prog-check" onclick="toggleProg(this)"></div><span>All reps complete with good form? Add 5 lbs next session.</span></div>
+      </div>
+
+      <div class="lift-card A-card">
+        <div><div class="lift-name">Deadlift</div><div class="lift-sub">Slow, steady pull. Do not heave or jerk. Single work set.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="135" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">1 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+        </div>
+        <div class="prog-row"><div class="prog-check" onclick="toggleProg(this)"></div><span>Complete? Add 10 lbs next session (deadlift progresses faster).</span></div>
+      </div>
+
+      <div class="lift-card A-card">
+        <div><div class="lift-name">Dips</div><div class="lift-sub">Add weight only if doing more than 10 bodyweight reps easily.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="BW" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">2 × 5–8</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+        </div>
+        <div class="prog-row"><div class="prog-check" onclick="toggleProg(this)"></div><span>More than 10 reps? Add weight next session.</span></div>
+      </div>
+
+      <div class="section-head"><div class="section-title">Accessory Work (every session)</div><div class="section-line"></div></div>
+
+      <div class="lift-card accessory-card">
+        <div><div class="lift-name">Weighted Situps</div><div class="lift-sub">45° decline. Hold parallel to ground 5 sec on the way down each rep.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="25" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+      </div>
+
+      <div class="lift-card accessory-card">
+        <div><div class="lift-name">Hyperextensions</div><div class="lift-sub">Hold weight across chest. Do not swing or use momentum.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="25" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 8</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- W1 Workout B -->
+    <div id="w1-B" class="workout-content" style="display:none">
+      <div class="section-head"><div class="section-title">Main Lifts</div><div class="section-line"></div></div>
+
+      <div class="lift-card B-card">
+        <div><div class="lift-name">Squat</div><div class="lift-sub">Below parallel. No bounce. +5 lbs from last Squat session.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="140" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+        <div class="prog-row"><div class="prog-check" onclick="toggleProg(this)"></div><span>All reps complete with good form? Add 5 lbs next session.</span></div>
+      </div>
+
+      <div class="lift-card B-card">
+        <div><div class="lift-name">Standing Military Press</div><div class="lift-sub">Press from rack. Tight core, no leg drive. Sets across.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="65" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+        <div class="prog-row"><div class="prog-check" onclick="toggleProg(this)"></div><span>All reps complete? Add 5 lbs next session.</span></div>
+      </div>
+
+      <div class="lift-card B-card">
+        <div><div class="lift-name">Pendlay Rows</div><div class="lift-sub">Bar to floor between reps. Explosive pull, controlled lower. <em style="color:var(--dim)">Alt: Power Cleans 5×3</em></div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="95" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+        <div class="prog-row"><div class="prog-check" onclick="toggleProg(this)"></div><span>All reps complete? Add 5 lbs next session.</span></div>
+      </div>
+
+      <div class="lift-card B-card">
+        <div><div class="lift-name">Chinups</div><div class="lift-sub">Palms facing you. Full dead hang to chin over bar. (3 sets if doing Power Cleans)</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="BW" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">2–3 × 5–8</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+      </div>
+
+      <div class="section-head"><div class="section-title">Accessory Work (every session)</div><div class="section-line"></div></div>
+
+      <div class="lift-card accessory-card">
+        <div><div class="lift-name">Weighted Situps</div><div class="lift-sub">45° decline. 5 sec hold at parallel on the way down.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="25" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 5</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+      </div>
+
+      <div class="lift-card accessory-card">
+        <div><div class="lift-name">Hyperextensions</div><div class="lift-sub">Weight on chest. No swinging.</div></div>
+        <div class="weight-field">
+          <div class="weight-label">Weight</div>
+          <input class="weight-input" type="number" placeholder="25" step="5">
+          <div class="weight-unit">lbs</div>
+        </div>
+        <div class="lift-sets">3 × 8</div>
+        <div class="set-dots">
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S1</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S2</span></div>
+          <div class="set-dot" onclick="toggleDot(this)"><span class="set-dot-label">S3</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="week-panel" id="week-2">
+    <div class="schedule-row">
+      <div class="sched-cell B"><div class="sched-day">Monday</div><div class="sched-workout">Workout B</div></div>
+      <div class="sched-cell A"><div class="sched-day">Wednesday</div><div class="sched-workout">Workout A</div></div>
+      <div class="sched-cell B"><div class="sched-day">Friday</div><div class="sched-workout">Workout B</div></div>
+    </div>
+    <div style="background:var(--plate);border:1px solid var(--groove);padding:2rem;text-align:center;color:var(--dim);font-size:0.85rem;line-height:1.8;">
+      <div style="font-family:'Oswald',sans-serif;font-size:1.2rem;color:var(--iron);letter-spacing:0.1em;margin-bottom:0.5rem;">WEEK 2: B / A / B</div>
+      Same structure as Week 1 — use the Workout A and B tabs above.<br>
+      Each lift should be <strong style="color:var(--chalk)">5–10 lbs heavier</strong> than your Week 1 sessions.<br>
+      Log weights in the fields above before each session.
+    </div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="week-panel" id="week-3">
+    <div class="schedule-row">
+      <div class="sched-cell A"><div class="sched-day">Monday</div><div class="sched-workout">Workout A</div></div>
+      <div class="sched-cell B"><div class="sched-day">Wednesday</div><div class="sched-workout">Workout B</div></div>
+      <div class="sched-cell A"><div class="sched-day">Friday</div><div class="sched-workout">Workout A</div></div>
+    </div>
+    <div style="background:var(--plate);border:1px solid var(--groove);padding:2rem;text-align:center;color:var(--dim);font-size:0.85rem;line-height:1.8;">
+      <div style="font-family:'Oswald',sans-serif;font-size:1.2rem;color:var(--iron);letter-spacing:0.1em;margin-bottom:0.5rem;">WEEK 3: A / B / A</div>
+      Three weeks in — still the same structure.<br>
+      If you've been consistent, your squat is already <strong style="color:var(--chalk)">30+ lbs heavier</strong> than Week 1.<br>
+      <span style="color:var(--yellow)">Friday only:</span> You may now optionally add 2 sets of Curls or Skullcrushers (8–12 reps).
+    </div>
+  </div>
+
+  <!-- WEEK 4+ -->
+  <div class="week-panel" id="week-4">
+    <div class="schedule-row">
+      <div class="sched-cell B"><div class="sched-day">Monday</div><div class="sched-workout">Workout B</div></div>
+      <div class="sched-cell A"><div class="sched-day">Wednesday</div><div class="sched-workout">Workout A</div></div>
+      <div class="sched-cell B"><div class="sched-day">Friday</div><div class="sched-workout">Workout B</div></div>
+    </div>
+    <div style="background:var(--plate);border:1px solid var(--groove);padding:2rem;text-align:center;color:var(--dim);font-size:0.85rem;line-height:1.8;">
+      <div style="font-family:'Oswald',sans-serif;font-size:1.2rem;color:var(--iron);letter-spacing:0.1em;margin-bottom:0.5rem;">WEEK 4+: KEEP ADDING WEIGHT</div>
+      The program is simple by design. Keep showing up. Keep adding weight.<br>
+      The novice LP stalls when life gets in the way — not when the weight gets heavy.<br>
+      <span style="color:var(--rust)">If you miss a session:</span> don't panic, don't deload. Pick up where you left off.
+    </div>
+  </div>
+
+  <!-- EXECUTION RULES -->
+  <div class="section-head" style="margin-top:2.5rem;"><div class="section-title">Execution Rules</div><div class="section-line"></div></div>
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rule-num">01</div>
+      <div><div class="rule-title">Sets Across</div><div class="rule-text">Use the same weight for all working sets of each lift. If you squat 100 lbs, all 3 sets are 100 lbs.</div></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">02</div>
+      <div><div class="rule-title">Linear Progression</div><div class="rule-text">Complete all reps with good form? Add 5 lbs to the bar next session. Deadlift: add 10 lbs.</div></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">03</div>
+      <div><div class="rule-title">Squat Depth</div><div class="rule-text">Below parallel — crease of the hip below top of the knee. No bouncing out of the hole.</div></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">04</div>
+      <div><div class="rule-title">Bench Strict</div><div class="rule-text">Feet flat on the floor. Do not bounce the bar off your chest. Full ROM, controlled descent.</div></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">05</div>
+      <div><div class="rule-title">Deadlift Pull</div><div class="rule-text">Slow, deliberate setup. Pull the slack out of the bar before breaking the floor. Do not heave.</div></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">06</div>
+      <div><div class="rule-title">Friday Arms Rule</div><div class="rule-text">No curls or skullcrushers until 3 weeks in. Then: 2 sets of 8–12 on Fridays only.</div></div>
+    </div>
+  </div>
+
+  <!-- NUTRITION -->
+  <div class="section-head"><div class="section-title">Nutrition Protocol</div><div class="section-line"></div></div>
+  <div class="nutrition-box">
+    <div class="nutrition-icon">🥩</div>
+    <div>
+      <div class="nutrition-title">Eat to Grow — This Is Non-Negotiable</div>
+      <div class="nutrition-body">
+        Rippetoe is direct: you must eat <strong>significantly more than usual</strong> to support strength gains. 
+        Focus on <strong>high-protein whole foods</strong> — ground beef, eggs, whole milk, chicken. 
+        Quality starches for energy: <strong>potatoes, rice, pasta</strong>. 
+        If you're not gaining weight, you're not eating enough. 
+        This program does not work in a caloric deficit the way fat-burn programming does.
+      </div>
+    </div>
+  </div>
+
+  <div class="friday-note">
+    <strong>THE FRIDAY RULE —</strong> No direct arm work (curls, skullcrushers) until you have completed at least 3 full weeks of the program. After that: 2 sets of 8–12 reps, <em>Fridays only</em>. The program is already working your arms through compound pressing and pulling — don't add noise before the signal is established.
+  </div>
+
+</main>
+
+<script>
+  // Week switching
+  function switchWeek(n) {
+    document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('week-' + n).classList.add('active');
+    document.querySelectorAll('.week-btn')[n - 1].classList.add('active');
+  }
+
+  // Workout A/B switching (week 1 only interactive)
+  function switchWorkout(week, wk) {
+    document.querySelectorAll(`#week-${week} .workout-content`).forEach(c => c.style.display = 'none');
+    document.querySelectorAll(`#week-${week} .wtab`).forEach(t => t.classList.remove('active'));
+    document.getElementById(`w${week}-${wk}`).style.display = 'block';
+    document.getElementById(`w${week}-tab-${wk}`).classList.add('active');
+  }
+
+  // Set dot toggle
+  function toggleDot(dot) {
+    dot.classList.toggle('done');
+    if (dot.classList.contains('done')) dot.innerHTML = '✓';
+    else dot.innerHTML = `<span class="set-dot-label">${dot.querySelector ? '' : ''}</span>`;
+    // Rebuild label
+    const label = dot.getAttribute('data-label') || '';
+    if (!dot.classList.contains('done')) {
+      // rebuild original label from position
+      const siblings = Array.from(dot.parentElement.children);
+      const idx = siblings.indexOf(dot) + 1;
+      dot.innerHTML = `<span class="set-dot-label">S${idx}</span>`;
+    }
+  }
+
+  // Progression check
+  function toggleProg(box) {
+    box.classList.toggle('done');
+    box.textContent = box.classList.contains('done') ? '✓' : '';
+  }
+
+  // REST TIMER
+  let timerSecs = 300;
+  let timerRunning = false;
+  let timerInterval = null;
+
+  function setRest(s) {
+    resetTimer();
+    timerSecs = s;
+    updateDisp();
+  }
+
+  function toggleTimer() {
+    if (timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('timer-start').textContent = 'RESUME';
+    } else {
+      timerRunning = true;
+      document.getElementById('timer-start').textContent = 'PAUSE';
+      timerInterval = setInterval(() => {
+        timerSecs--;
+        updateDisp();
+        const disp = document.getElementById('timer-disp');
+        if (timerSecs <= 30) disp.classList.add('warning');
+        if (timerSecs <= 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('timer-start').textContent = 'START';
+          disp.classList.remove('warning');
+          disp.classList.add('done-color');
+          disp.textContent = 'REST DONE';
+          setTimeout(() => {
+            disp.classList.remove('done-color');
+            timerSecs = 300;
+            updateDisp();
+          }, 2000);
+        }
+      }, 1000);
+    }
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerSecs = 300;
+    document.getElementById('timer-start').textContent = 'START';
+    document.getElementById('timer-disp').className = 'rest-timer-display';
+    updateDisp();
+  }
+
+  function updateDisp() {
+    const m = Math.floor(timerSecs / 60).toString().padStart(2, '0');
+    const s = (timerSecs % 60).toString().padStart(2, '0');
+    document.getElementById('timer-disp').textContent = m + ':' + s;
+  }
+
+  // Rebuild dot labels on toggle
+  document.querySelectorAll('.set-dot').forEach((dot, i) => {
+    dot.addEventListener('click', function() {
+      if (!this.classList.contains('done')) {
+        const siblings = Array.from(this.parentElement.children);
+        const idx = siblings.indexOf(this) + 1;
+        this.innerHTML = `<span class="set-dot-label">S${idx}</span>`;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

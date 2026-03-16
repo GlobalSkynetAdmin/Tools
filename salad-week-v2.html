@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Salad Week // Meal Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage:    #4A6741;
+    --sage-lt: #7A9B72;
+    --sage-bg: #EDF2E8;
+    --cream:   #FAF7F0;
+    --warm:    #F2EDE0;
+    --gold:    #C07B2A;
+    --rust:    #A8442A;
+    --ink:     #1E1E1A;
+    --mid:     #5A5A52;
+    --ghost:   #9A9A90;
+    --rule:    #DDD8CC;
+    --white:   #FFFFFF;
+    --sky:     #3A7CA5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--sage);
+    color: var(--cream);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(122,155,114,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner { max-width: 1000px; margin: 0 auto; position: relative; }
+
+  .header-kicker {
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage-lt);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em { font-style: italic; color: #B8D4A8; display: block; }
+
+  .header-desc {
+    font-size: 0.82rem;
+    color: rgba(250,247,240,0.7);
+    margin-top: 1rem;
+    max-width: 560px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .header-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.25rem 0.7rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(250,247,240,0.75);
+    border-radius: 2px;
+  }
+
+  /* TABS */
+  .tabs {
+    background: var(--warm);
+    border-bottom: 2px solid var(--rule);
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .tab {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 1rem 1.4rem;
+    color: var(--ghost);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    margin-bottom: -2px;
+  }
+
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--sage); border-bottom-color: var(--sage); }
+
+  /* PANELS */
+  .panel { display: none; animation: fadeUp 0.2s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem 2.5rem 4rem;
+  }
+
+  /* SECTION HEADING */
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.4rem;
+    margin-top: 2.5rem;
+  }
+
+  .section-heading:first-child { margin-top: 0; }
+
+  .section-sub {
+    font-size: 0.75rem;
+    color: var(--ghost);
+    font-style: italic;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  /* MEAL CARDS */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .meal-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .meal-card:hover { border-color: var(--sage-lt); box-shadow: 0 4px 20px rgba(74,103,65,0.08); transform: translateY(-1px); }
+  .meal-card.open { border-color: var(--sage); }
+
+  .meal-card-top {
+    padding: 1.25rem 1.25rem 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .meal-day {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.3rem;
+  }
+
+  .meal-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .meal-sub {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    margin-top: 0.3rem;
+    font-style: italic;
+  }
+
+  .meal-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  .meta-item span {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 0.05rem;
+  }
+
+  .rotisserie-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(74,103,65,0.1);
+    border: 1px solid var(--sage-lt);
+    color: var(--sage);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    margin-top: 0.5rem;
+  }
+
+  .charcoal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(30,30,26,0.07);
+    border: 1px solid var(--mid);
+    color: var(--mid);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    margin-left: 0.3rem;
+  }
+
+  .meal-expand {
+    padding: 1.25rem;
+    display: none;
+    border-top: 1px solid var(--sage-bg);
+    background: var(--sage-bg);
+  }
+
+  .meal-card.open .meal-expand { display: block; }
+
+  .expand-section { margin-bottom: 1.25rem; }
+  .expand-section:last-child { margin-bottom: 0; }
+
+  .expand-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .expand-label::after { content: ''; flex: 1; height: 1px; background: rgba(74,103,65,0.2); }
+
+  .ingredient-list { list-style: none; }
+
+  .ingredient-list li {
+    font-size: 0.77rem;
+    color: var(--mid);
+    padding: 0.2rem 0 0.2rem 0.85rem;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .ingredient-list li::before { content: '·'; position: absolute; left: 0; color: var(--sage-lt); font-weight: 700; }
+
+  .ingredient-list li.note {
+    color: var(--gold);
+    font-style: italic;
+    font-size: 0.72rem;
+  }
+
+  .ingredient-list li.note::before { color: var(--gold); content: '↳'; }
+
+  .steps-list { list-style: none; counter-reset: steps; }
+
+  .steps-list li {
+    counter-increment: steps;
+    font-size: 0.78rem;
+    color: var(--mid);
+    padding: 0.4rem 0 0.4rem 1.75rem;
+    position: relative;
+    border-bottom: 1px solid rgba(74,103,65,0.12);
+    line-height: 1.5;
+  }
+
+  .steps-list li:last-child { border-bottom: none; }
+
+  .steps-list li::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--sage);
+    line-height: 1.4;
+    width: 1.2rem;
+    text-align: center;
+  }
+
+  .steps-list li.tip-step {
+    color: var(--gold);
+    font-style: italic;
+    border-bottom: none;
+    padding-left: 1.25rem;
+  }
+
+  .steps-list li.tip-step::before { content: '★'; color: var(--gold); font-size: 0.6rem; top: 0.55rem; }
+
+  .nutrition-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+  }
+
+  .nut-pill {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+    color: var(--mid);
+    letter-spacing: 0.05em;
+  }
+
+  .nut-pill strong { color: var(--ink); font-weight: 500; }
+
+  /* DRINKS */
+  .drinks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .drink-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: 1.25rem;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .drink-card:hover { border-color: var(--sky); box-shadow: 0 4px 16px rgba(58,124,165,0.08); transform: translateY(-1px); }
+  .drink-card.open { border-color: var(--sky); }
+
+  .drink-top { display: flex; align-items: flex-start; gap: 0.75rem; }
+
+  .drink-emoji { font-size: 1.75rem; line-height: 1; flex-shrink: 0; }
+
+  .drink-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .drink-sub {
+    font-size: 0.7rem;
+    color: var(--ghost);
+    font-style: italic;
+    margin-top: 0.2rem;
+  }
+
+  .drink-tags {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .dtag {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.4rem;
+    border-radius: 2px;
+    border: 1px solid currentColor;
+  }
+
+  .dtag-kf { color: var(--sage); }
+  .dtag-low { color: var(--gold); }
+  .dtag-pairs { color: var(--sky); }
+  .dtag-treat { color: var(--rust); }
+
+  .drink-expand {
+    display: none;
+    margin-top: 1rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+  }
+
+  .drink-card.open .drink-expand { display: block; }
+
+  .drink-recipe-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sky);
+    margin-bottom: 0.5rem;
+  }
+
+  .drink-ingredients { list-style: none; margin-bottom: 0.75rem; }
+
+  .drink-ingredients li {
+    font-size: 0.75rem;
+    color: var(--mid);
+    padding: 0.15rem 0 0.15rem 0.75rem;
+    position: relative;
+  }
+
+  .drink-ingredients li::before { content: '·'; position: absolute; left: 0; color: var(--sky); font-weight: 700; }
+
+  .drink-method {
+    font-size: 0.75rem;
+    color: var(--mid);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* GROCERY */
+  .grocery-intro {
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+
+  .store-section { margin-bottom: 2.5rem; }
+
+  .store-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .store-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .store-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    border: 1px solid var(--rule);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  .grocery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .grocery-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.85rem;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+  }
+
+  .grocery-item:hover { background: var(--white); border-color: var(--sage-lt); }
+  .grocery-item.checked { opacity: 0.42; background: var(--cream); }
+  .grocery-item.checked .g-name { text-decoration: line-through; }
+
+  .g-check {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--rule);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: var(--sage);
+    transition: all 0.12s;
+    border-radius: 2px;
+  }
+
+  .grocery-item.checked .g-check { background: var(--sage); border-color: var(--sage); color: white; }
+
+  .g-info { flex: 1; }
+  .g-name { font-size: 0.83rem; font-weight: 400; line-height: 1.2; }
+  .g-qty { font-size: 0.68rem; color: var(--ghost); margin-top: 0.1rem; }
+
+  .g-cat {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    border-left: 2px solid var(--rule);
+    padding-left: 0.4rem;
+    white-space: nowrap;
+  }
+
+  .cat-produce { border-color: var(--sage-lt); color: var(--sage); }
+  .cat-protein { border-color: var(--gold); color: var(--gold); }
+  .cat-pantry  { border-color: var(--mid); color: var(--mid); }
+  .cat-dairy   { border-color: #7AADE0; color: #4A7DB0; }
+  .cat-drinks  { border-color: var(--sky); color: var(--sky); }
+
+  .grocery-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .gbtn {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--mid);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.12s;
+    border-radius: 2px;
+  }
+
+  .gbtn:hover { color: var(--ink); border-color: var(--mid); }
+
+  .cat-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+    margin-top: 1.25rem;
+    display: block;
+  }
+
+  .progress-note {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    margin-top: 1rem;
+    font-style: italic;
+  }
+
+  /* PREP */
+  .prep-intro {
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    border-left: 3px solid var(--sage);
+    padding-left: 1rem;
+  }
+
+  .prep-day {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--rule);
+    background: var(--white);
+    overflow: hidden;
+  }
+
+  .prep-day-header {
+    background: var(--warm);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+  }
+
+  .prep-day-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .prep-day-sub {
+    font-size: 0.7rem;
+    color: var(--ghost);
+    font-style: italic;
+    margin-top: 0.1rem;
+  }
+
+  .prep-time-badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    border: 1px solid var(--sage-lt);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .prep-day-body { padding: 1.25rem; }
+
+  .prep-step {
+    display: flex;
+    gap: 0.85rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+  }
+
+  .prep-step:last-child { border-bottom: none; }
+
+  .prep-icon { font-size: 1.1rem; flex-shrink: 0; line-height: 1.3; }
+
+  .prep-text {
+    font-size: 0.78rem;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+
+  .prep-text strong { color: var(--ink); font-weight: 500; }
+
+  /* TIPS */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .tip-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: 1.25rem;
+  }
+
+  .tip-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  .tip-body {
+    font-size: 0.76rem;
+    color: var(--mid);
+    line-height: 1.65;
+  }
+
+  .tip-body ul { list-style: none; }
+
+  .tip-body li {
+    padding: 0.2rem 0 0.2rem 0.85rem;
+    position: relative;
+  }
+
+  .tip-body li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--sage-lt);
+    font-size: 0.65rem;
+    top: 0.3rem;
+  }
+
+  @media (max-width: 600px) {
+    .panel-inner { padding: 1.5rem 1rem 3rem; }
+    header { padding: 2rem 1rem 1.75rem; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .tab { padding: 0.85rem 0.9rem; font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-kicker">Weekly Dinner Plan · Family of 3–4 · Updated Edition</div>
+    <h1>The Salad<em>Week</em></h1>
+    <div class="header-desc">
+      One Costco + Macey's trip, seven hearty dinners. Rotisserie chicken throughout, charcoal-grilled steak on Tuesday, egg-optional Cobb on Sunday, and a full drink pairing guide to keep things fun all week.
+    </div>
+    <div class="header-badges">
+      <span class="badge">Rotisserie Chicken</span>
+      <span class="badge">Charcoal Steak</span>
+      <span class="badge">Kid-Friendly Drinks</span>
+      <span class="badge">40–50g Protein / Serving</span>
+      <span class="badge">One Trip</span>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('meals', this)">📋 Meal Plan</button>
+  <button class="tab" onclick="switchTab('drinks', this)">🥤 Drink Pairings</button>
+  <button class="tab" onclick="switchTab('grocery', this)">🛒 Grocery List</button>
+  <button class="tab" onclick="switchTab('prep', this)">🔪 Prep Guide</button>
+  <button class="tab" onclick="switchTab('tips', this)">💡 Tips</button>
+</div>
+
+<!-- ══════════ MEALS ══════════ -->
+<div class="panel active" id="panel-meals">
+  <div class="panel-inner">
+    <div class="week-grid">
+
+      <!-- MONDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Monday</div>
+          <div class="meal-name">Rotisserie Chicken Caesar</div>
+          <div class="meal-sub">Classic Caesar — zero cooking, just pull and plate</div>
+          <div><span class="rotisserie-badge">🍗 Rotisserie</span></div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>10 min</span>Prep</div>
+            <div class="meta-item"><span>~500</span>Cal</div>
+            <div class="meta-item"><span>46g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>½ rotisserie chicken — pull breast meat, slice or shred</li>
+              <li class="note">No raw chicken to cook — just pull it apart at serving time</li>
+              <li>2 large heads Romaine lettuce, chopped</li>
+              <li>1 cup shredded Parmesan</li>
+              <li>1½ cups croutons</li>
+              <li>½ cup Caesar dressing (bottled)</li>
+              <li>Black pepper, optional squeeze of lemon</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Pull breast and thigh meat from the rotisserie chicken. Slice or shred — whatever your family prefers.</li>
+              <li>Chop Romaine and spin or pat completely dry (wet lettuce = watery dressing).</li>
+              <li>Toss Romaine with Caesar dressing in a large bowl. Start light, taste, add more.</li>
+              <li>Plate up, top with chicken, Parmesan, croutons, fresh black pepper.</li>
+              <li class="tip-step">Rotisserie chicken is already seasoned — go easy on any extra salt.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~500</strong> cal</div>
+              <div class="nut-pill"><strong>46g</strong> protein</div>
+              <div class="nut-pill"><strong>26g</strong> fat</div>
+              <div class="nut-pill"><strong>20g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TUESDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Tuesday</div>
+          <div class="meal-name">Charcoal-Grilled Steak &amp; Roasted Veggie Salad</div>
+          <div class="meal-sub">Strip steak off the charcoal grill over sweet potato and arugula</div>
+          <div><span class="charcoal-badge">🔥 Charcoal Grill</span></div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>35 min</span>Prep</div>
+            <div class="meta-item"><span>~610</span>Cal</div>
+            <div class="meta-item"><span>44g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>1½–2 lbs strip steak or sirloin</li>
+              <li>2 medium sweet potatoes, cubed ½ inch</li>
+              <li>5 oz arugula or spring mix</li>
+              <li>1 red onion, sliced into rings</li>
+              <li>½ cup crumbled feta cheese</li>
+              <li>3 tbsp balsamic vinegar, 3 tbsp olive oil, 1 tsp honey</li>
+              <li>Salt, pepper, garlic powder</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Light the charcoal about 25–30 min before you want to cook. You want a hot two-zone fire — coals banked to one side.</li>
+              <li>Preheat oven to 425°F. Toss sweet potato cubes with olive oil, salt, pepper. Roast 20–22 min, flipping halfway, while the coals get ready.</li>
+              <li>Season steak generously with salt, pepper, garlic powder. Let it sit at room temp while the coals ash over.</li>
+              <li>Grill steak over direct high heat, 3–4 min per side for medium (130–135°F). Move to indirect side if flare-ups happen. Rest 8 min off the grill — this is non-negotiable for juicy steak.</li>
+              <li>Whisk balsamic, olive oil, honey, pinch of salt for dressing.</li>
+              <li>Arrange arugula, roasted sweet potato, red onion rings. Slice steak thin against the grain, lay over the top, crumble feta, drizzle dressing.</li>
+              <li class="tip-step">Charcoal tip: lump charcoal burns hotter and cleaner than briquettes — worth it for steak.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~610</strong> cal</div>
+              <div class="nut-pill"><strong>44g</strong> protein</div>
+              <div class="nut-pill"><strong>32g</strong> fat</div>
+              <div class="nut-pill"><strong>38g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEDNESDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Wednesday</div>
+          <div class="meal-name">Southwest Taco Salad</div>
+          <div class="meal-sub">Seasoned ground beef, black beans, corn, creamy lime dressing</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~580</span>Cal</div>
+            <div class="meta-item"><span>42g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>1½ lbs 80/20 ground beef</li>
+              <li>1 packet taco seasoning</li>
+              <li>1 head Romaine lettuce, chopped</li>
+              <li>1 can black beans, drained and rinsed</li>
+              <li>1 can sweet corn, drained</li>
+              <li>1 cup shredded cheddar cheese</li>
+              <li>1 cup sour cream + juice of 1 lime + pinch of salt (your dressing)</li>
+              <li>Tortilla chips, optional salsa or jalapeño</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Brown ground beef in a skillet over medium-high, breaking it up. Drain excess fat.</li>
+              <li>Add taco seasoning + 2–3 tbsp water. Stir and simmer 2–3 min. Take off heat.</li>
+              <li>Mix sour cream with lime juice and a pinch of salt — this is the dressing.</li>
+              <li>Build: Romaine base, beans, corn, cheddar, warm beef on top.</li>
+              <li>Drizzle lime-sour cream dressing. Crush tortilla chips over each bowl at the table.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~580</strong> cal</div>
+              <div class="nut-pill"><strong>42g</strong> protein</div>
+              <div class="nut-pill"><strong>30g</strong> fat</div>
+              <div class="nut-pill"><strong>42g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THURSDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Thursday</div>
+          <div class="meal-name">Salmon &amp; Cucumber Dill Salad</div>
+          <div class="meal-sub">Pan-seared salmon over crisp greens with lemon-dill vinaigrette</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~490</span>Cal</div>
+            <div class="meta-item"><span>46g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>4 salmon fillets (5–6 oz each)</li>
+              <li>1 large English cucumber, sliced thin</li>
+              <li>5 oz spring mix or butter lettuce</li>
+              <li>½ red onion, sliced thin</li>
+              <li>1 cup cherry tomatoes, halved</li>
+              <li>3 tbsp olive oil, juice of 2 lemons</li>
+              <li>1 tbsp dried dill, 1 tsp Dijon mustard, salt, pepper</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Pat salmon dry. Season with salt, pepper, squeeze of lemon.</li>
+              <li>Heat olive oil in a non-stick skillet over medium-high. Sear skin-side up 3–4 min, flip, cook 3 more min. Salmon should flake easily at the thickest part.</li>
+              <li>Whisk together olive oil, lemon juice, Dijon, dill, salt, pepper for dressing.</li>
+              <li>Arrange greens, cucumber, tomatoes, red onion in bowls.</li>
+              <li>Place salmon on top, skin-side down. Drizzle dressing generously.</li>
+              <li class="tip-step">Frozen salmon works great here — thaw overnight in the fridge.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~490</strong> cal</div>
+              <div class="nut-pill"><strong>46g</strong> protein</div>
+              <div class="nut-pill"><strong>28g</strong> fat</div>
+              <div class="nut-pill"><strong>12g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRIDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Friday</div>
+          <div class="meal-name">BBQ Rotisserie &amp; Bacon Chopped Salad</div>
+          <div class="meal-sub">Shredded rotisserie tossed in warm BBQ sauce — smoky, fast, crowd-pleasing</div>
+          <div><span class="rotisserie-badge">🍗 Rotisserie</span></div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>15 min</span>Prep</div>
+            <div class="meta-item"><span>~540</span>Cal</div>
+            <div class="meta-item"><span>48g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>½–¾ rotisserie chicken — shred thigh and breast meat</li>
+              <li>½ cup BBQ sauce</li>
+              <li>6 strips thick-cut bacon</li>
+              <li>2 heads Romaine, chopped fine (this is a chopped salad — small pieces)</li>
+              <li>1 cup shredded cheddar</li>
+              <li>1 can sweet corn, drained</li>
+              <li>½ cup ranch dressing</li>
+              <li>2 green onions, sliced</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Cook bacon in a skillet until crisp. Set on paper towels, crumble when cool.</li>
+              <li>Shred rotisserie chicken (thigh meat especially — more flavor). Warm briefly in a skillet with the BBQ sauce, just 2–3 min to get it sticky and hot.</li>
+              <li>Finely chop the Romaine — smaller pieces than a regular salad make this work.</li>
+              <li>Combine Romaine, corn, cheddar, bacon in a bowl and toss.</li>
+              <li>Top with warm BBQ chicken, drizzle ranch, scatter green onions over everything.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~540</strong> cal</div>
+              <div class="nut-pill"><strong>48g</strong> protein</div>
+              <div class="nut-pill"><strong>26g</strong> fat</div>
+              <div class="nut-pill"><strong>30g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SATURDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Saturday</div>
+          <div class="meal-name">Greek Salad with Rotisserie Chicken</div>
+          <div class="meal-sub">Feta, olives, cucumber, tomato — bright and easy</div>
+          <div><span class="rotisserie-badge">🍗 Rotisserie</span></div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>15 min</span>Prep</div>
+            <div class="meta-item"><span>~460</span>Cal</div>
+            <div class="meta-item"><span>42g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>Remaining rotisserie chicken — pull whatever is left, chop rough</li>
+              <li>1 English cucumber, chopped</li>
+              <li>2 cups cherry tomatoes, halved</li>
+              <li>½ red onion, thinly sliced</li>
+              <li>1 cup kalamata olives, halved</li>
+              <li>1 cup crumbled feta</li>
+              <li>5 oz Romaine or spring mix</li>
+              <li>4 tbsp olive oil, 2 tbsp red wine vinegar, 1 tsp dried oregano, salt, pepper</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Whisk together olive oil, red wine vinegar, oregano, salt, pepper into a simple vinaigrette.</li>
+              <li>Combine cucumber, tomatoes, red onion, olives. Toss with half the dressing. Let sit 5 min.</li>
+              <li>Arrange greens, add marinated veggies, lay chopped rotisserie chicken on top.</li>
+              <li>Crumble feta generously. Drizzle remaining dressing. Done.</li>
+              <li class="tip-step">If you're short on chicken from the week, grab a second rotisserie bird at Costco — or this is a great night for a fresh one.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~460</strong> cal</div>
+              <div class="nut-pill"><strong>42g</strong> protein</div>
+              <div class="nut-pill"><strong>26g</strong> fat</div>
+              <div class="nut-pill"><strong>16g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUNDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Sunday</div>
+          <div class="meal-name">Cobb Salad</div>
+          <div class="meal-sub">Classic Cobb — egg-optional for anyone who prefers without</div>
+          <div><span class="rotisserie-badge">🍗 Rotisserie</span></div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>20 min</span>Prep</div>
+            <div class="meta-item"><span>~530</span>Cal</div>
+            <div class="meta-item"><span>46g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>Rotisserie chicken — shred or chop generously</li>
+              <li>6 large eggs — hard boiled <em style="color:var(--gold)">(see egg note below)</em></li>
+              <li class="note">Egg-optional: serve eggs on the side so everyone builds their own bowl. Your wife can skip, you can pile them on — fresh-boiled eggs may actually win her over.</li>
+              <li>6 strips thick-cut bacon, cooked and crumbled</li>
+              <li>2 heads Romaine, chopped</li>
+              <li>2 avocados, diced</li>
+              <li>1 cup cherry tomatoes, halved</li>
+              <li>½ cup blue cheese crumbles (or feta)</li>
+              <li>½ cup ranch or blue cheese dressing</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Hard boil eggs if using: cover with cold water, bring to full boil, cook 10 min, transfer to ice water 5 min, peel. Slice just before serving.</li>
+              <li>Cook bacon until crisp. Crumble when cool.</li>
+              <li>Shred or chop rotisserie chicken.</li>
+              <li>Dice avocado right before serving — toss with a little lemon juice to prevent browning.</li>
+              <li>Arrange Romaine in a wide serving bowl or platter. Lay toppings in rows — classic Cobb presentation — then let everyone build their own plate.</li>
+              <li>Serve dressing on the side. Put the egg bowl on the side too — no pressure, no arguments.</li>
+              <li class="tip-step">Fresh-boiled, properly cooked eggs (not rubbery) are a genuinely different experience than old diner eggs — worth trying one before writing them off.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~530</strong> cal</div>
+              <div class="nut-pill"><strong>46g</strong> protein</div>
+              <div class="nut-pill"><strong>34g</strong> fat</div>
+              <div class="nut-pill"><strong>14g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <p style="font-size:0.72rem;color:var(--ghost);font-style:italic;">Click any card to expand the full recipe.</p>
+  </div>
+</div>
+
+<!-- ══════════ DRINKS ══════════ -->
+<div class="panel" id="panel-drinks">
+  <div class="panel-inner">
+
+    <div class="section-heading">Every-Night Standbys</div>
+    <div class="section-sub">Kid-friendly, low-calorie, and actually refreshing. Keep ingredients stocked so you can mix one up any night.</div>
+
+    <div class="drinks-grid">
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🍋</div>
+          <div>
+            <div class="drink-name">Sparkling Lemon-Mint Water</div>
+            <div class="drink-sub">The house drink — elegant, zero-calorie, infinitely refillable</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-kf">Kid Friendly</span>
+          <span class="dtag dtag-low">~0 cal</span>
+          <span class="dtag dtag-pairs">Pairs with: Everything</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (per pitcher)</div>
+          <ul class="drink-ingredients">
+            <li>1 liter sparkling water (LaCroix, Bubly, or store brand)</li>
+            <li>1 lemon, sliced thin</li>
+            <li>Small handful fresh mint leaves</li>
+            <li>Ice</li>
+          </ul>
+          <div class="drink-method">Combine in a pitcher and let it sit 10 min before serving. The mint and lemon infuse into the bubbles. Kids love it, it pairs with everything, and it looks fancier than it is. Costco sells bulk sparkling water — keep a case on hand all summer.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🍓</div>
+          <div>
+            <div class="drink-name">Strawberry Basil Lemonade</div>
+            <div class="drink-sub">Fresh, slightly sweet, bright pink — kids go wild for it</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-kf">Kid Friendly</span>
+          <span class="dtag dtag-low">~60 cal</span>
+          <span class="dtag dtag-pairs">Pairs with: Caesar, Greek, Cobb</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (serves 4)</div>
+          <ul class="drink-ingredients">
+            <li>1 cup fresh or frozen strawberries</li>
+            <li>½ cup fresh lemon juice (about 3–4 lemons)</li>
+            <li>2 tbsp honey or sugar</li>
+            <li>4 cups cold water</li>
+            <li>4–5 fresh basil leaves</li>
+            <li>Ice</li>
+          </ul>
+          <div class="drink-method">Blend strawberries with a splash of water until smooth. Strain if you want it clear. Combine with lemon juice, honey, water, and basil. Stir well, pour over ice. The basil sounds fancy but it's what makes it taste like a restaurant drink.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🥒</div>
+          <div>
+            <div class="drink-name">Cucumber Lime Agua Fresca</div>
+            <div class="drink-sub">Light, cooling, slightly sweet — perfect for hot Utah evenings</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-kf">Kid Friendly</span>
+          <span class="dtag dtag-low">~25 cal</span>
+          <span class="dtag dtag-pairs">Pairs with: Taco, Salmon, Greek</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (serves 4)</div>
+          <ul class="drink-ingredients">
+            <li>1 large English cucumber, roughly chopped (use your salad cucumber)</li>
+            <li>Juice of 2 limes</li>
+            <li>1 tbsp honey or agave</li>
+            <li>4 cups cold water</li>
+            <li>Pinch of salt</li>
+            <li>Ice, lime slices to serve</li>
+          </ul>
+          <div class="drink-method">Blend cucumber with 1 cup of water until smooth. Strain through a fine mesh strainer into a pitcher. Add remaining water, lime juice, honey, pinch of salt. Taste and adjust. Serve over ice with a lime slice. Uses the same cucumber you're buying for salads — zero waste.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🍵</div>
+          <div>
+            <div class="drink-name">Peach Iced Green Tea</div>
+            <div class="drink-sub">Antioxidant-rich, lightly sweet, beautiful amber color</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-kf">Kid Friendly</span>
+          <span class="dtag dtag-low">~30 cal</span>
+          <span class="dtag dtag-pairs">Pairs with: Steak, BBQ Chicken, Cobb</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recipe (makes 1 pitcher)</div>
+          <ul class="drink-ingredients">
+            <li>4 green tea bags</li>
+            <li>4 cups boiling water</li>
+            <li>2 cups cold water</li>
+            <li>2–3 tbsp peach jam or preserves (Macey's will have it)</li>
+            <li>Ice, peach slices optional</li>
+          </ul>
+          <div class="drink-method">Steep tea bags 3–4 min in boiling water. Remove bags, stir in peach jam while hot. Add cold water. Refrigerate until cold or pour over ice. The jam trick sounds weird but it works — it dissolves perfectly and tastes like real peach tea. Make a pitcher Sunday night for the whole week.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-heading">Pairing By Meal</div>
+    <div class="section-sub">Best match for each dinner if you want to be intentional about it.</div>
+
+    <div class="drinks-grid">
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🔥</div>
+          <div>
+            <div class="drink-name">Charcoal Steak Night (Tuesday)</div>
+            <div class="drink-sub">Smoky, rich flavors need something that cuts through</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-pairs">Steak Night</span>
+          <span class="dtag dtag-treat">Optional Treat</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recommended Drinks</div>
+          <ul class="drink-ingredients">
+            <li><strong>Virgin:</strong> Sparkling water with a squeeze of lemon and a few drops of balsamic — sounds odd, works perfectly with steak flavors</li>
+            <li><strong>Kids:</strong> Peach iced tea or plain sparkling water with ice</li>
+            <li><strong>Treat option:</strong> A single glass of a dry red wine (Cabernet, Malbec) — classic steak pairing if you want one glass for the adults</li>
+          </ul>
+          <div class="drink-method">The charcoal adds a smokiness that pairs well with something slightly acidic or fruity. The balsamic sparkling water sounds unusual but echoes the balsamic in the dressing.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🌮</div>
+          <div>
+            <div class="drink-name">Taco Salad Night (Wednesday)</div>
+            <div class="drink-sub">Spice, lime, and beef — classic agua fresca territory</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-pairs">Taco Night</span>
+          <span class="dtag dtag-kf">Kid Friendly</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recommended Drinks</div>
+          <ul class="drink-ingredients">
+            <li><strong>Best match:</strong> Cucumber Lime Agua Fresca — uses the same lime and cucumber you're already buying</li>
+            <li><strong>Alt:</strong> Sparkling water with lime juice and a pinch of salt (essentially a virgin Ranch Water)</li>
+            <li><strong>Kids:</strong> Strawberry lemonade — the sweetness balances the taco spice perfectly</li>
+          </ul>
+          <div class="drink-method">Wednesday is your most flavorful night — lean into citrus and something cool and light. The agua fresca is genuinely one of the best things you can drink with anything Mexican-adjacent.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🐟</div>
+          <div>
+            <div class="drink-name">Salmon Night (Thursday)</div>
+            <div class="drink-sub">Delicate fish, lemon-dill — needs something clean</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-pairs">Salmon Night</span>
+          <span class="dtag dtag-low">Light</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recommended Drinks</div>
+          <ul class="drink-ingredients">
+            <li><strong>Best match:</strong> Sparkling lemon-mint water — echoes the lemon-dill in the dressing</li>
+            <li><strong>Alt:</strong> Peach iced green tea — the green tea and salmon are a natural pairing</li>
+            <li><strong>Treat option:</strong> A single glass of dry white wine (Sauvignon Blanc, Pinot Grigio) — a genuinely classic pairing if you want one</li>
+          </ul>
+          <div class="drink-method">Keep it light on salmon night — anything too sweet or heavy competes with the delicate fish flavor. Clean and citrusy is the move.</div>
+        </div>
+      </div>
+
+      <div class="drink-card" onclick="toggleDrink(this)">
+        <div class="drink-top">
+          <div class="drink-emoji">🏆</div>
+          <div>
+            <div class="drink-name">Friday BBQ Night</div>
+            <div class="drink-sub">Smoky, sweet BBQ needs something to cut through it</div>
+          </div>
+        </div>
+        <div class="drink-tags">
+          <span class="dtag dtag-pairs">BBQ Night</span>
+          <span class="dtag dtag-kf">Kid Friendly</span>
+        </div>
+        <div class="drink-expand">
+          <div class="drink-recipe-label">Recommended Drinks</div>
+          <ul class="drink-ingredients">
+            <li><strong>Best match:</strong> Strawberry basil lemonade — the acidity cuts the BBQ sauce perfectly</li>
+            <li><strong>Alt:</strong> Sparkling water with a splash of apple juice and ice — kids love it, looks fancy</li>
+            <li><strong>Zero effort:</strong> Cold sparkling water or LaCroix straight up — BBQ Friday, nobody needs fuss</li>
+          </ul>
+          <div class="drink-method">Friday is your easiest cooking night. Don't overthink the drink. Make the strawberry lemonade if you have time, grab a sparkling water if you don't.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="background:var(--warm);border:1px solid var(--rule);padding:1.25rem;margin-top:0.5rem;font-size:0.78rem;color:var(--mid);line-height:1.7;">
+      <strong style="color:var(--ink);font-family:'Playfair Display',serif;">A note on the treat option:</strong> Running clean all summer is a solid goal and these meals support it. If you do want one adult drink on a special night — steak Tuesday or salmon Thursday — a single glass of a dry red or white is roughly 120–130 cal and pairs genuinely well. That's a far cry from derailing anything. Just something to know it's in your pocket if you want it.
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ GROCERY ══════════ -->
+<div class="panel" id="panel-grocery">
+  <div class="panel-inner">
+    <p class="grocery-intro">Updated for rotisserie chicken — no raw chicken on the list. Pick up 2 birds at Costco and you're covered for Mon, Fri, Sat, and Sun. Everything else is one pass through Macey's.</p>
+
+    <div class="grocery-actions">
+      <button class="gbtn" onclick="clearAll()">Clear All</button>
+      <button class="gbtn" onclick="checkAll()">Check All</button>
+    </div>
+
+    <div class="store-section">
+      <div class="store-header">
+        <div class="store-name">Costco <span style="font-style:italic;color:var(--ghost);font-weight:300;">— Spanish Fork</span></div>
+        <div class="store-tag">Bulk + rotisserie</div>
+      </div>
+
+      <span class="cat-label" style="color:var(--gold);">Proteins</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Rotisserie Chickens</div><div class="g-qty">2 birds (covers Mon, Fri, Sat, Sun)</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Ground Beef (80/20)</div><div class="g-qty">~3 lbs (Wed taco salad)</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Salmon Fillets</div><div class="g-qty">4 fillets, 5–6 oz each (Thu)</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Strip Steak or Sirloin</div><div class="g-qty">1½–2 lbs (Tue charcoal grill)</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Thick-Cut Bacon</div><div class="g-qty">1 large pack (Fri + Sun)</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Large Eggs</div><div class="g-qty">1 dozen (Sun Cobb — optional/side)</div></div><div class="g-cat cat-protein">Protein</div></div>
+      </div>
+
+      <span class="cat-label" style="color:var(--sage);">Produce &amp; Staples</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Romaine Lettuce Hearts</div><div class="g-qty">Bulk bag, 6-pack</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Cherry Tomatoes</div><div class="g-qty">Large container</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Shredded Parmesan</div><div class="g-qty">Large tub</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Shredded Cheddar Cheese</div><div class="g-qty">Large bag</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Olive Oil</div><div class="g-qty">Large bottle if running low</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sparkling Water (LaCroix/Bubly)</div><div class="g-qty">Case — for drinks all week</div></div><div class="g-cat cat-drinks">Drinks</div></div>
+      </div>
+    </div>
+
+    <div class="store-section">
+      <div class="store-header">
+        <div class="store-name">Macey's <span style="font-style:italic;color:var(--ghost);font-weight:300;">— Santaquin</span></div>
+        <div class="store-tag">Everything else</div>
+      </div>
+
+      <span class="cat-label" style="color:var(--sage);">Produce</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Arugula or Spring Mix</div><div class="g-qty">1 large bag (5 oz)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">English Cucumbers</div><div class="g-qty">2 (salads + agua fresca)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Red Onions</div><div class="g-qty">2 medium</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sweet Potatoes</div><div class="g-qty">2–3 medium (Tue)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Avocados</div><div class="g-qty">4 — buy firm, ripen by Sunday</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Lemons</div><div class="g-qty">6 (salads + drinks)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Limes</div><div class="g-qty">4 (taco dressing + agua fresca)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Green Onions</div><div class="g-qty">1 bunch (Fri BBQ)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Strawberries</div><div class="g-qty">1 pint (for strawberry lemonade)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Mint</div><div class="g-qty">1 small bunch (drinks)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Fresh Basil</div><div class="g-qty">1 small bunch (strawberry lemonade)</div></div><div class="g-cat cat-produce">Produce</div></div>
+      </div>
+
+      <span class="cat-label" style="color:gold;filter:brightness(0.75);">Dairy / Cheese</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Crumbled Feta Cheese</div><div class="g-qty">2 containers, 6 oz each (Tue + Sat)</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Blue Cheese Crumbles</div><div class="g-qty">1 small container (Sun Cobb)</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sour Cream</div><div class="g-qty">16 oz container (Wed taco dressing)</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+      </div>
+
+      <span class="cat-label" style="color:var(--mid);">Pantry &amp; Canned</span>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Black Beans (canned)</div><div class="g-qty">2 cans, 15 oz</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sweet Corn (canned)</div><div class="g-qty">2 cans, 15 oz</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Kalamata Olives</div><div class="g-qty">1 jar or can</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Caesar Dressing (bottled)</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Ranch Dressing</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">BBQ Sauce</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Balsamic Vinegar</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Red Wine Vinegar</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Dijon Mustard</div><div class="g-qty">1 jar</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Taco Seasoning</div><div class="g-qty">1–2 packets</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Croutons</div><div class="g-qty">1 bag</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Tortilla Chips</div><div class="g-qty">1 bag</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Dried Dill</div><div class="g-qty">1 jar if needed</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Dried Oregano</div><div class="g-qty">1 jar if needed</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Honey</div><div class="g-qty">Small bottle — salads + drinks</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Peach Jam or Preserves</div><div class="g-qty">1 small jar (peach iced tea)</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Green Tea Bags</div><div class="g-qty">1 box (peach iced tea)</div></div><div class="g-cat cat-drinks">Drinks</div></div>
+      </div>
+    </div>
+
+    <p class="progress-note" id="grocery-progress">Click items to check them off as you shop.</p>
+  </div>
+</div>
+
+<!-- ══════════ PREP ══════════ -->
+<div class="panel" id="panel-prep">
+  <div class="panel-inner">
+    <p class="prep-intro">With rotisserie chicken, Sunday prep gets even simpler — no raw chicken to cook. The whole session is now about greens, eggs, and getting your drinks ready for the week.</p>
+
+    <div class="prep-day">
+      <div class="prep-day-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-day-name">Sunday Batch Prep</div>
+          <div class="prep-day-sub">30 minutes of work that makes the entire week easier</div>
+        </div>
+        <div class="prep-time-badge">~25–30 min</div>
+      </div>
+      <div class="prep-day-body">
+        <div class="prep-step"><div class="prep-icon">🥬</div><div class="prep-text"><strong>Wash and dry all greens.</strong> Both Romaine and the arugula/spring mix bag. Spin completely dry. Store in zip-lock bags with a paper towel inside — this one step is the difference between crisp salads and soggy ones mid-week.</div></div>
+        <div class="prep-step"><div class="prep-icon">🧅</div><div class="prep-text"><strong>Slice red onions, then quick-pickle them.</strong> Slice both onions thin, put in a jar, cover with red wine vinegar and a pinch of salt. Ready in 30 min, better after a few hours. Mellows the raw bite dramatically — your family will actually eat them.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍠</div><div class="prep-text"><strong>Roast sweet potatoes for Tuesday.</strong> Cube, toss with olive oil and salt, roast at 425°F for 20 min. Store in the fridge — reheat in a dry skillet Tuesday before building the steak salad.</div></div>
+        <div class="prep-step"><div class="prep-icon">🥚</div><div class="prep-text"><strong>Hard boil eggs for Sunday's Cobb — or wait until Sunday night.</strong> If you do them now: cover with cold water, boil 10 min, ice bath 5 min, refrigerate unpeeled. Peel right before serving. Fresh-boiled eggs really are a different experience — worth offering them on the side and letting everyone decide.</div></div>
+        <div class="prep-step"><div class="prep-icon">🫙</div><div class="prep-text"><strong>Mix the dressings that keep.</strong> Make the lemon-dill vinaigrette (Thursday) and the Greek vinaigrette (Saturday) now — shake together in small mason jars and refrigerate. Shake before using. Vinaigrettes last 1–2 weeks.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍵</div><div class="prep-text"><strong>Brew a pitcher of peach iced green tea.</strong> Takes 15 min, lasts all week in the fridge. Best drink you can have cold waiting for you every night.</div></div>
+      </div>
+    </div>
+
+    <div class="prep-day">
+      <div class="prep-day-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-day-name">Rotisserie Chicken Strategy</div>
+          <div class="prep-day-sub">How to make 2 birds stretch across 4 meals cleanly</div>
+        </div>
+        <div class="prep-time-badge">Reference</div>
+      </div>
+      <div class="prep-day-body">
+        <div class="prep-step"><div class="prep-icon">🍗</div><div class="prep-text"><strong>Bird #1 (Monday + Friday):</strong> Monday night, pull breast meat for the Caesar — you'll use about half the breast. Friday, shred thigh meat for the BBQ chopped salad. Thigh meat shreds better and holds up to BBQ sauce. Refrigerate carcass in a bag between meals.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍗</div><div class="prep-text"><strong>Bird #2 (Saturday + Sunday):</strong> Saturday, pull breast and thigh for the Greek salad — chop it rough. Sunday, use whatever remains for the Cobb. Shred or slice depending on what you have left. If one bird looks thin, a Costco rotisserie is so cheap it's worth picking up a third on the same trip just to have insurance.</div></div>
+        <div class="prep-step"><div class="prep-icon">🦴</div><div class="prep-text"><strong>Bonus: make stock with the carcasses.</strong> If you're into that kind of thing — toss both carcasses in a pot with water, onion, celery, carrot, salt, simmer 2 hours. Freeze it. Free chicken stock for soups all summer. Totally optional but wildly useful.</div></div>
+      </div>
+    </div>
+
+    <div class="prep-day">
+      <div class="prep-day-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-day-name">Tuesday Charcoal Grill Notes</div>
+          <div class="prep-day-sub">Getting the most out of the charcoal setup for a weeknight</div>
+        </div>
+        <div class="prep-time-badge">Grill Tips</div>
+      </div>
+      <div class="prep-day-body">
+        <div class="prep-step"><div class="prep-icon">🔥</div><div class="prep-text"><strong>Light coals 25–30 min before you want to eat.</strong> Plan backwards from dinner time — charcoal isn't fast. A chimney starter is the best investment you can make for weeknight grilling: no lighter fluid, ready in 15 min.</div></div>
+        <div class="prep-step"><div class="prep-icon">🥩</div><div class="prep-text"><strong>Pull steak from the fridge 20–30 min before grilling.</strong> Room temperature meat sears better and cooks more evenly. Salt it generously as soon as it comes out — the salt starts working immediately.</div></div>
+        <div class="prep-step"><div class="prep-icon">🌡️</div><div class="prep-text"><strong>Target 130°F for medium.</strong> An instant-read thermometer is worth it — steak is too expensive to guess. Pull at 125°F and let carryover heat finish it during the 8-minute rest.</div></div>
+        <div class="prep-step"><div class="prep-icon">⏱️</div><div class="prep-text"><strong>Use the grill heat while you have it.</strong> While the steak rests, throw the sweet potato on the grill in foil if you didn't roast them in the oven Sunday. Or grill some corn for a bonus side.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ TIPS ══════════ -->
+<div class="panel" id="panel-tips">
+  <div class="panel-inner">
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-title">🥬 Keeping Greens Fresh All Week</div>
+        <div class="tip-body"><ul>
+          <li>Wash and spin dry all greens Sunday before storing.</li>
+          <li>Paper towel in the zip-lock bag absorbs moisture — greens stay crisp 5–6 days.</li>
+          <li>Never dress greens ahead of time — always right before serving.</li>
+          <li>Arugula wilts faster than Romaine — use it by Thursday.</li>
+          <li>Limp greens? Soak in ice water 5 min. They crisp right back up.</li>
+        </ul></div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">💪 Supporting Your Training</div>
+        <div class="tip-body"><ul>
+          <li>Every salad here hits 40–50g protein per serving — solid for muscle recovery.</li>
+          <li>On heavy lift days (Mon, Thu, Fri) lean into higher-carb nights: Taco Salad, BBQ Chicken.</li>
+          <li>Salmon Thursday is ideal post-training — omega-3s actively reduce muscle inflammation.</li>
+          <li>Add a second portion of chicken or an extra hard-boiled egg to bump protein without changing the recipe.</li>
+          <li>The avocado in the Cobb is quality fat — leave it in, it supports hormone production and recovery.</li>
+        </ul></div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🛒 Eureka Shopping Strategy</div>
+        <div class="tip-body"><ul>
+          <li>Hit Costco first (Spanish Fork), then Macey's on the way back through Santaquin — same highway, one trip.</li>
+          <li>Buy avocados firm — they ripen perfectly over 4–5 days and are ready by Sunday.</li>
+          <li>Stock extra canned goods (beans, corn, olives) and bottled dressings — they last forever and cut future trips.</li>
+          <li>Frozen salmon is completely fine if the fresh counter is thin — thaw overnight in the fridge.</li>
+          <li>Rotisserie chickens at Costco are around $5 — cheaper than raw chicken per pound of cooked meat.</li>
+        </ul></div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🔄 Swaps &amp; What You Might Be Missing</div>
+        <div class="tip-body"><ul>
+          <li><strong>Salad dressing variety:</strong> Keep a second bottle of something different — Green Goddess, Thousand Island — so the family doesn't get bored of ranch and Caesar.</li>
+          <li><strong>Bread on the side:</strong> A crusty loaf or some warm rolls makes salad feel like a full dinner to skeptical kids and hungry post-workout adults.</li>
+          <li><strong>Protein powder:</strong> If you're tracking protein closely for lifting, a shake alongside dinner is an easy 25g bump that doesn't change the meal.</li>
+          <li><strong>Don't forget salt and pepper grinders:</strong> Fresh-ground makes a real difference on salads — especially the steak and Caesar.</li>
+          <li><strong>Paper towels:</strong> You'll go through them. The greens need them, the steak needs them, the bacon needs them.</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleMeal(card) { card.classList.toggle('open'); }
+  function toggleDrink(card) { card.classList.toggle('open'); }
+
+  function toggleGrocery(item) {
+    item.classList.toggle('checked');
+    const total = document.querySelectorAll('.grocery-item').length;
+    const checked = document.querySelectorAll('.grocery-item.checked').length;
+    const el = document.getElementById('grocery-progress');
+    if (checked === 0) el.textContent = 'Click items to check them off as you shop.';
+    else if (checked === total) el.textContent = "✓ Cart is packed — you're ready for the week.";
+    else el.textContent = `${checked} of ${total} items checked.`;
+  }
+
+  function clearAll() {
+    document.querySelectorAll('.grocery-item').forEach(i => i.classList.remove('checked'));
+    document.getElementById('grocery-progress').textContent = 'Click items to check them off as you shop.';
+  }
+
+  function checkAll() {
+    document.querySelectorAll('.grocery-item').forEach(i => i.classList.add('checked'));
+    const total = document.querySelectorAll('.grocery-item').length;
+    document.getElementById('grocery-progress').textContent = `✓ ${total} of ${total} items checked.`;
+  }
+
+  function togglePrep(header) {
+    const body = header.nextElementSibling;
+    body.style.display = body.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>

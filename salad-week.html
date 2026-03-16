@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Salad Week // Meal Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage:    #4A6741;
+    --sage-lt: #7A9B72;
+    --sage-bg: #EDF2E8;
+    --cream:   #FAF7F0;
+    --warm:    #F2EDE0;
+    --gold:    #C07B2A;
+    --rust:    #A8442A;
+    --ink:     #1E1E1A;
+    --mid:     #5A5A52;
+    --ghost:   #9A9A90;
+    --rule:    #DDD8CC;
+    --white:   #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--sage);
+    color: var(--cream);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(122,155,114,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .header-kicker {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage-lt);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: #B8D4A8;
+    display: block;
+  }
+
+  .header-desc {
+    font-size: 0.82rem;
+    color: rgba(250,247,240,0.7);
+    margin-top: 1rem;
+    max-width: 520px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .header-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.25rem 0.7rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(250,247,240,0.75);
+    border-radius: 2px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    background: var(--warm);
+    border-bottom: 2px solid var(--rule);
+    display: flex;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  .tab {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 1rem 1.5rem;
+    color: var(--ghost);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    margin-bottom: -2px;
+  }
+
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--sage); border-bottom-color: var(--sage); font-weight: 500; }
+
+  /* ── PANELS ── */
+  .panel { display: none; animation: fadeUp 0.2s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem 2.5rem 4rem;
+  }
+
+  /* ── GROCERY LIST ── */
+  .grocery-intro {
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+
+  .store-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .store-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .store-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .store-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    border: 1px solid var(--rule);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  .grocery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.35rem;
+  }
+
+  .grocery-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.85rem;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+  }
+
+  .grocery-item:hover { background: var(--white); border-color: var(--sage-lt); }
+  .grocery-item.checked { opacity: 0.45; background: var(--cream); }
+  .grocery-item.checked .g-name { text-decoration: line-through; }
+
+  .g-check {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--rule);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: var(--sage);
+    transition: all 0.12s;
+    border-radius: 2px;
+  }
+
+  .grocery-item.checked .g-check { background: var(--sage); border-color: var(--sage); color: white; }
+
+  .g-info { flex: 1; }
+
+  .g-name {
+    font-size: 0.83rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .g-qty {
+    font-size: 0.68rem;
+    color: var(--ghost);
+    margin-top: 0.1rem;
+  }
+
+  .g-cat {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    border-left: 2px solid var(--rule);
+    padding-left: 0.4rem;
+    white-space: nowrap;
+  }
+
+  .cat-produce { border-color: var(--sage-lt); color: var(--sage); }
+  .cat-protein { border-color: var(--gold); color: var(--gold); }
+  .cat-pantry  { border-color: var(--mid); color: var(--mid); }
+  .cat-dairy   { border-color: #7AADE0; color: #4A7DB0; }
+
+  .grocery-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .gbtn {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--mid);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.12s;
+    border-radius: 2px;
+  }
+
+  .gBtn:hover { color: var(--ink); border-color: var(--mid); }
+  .gBtn.primary { background: var(--sage); border-color: var(--sage); color: white; }
+
+  .progress-note {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    margin-top: 1rem;
+    font-style: italic;
+  }
+
+  /* ── MEAL CARDS ── */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .meal-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .meal-card:hover { border-color: var(--sage-lt); box-shadow: 0 4px 20px rgba(74,103,65,0.08); transform: translateY(-1px); }
+  .meal-card.open { border-color: var(--sage); }
+
+  .meal-card-top {
+    padding: 1.25rem 1.25rem 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .meal-day {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.3rem;
+  }
+
+  .meal-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .meal-sub {
+    font-size: 0.72rem;
+    color: var(--ghost);
+    margin-top: 0.3rem;
+    font-style: italic;
+  }
+
+  .meal-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.85rem;
+  }
+
+  .meta-item {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  .meta-item span {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 0.05rem;
+  }
+
+  .meal-expand {
+    padding: 1.25rem;
+    display: none;
+    border-top: 1px solid var(--sage-bg);
+    background: var(--sage-bg);
+  }
+
+  .meal-card.open .meal-expand { display: block; }
+
+  .expand-section {
+    margin-bottom: 1.25rem;
+  }
+
+  .expand-section:last-child { margin-bottom: 0; }
+
+  .expand-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .expand-label::after { content: ''; flex: 1; height: 1px; background: rgba(74,103,65,0.2); }
+
+  .ingredient-list {
+    list-style: none;
+  }
+
+  .ingredient-list li {
+    font-size: 0.77rem;
+    color: var(--mid);
+    padding: 0.2rem 0;
+    padding-left: 0.85rem;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .ingredient-list li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--sage-lt);
+    font-weight: 700;
+  }
+
+  .steps-list {
+    list-style: none;
+    counter-reset: steps;
+  }
+
+  .steps-list li {
+    counter-increment: steps;
+    font-size: 0.78rem;
+    color: var(--mid);
+    padding: 0.4rem 0 0.4rem 1.75rem;
+    position: relative;
+    border-bottom: 1px solid rgba(74,103,65,0.12);
+    line-height: 1.5;
+  }
+
+  .steps-list li:last-child { border-bottom: none; }
+
+  .steps-list li::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--sage);
+    line-height: 1.4;
+    width: 1.2rem;
+    text-align: center;
+  }
+
+  .nutrition-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+  }
+
+  .nut-pill {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+    color: var(--mid);
+    letter-spacing: 0.05em;
+  }
+
+  .nut-pill strong { color: var(--ink); font-weight: 500; }
+
+  /* ── PREP GUIDE ── */
+  .prep-intro {
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    border-left: 3px solid var(--sage);
+    padding-left: 1rem;
+  }
+
+  .prep-day {
+    margin-bottom: 2rem;
+    border: 1px solid var(--rule);
+    background: var(--white);
+    overflow: hidden;
+  }
+
+  .prep-day-header {
+    background: var(--warm);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+  }
+
+  .prep-day-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .prep-day-sub {
+    font-size: 0.7rem;
+    color: var(--ghost);
+    font-style: italic;
+    margin-top: 0.1rem;
+  }
+
+  .prep-time-badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    border: 1px solid var(--sage-lt);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .prep-day-body {
+    padding: 1.25rem;
+  }
+
+  .prep-step {
+    display: flex;
+    gap: 0.85rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+  }
+
+  .prep-step:last-child { border-bottom: none; }
+
+  .prep-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+
+  .prep-text {
+    font-size: 0.78rem;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+
+  .prep-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ── TIPS ── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .tip-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: 1.25rem;
+  }
+
+  .tip-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tip-body {
+    font-size: 0.76rem;
+    color: var(--mid);
+    line-height: 1.65;
+  }
+
+  .tip-body li {
+    padding: 0.2rem 0;
+    padding-left: 0.85rem;
+    position: relative;
+  }
+
+  .tip-body li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--sage-lt);
+    font-size: 0.65rem;
+    top: 0.3rem;
+  }
+
+  @media (max-width: 600px) {
+    .panel-inner { padding: 1.5rem 1rem 3rem; }
+    header { padding: 2rem 1rem 1.75rem; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .tab { padding: 0.85rem 1rem; font-size: 0.72rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-kicker">Weekly Dinner Plan · Family of 3–4</div>
+    <h1>The Salad<em>Week</em></h1>
+    <div class="header-desc">
+      Seven hearty, protein-rich salads built from one grocery trip. Every ingredient pulls double or triple duty across the week — so nothing goes to waste and you're never driving back to Santaquin mid-week.
+    </div>
+    <div class="header-badges">
+      <span class="badge">One Trip · Macey's + Costco</span>
+      <span class="badge">20–35 min prep</span>
+      <span class="badge">High Protein</span>
+      <span class="badge">No Exotic Ingredients</span>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('meals')">📋 Meal Plan</button>
+  <button class="tab" onclick="switchTab('grocery')">🛒 Grocery List</button>
+  <button class="tab" onclick="switchTab('prep')">🔪 Prep Guide</button>
+  <button class="tab" onclick="switchTab('tips')">💡 Tips & Storage</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 1: MEAL PLAN
+══════════════════════════════════════════ -->
+<div class="panel active" id="panel-meals">
+  <div class="panel-inner">
+
+    <div class="week-grid">
+
+      <!-- MONDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Monday</div>
+          <div class="meal-name">Grilled Chicken Caesar</div>
+          <div class="meal-sub">Classic done right — anchovy-free dressing, plenty of protein</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~520</span>Cal / serving</div>
+            <div class="meta-item"><span>48g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>2 lbs boneless skinless chicken breasts</li>
+              <li>2 large heads Romaine lettuce, chopped</li>
+              <li>1 cup shredded Parmesan</li>
+              <li>1½ cups croutons (store-bought or homemade)</li>
+              <li>½ cup Caesar dressing (bottled is fine)</li>
+              <li>1 tsp garlic powder, salt, pepper, olive oil</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Season chicken with garlic powder, salt, pepper, drizzle of olive oil.</li>
+              <li>Grill or pan-sear over medium-high heat, 6–7 min per side until cooked through (165°F). Rest 5 min, then slice.</li>
+              <li>Chop Romaine and spin dry (or pat dry). Add to a large bowl.</li>
+              <li>Toss with Caesar dressing — start with less, taste, add more.</li>
+              <li>Top with sliced chicken, Parmesan, and croutons. Serve immediately.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~520</strong> cal</div>
+              <div class="nut-pill"><strong>48g</strong> protein</div>
+              <div class="nut-pill"><strong>28g</strong> fat</div>
+              <div class="nut-pill"><strong>20g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TUESDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Tuesday</div>
+          <div class="meal-name">Steak &amp; Roasted Veggie Salad</div>
+          <div class="meal-sub">Strip steak over roasted sweet potato and arugula with balsamic</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>35 min</span>Prep</div>
+            <div class="meta-item"><span>~610</span>Cal / serving</div>
+            <div class="meta-item"><span>44g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>1½ lbs strip steak or sirloin</li>
+              <li>2 medium sweet potatoes, cubed ½ inch</li>
+              <li>5 oz arugula (or spring mix)</li>
+              <li>1 red onion, sliced into rings</li>
+              <li>½ cup crumbled feta cheese</li>
+              <li>3 tbsp balsamic vinegar, 3 tbsp olive oil, 1 tsp honey</li>
+              <li>Salt, pepper, garlic powder</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Preheat oven to 425°F. Toss sweet potato cubes with olive oil, salt, pepper. Roast 20–22 min, flipping halfway.</li>
+              <li>Season steak generously with salt, pepper, garlic powder. Let sit at room temp while veggies roast.</li>
+              <li>Sear steak in cast iron or heavy pan over high heat, 3–4 min per side for medium. Rest 8 min, then slice thin against the grain.</li>
+              <li>Whisk together balsamic, olive oil, honey, pinch of salt for dressing.</li>
+              <li>Arrange arugula, roasted sweet potato, red onion. Top with steak, feta. Drizzle dressing.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~610</strong> cal</div>
+              <div class="nut-pill"><strong>44g</strong> protein</div>
+              <div class="nut-pill"><strong>32g</strong> fat</div>
+              <div class="nut-pill"><strong>38g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEDNESDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Wednesday</div>
+          <div class="meal-name">Southwest Taco Salad</div>
+          <div class="meal-sub">Seasoned ground beef, black beans, corn, with creamy lime dressing</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~580</span>Cal / serving</div>
+            <div class="meta-item"><span>42g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>1½ lbs 80/20 ground beef</li>
+              <li>1 packet taco seasoning (or: cumin, chili powder, garlic powder, oregano)</li>
+              <li>1 head Romaine lettuce, chopped</li>
+              <li>1 can black beans, drained and rinsed</li>
+              <li>1 can sweet corn, drained</li>
+              <li>1 cup shredded cheddar cheese</li>
+              <li>1 cup sour cream, juice of 1 lime, salt</li>
+              <li>Tortilla chips for topping</li>
+              <li>Optional: salsa, sliced jalapeño, avocado</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Brown ground beef in a skillet over medium-high heat, breaking it up. Drain fat.</li>
+              <li>Add taco seasoning + 2–3 tbsp water. Stir and simmer 2–3 min. Remove from heat.</li>
+              <li>Mix sour cream with lime juice and a pinch of salt — this is your dressing.</li>
+              <li>Build the salad: Romaine first, then beans, corn, cheese, warm beef.</li>
+              <li>Drizzle lime-sour cream dressing over top. Crush tortilla chips over each serving.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~580</strong> cal</div>
+              <div class="nut-pill"><strong>42g</strong> protein</div>
+              <div class="nut-pill"><strong>30g</strong> fat</div>
+              <div class="nut-pill"><strong>42g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THURSDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Thursday</div>
+          <div class="meal-name">Salmon &amp; Cucumber Dill Salad</div>
+          <div class="meal-sub">Pan-seared salmon over crisp greens with a lemon-dill vinaigrette</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~490</span>Cal / serving</div>
+            <div class="meta-item"><span>46g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>4 salmon fillets (5–6 oz each)</li>
+              <li>1 large English cucumber, sliced thin</li>
+              <li>5 oz spring mix or butter lettuce</li>
+              <li>½ red onion, sliced thin</li>
+              <li>1 cup cherry tomatoes, halved</li>
+              <li>3 tbsp olive oil, juice of 2 lemons</li>
+              <li>1 tbsp dried dill (or 2 tbsp fresh), 1 tsp Dijon mustard, salt, pepper</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Pat salmon dry, season with salt, pepper, a squeeze of lemon.</li>
+              <li>Heat olive oil in a non-stick skillet over medium-high. Sear salmon skin-side up 3–4 min, flip, cook 3 more min. Fish should flake easily.</li>
+              <li>Whisk together olive oil, lemon juice, Dijon, dill, salt, pepper for the dressing.</li>
+              <li>Arrange greens, cucumber, tomatoes, red onion in bowls.</li>
+              <li>Place salmon on top (skin side down so it stays crisp). Drizzle dressing generously.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~490</strong> cal</div>
+              <div class="nut-pill"><strong>46g</strong> protein</div>
+              <div class="nut-pill"><strong>28g</strong> fat</div>
+              <div class="nut-pill"><strong>12g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRIDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Friday</div>
+          <div class="meal-name">BBQ Chicken &amp; Bacon Chopped Salad</div>
+          <div class="meal-sub">Crowd-pleaser Friday — smoky, creamy, satisfying</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>25 min</span>Prep</div>
+            <div class="meta-item"><span>~560</span>Cal / serving</div>
+            <div class="meta-item"><span>50g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>2 lbs chicken thighs (boneless skinless)</li>
+              <li>½ cup BBQ sauce (any store brand)</li>
+              <li>6 strips thick-cut bacon</li>
+              <li>2 heads Romaine lettuce, chopped fine</li>
+              <li>1 cup shredded cheddar</li>
+              <li>1 can sweet corn, drained</li>
+              <li>½ cup ranch dressing</li>
+              <li>2 green onions, sliced</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Cook bacon in a skillet until crisp. Set aside on paper towels, then crumble. Leave a little bacon fat in the pan.</li>
+              <li>Season chicken thighs with salt and pepper. Cook in same skillet over medium-high heat 5–6 min per side until cooked through.</li>
+              <li>Brush chicken liberally with BBQ sauce in last minute of cooking. Rest 5 min, then chop into bite-sized pieces.</li>
+              <li>Finely chop the Romaine (this is a "chopped" salad — small pieces make it great).</li>
+              <li>Toss greens, corn, cheddar, bacon together. Top with BBQ chicken, drizzle ranch, scatter green onions.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~560</strong> cal</div>
+              <div class="nut-pill"><strong>50g</strong> protein</div>
+              <div class="nut-pill"><strong>28g</strong> fat</div>
+              <div class="nut-pill"><strong>30g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SATURDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Saturday</div>
+          <div class="meal-name">Greek Salad with Grilled Chicken</div>
+          <div class="meal-sub">Feta, olives, cucumber, tomato — bright and clean</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>20 min</span>Prep</div>
+            <div class="meta-item"><span>~470</span>Cal / serving</div>
+            <div class="meta-item"><span>44g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>2 lbs chicken breasts (leftover from Monday works great here)</li>
+              <li>1 English cucumber, chopped</li>
+              <li>2 cups cherry tomatoes, halved</li>
+              <li>½ red onion, thinly sliced</li>
+              <li>1 cup kalamata olives, halved</li>
+              <li>1 cup crumbled feta</li>
+              <li>5 oz Romaine or spring mix</li>
+              <li>4 tbsp olive oil, 2 tbsp red wine vinegar, 1 tsp dried oregano, salt, pepper</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>If cooking fresh chicken: season with oregano, salt, olive oil. Grill or pan-sear 6–7 min per side. Rest and slice.</li>
+              <li>Whisk olive oil, red wine vinegar, oregano, salt, pepper into a simple vinaigrette.</li>
+              <li>Combine cucumber, tomatoes, red onion, olives in a bowl. Toss with half the dressing. Let sit 5 min.</li>
+              <li>Arrange greens, top with marinated veggies, sliced chicken, and crumbled feta.</li>
+              <li>Drizzle remaining dressing. Serve with warm pita bread if desired.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~470</strong> cal</div>
+              <div class="nut-pill"><strong>44g</strong> protein</div>
+              <div class="nut-pill"><strong>26g</strong> fat</div>
+              <div class="nut-pill"><strong>16g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUNDAY -->
+      <div class="meal-card" onclick="toggleMeal(this)">
+        <div class="meal-card-top">
+          <div class="meal-day">Sunday</div>
+          <div class="meal-name">Cobb Salad</div>
+          <div class="meal-sub">The original hearty salad — hard-boiled eggs, bacon, chicken, avocado</div>
+          <div class="meal-meta">
+            <div class="meta-item"><span>30 min</span>Prep</div>
+            <div class="meta-item"><span>~540</span>Cal / serving</div>
+            <div class="meta-item"><span>48g</span>Protein</div>
+          </div>
+        </div>
+        <div class="meal-expand">
+          <div class="expand-section">
+            <div class="expand-label">Ingredients (serves 4)</div>
+            <ul class="ingredient-list">
+              <li>1½ lbs cooked chicken breast (use leftovers or rotisserie)</li>
+              <li>6 large eggs</li>
+              <li>6 strips thick-cut bacon</li>
+              <li>2 heads Romaine, chopped</li>
+              <li>2 avocados, diced</li>
+              <li>1 cup cherry tomatoes, halved</li>
+              <li>½ cup blue cheese crumbles (or feta)</li>
+              <li>½ cup ranch or blue cheese dressing</li>
+            </ul>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">How to Make</div>
+            <ol class="steps-list">
+              <li>Hard boil eggs: cover with cold water, bring to boil, cook 10 min, transfer to ice water. Peel and slice.</li>
+              <li>Cook bacon until crisp. Crumble when cool.</li>
+              <li>Dice or shred chicken. Dice avocado right before serving (toss with a little lemon juice to prevent browning).</li>
+              <li>Arrange Romaine in a wide bowl or platter. Lay toppings in rows — classic Cobb style — or just pile it on.</li>
+              <li>Drizzle dressing over top. Serve immediately.</li>
+            </ol>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Nutrition Estimate</div>
+            <div class="nutrition-row">
+              <div class="nut-pill"><strong>~540</strong> cal</div>
+              <div class="nut-pill"><strong>48g</strong> protein</div>
+              <div class="nut-pill"><strong>34g</strong> fat</div>
+              <div class="nut-pill"><strong>14g</strong> carbs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end week-grid -->
+    <p style="font-size:0.72rem;color:var(--ghost);font-style:italic;">Click any meal card to expand ingredients and instructions.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 2: GROCERY LIST
+══════════════════════════════════════════ -->
+<div class="panel" id="panel-grocery">
+  <div class="panel-inner">
+    <p class="grocery-intro">
+      One trip covers everything. Costco is your best stop for bulk proteins (chicken, salmon, ground beef, bacon) and Romaine. Macey's handles the rest. Check items off as you shop — your progress saves while you're on this page.
+    </p>
+
+    <div class="grocery-actions">
+      <button class="gBtn" onclick="clearAll()">Clear All</button>
+      <button class="gBtn" onclick="checkAll()">Check All</button>
+    </div>
+
+    <!-- COSTCO -->
+    <div class="store-section">
+      <div class="store-header">
+        <div class="store-name">Costco <span style="font-style:italic;color:var(--ghost);font-weight:400;">— Spanish Fork</span></div>
+        <div class="store-tag">Bulk buys</div>
+      </div>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Boneless Skinless Chicken Breasts</div><div class="g-qty">~5–6 lbs (bulk pack)</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Chicken Thighs, boneless skinless</div><div class="g-qty">~3 lbs</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Ground Beef (80/20)</div><div class="g-qty">~3 lbs</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Salmon Fillets</div><div class="g-qty">4 fillets, ~5–6 oz each</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sirloin or Strip Steak</div><div class="g-qty">~2 lbs</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Thick-Cut Bacon</div><div class="g-qty">1 large pack</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Large Eggs</div><div class="g-qty">1 dozen</div></div><div class="g-cat cat-protein">Protein</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Romaine Lettuce Hearts</div><div class="g-qty">Bulk bag (6-pack)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Cherry Tomatoes</div><div class="g-qty">Large container</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Shredded Parmesan</div><div class="g-qty">Large bag/tub</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Shredded Cheddar Cheese</div><div class="g-qty">Large bag</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Olive Oil</div><div class="g-qty">Large bottle (if low)</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+      </div>
+    </div>
+
+    <!-- MACEY'S -->
+    <div class="store-section">
+      <div class="store-header">
+        <div class="store-name">Macey's <span style="font-style:italic;color:var(--ghost);font-weight:400;">— Santaquin</span></div>
+        <div class="store-tag">Everything else</div>
+      </div>
+
+      <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);margin-bottom:0.6rem;margin-top:0.5rem;font-weight:500;">Produce</div>
+      <div class="grocery-grid" style="margin-bottom:1rem;">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Arugula or Spring Mix</div><div class="g-qty">1 large bag (5 oz)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">English Cucumbers</div><div class="g-qty">2</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Red Onions</div><div class="g-qty">2 medium</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sweet Potatoes</div><div class="g-qty">2–3 medium</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Avocados</div><div class="g-qty">4 (buy slightly firm — ripen by Sunday)</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Lemons</div><div class="g-qty">4</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Limes</div><div class="g-qty">2</div></div><div class="g-cat cat-produce">Produce</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Green Onions</div><div class="g-qty">1 bunch</div></div><div class="g-cat cat-produce">Produce</div></div>
+      </div>
+
+      <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;margin-top:0.5rem;font-weight:500;">Dairy / Deli</div>
+      <div class="grocery-grid" style="margin-bottom:1rem;">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Crumbled Feta Cheese</div><div class="g-qty">2 containers (6 oz each)</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Blue Cheese Crumbles</div><div class="g-qty">1 container (for Cobb)</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sour Cream</div><div class="g-qty">1 container (16 oz)</div></div><div class="g-cat cat-dairy">Dairy</div></div>
+      </div>
+
+      <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);margin-bottom:0.6rem;margin-top:0.5rem;font-weight:500;">Pantry &amp; Canned</div>
+      <div class="grocery-grid">
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Black Beans (canned)</div><div class="g-qty">2 cans (15 oz)</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Sweet Corn (canned)</div><div class="g-qty">2 cans (15 oz)</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Kalamata Olives</div><div class="g-qty">1 jar or can</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Caesar Dressing (bottled)</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Ranch Dressing</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">BBQ Sauce</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Balsamic Vinegar</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Red Wine Vinegar</div><div class="g-qty">1 bottle</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Dijon Mustard</div><div class="g-qty">1 jar</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Taco Seasoning Packet</div><div class="g-qty">1–2 packets</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Croutons (store-bought)</div><div class="g-qty">1 bag</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Tortilla Chips</div><div class="g-qty">1 bag</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Dried Dill</div><div class="g-qty">1 jar (if you don't have it)</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Dried Oregano</div><div class="g-qty">1 jar (if you don't have it)</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Garlic Powder</div><div class="g-qty">If low</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="g-check">✓</div><div class="g-info"><div class="g-name">Honey</div><div class="g-qty">Small bottle if you don't have it</div></div><div class="g-cat cat-pantry">Pantry</div></div>
+      </div>
+    </div>
+
+    <p class="progress-note" id="grocery-progress">Click items to check them off as you shop.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 3: PREP GUIDE
+══════════════════════════════════════════ -->
+<div class="panel" id="panel-prep">
+  <div class="panel-inner">
+    <p class="prep-intro">
+      The key to making this week work without daily effort: do a 30-minute Sunday prep session. Wash and dry greens, cook a batch of chicken, hard-boil eggs, and roast sweet potatoes. That front-loads the work so Mon–Wed nights are genuinely fast.
+    </p>
+
+    <div class="prep-day">
+      <div class="prep-day-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-day-name">Sunday Batch Prep</div>
+          <div class="prep-day-sub">Do this before the week starts — it makes everything easier</div>
+        </div>
+        <div class="prep-time-badge">~30–35 min</div>
+      </div>
+      <div class="prep-day-body">
+        <div class="prep-step"><div class="prep-icon">🔪</div><div class="prep-text"><strong>Wash and dry all lettuce</strong> — Both Romaine heads and the bag of arugula/spring mix. Spin in a salad spinner or pat completely dry with paper towels. Store in a large zip-lock bag with a paper towel inside to absorb moisture. Lasts all week.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍗</div><div class="prep-text"><strong>Cook one big batch of chicken breasts</strong> — Season 3 lbs of breasts simply with salt, pepper, garlic powder. Bake at 400°F for 22–25 min or pan-sear. Slice and refrigerate. Covers Monday's Caesar and provides backup for Saturday's Greek if you don't feel like cooking again.</div></div>
+        <div class="prep-step"><div class="prep-icon">🥚</div><div class="prep-text"><strong>Hard boil 6 eggs for Sunday's Cobb</strong> — You can do this ahead and refrigerate unpeeled for up to a week. Peel night of.</div></div>
+        <div class="prep-step"><div class="prep-icon">🍠</div><div class="prep-text"><strong>Roast sweet potatoes</strong> — Cube and roast all sweet potato at once (Tuesday's salad). Keeps in fridge 4 days and reheats in 2 min in a skillet.</div></div>
+        <div class="prep-step"><div class="prep-icon">🧅</div><div class="prep-text"><strong>Slice red onions</strong> — Slice both red onions thin, store in a jar with water and a splash of red wine vinegar. Mellows the bite, keeps all week, and works in the Greek and Cobb salads.</div></div>
+        <div class="prep-step"><div class="prep-icon">🫙</div><div class="prep-text"><strong>Mix dressings that keep</strong> — Make the lemon-dill vinaigrette (Thursday) and the Greek vinaigrette (Saturday) now. Store in small jars in the fridge. Shake before using.</div></div>
+      </div>
+    </div>
+
+    <div class="prep-day">
+      <div class="prep-day-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-day-name">Weeknight Order of Operations</div>
+          <div class="prep-day-sub">How to get dinner on the table in 20–25 min on a busy night</div>
+        </div>
+        <div class="prep-time-badge">20–25 min</div>
+      </div>
+      <div class="prep-day-body">
+        <div class="prep-step"><div class="prep-icon">1️⃣</div><div class="prep-text"><strong>Start protein first, always.</strong> The moment you walk in, get the protein going — chicken on the grill, steak in the pan, ground beef browning. Everything else takes less time.</div></div>
+        <div class="prep-step"><div class="prep-icon">2️⃣</div><div class="prep-text"><strong>Chop while protein cooks.</strong> Use the cook time to dice avocado, slice cucumber, halve tomatoes, crumble cheese. Keep the cutting board busy.</div></div>
+        <div class="prep-step"><div class="prep-icon">3️⃣</div><div class="prep-text"><strong>Build the base while protein rests.</strong> Protein needs 5–8 min to rest. Use that time to lay the greens, arrange toppings, and mix any dressing you haven't prepped.</div></div>
+        <div class="prep-step"><div class="prep-icon">4️⃣</div><div class="prep-text"><strong>Slice protein last, right before serving.</strong> This keeps it juicy and hot at the table.</div></div>
+      </div>
+    </div>
+
+    <div class="prep-day">
+      <div class="prep-day-header" onclick="togglePrep(this)">
+        <div>
+          <div class="prep-day-name">Ingredient Cross-Use Map</div>
+          <div class="prep-day-sub">How ingredients stretch across multiple meals — nothing wasted</div>
+        </div>
+        <div class="prep-time-badge">Reference</div>
+      </div>
+      <div class="prep-day-body">
+        <div class="prep-step"><div class="prep-icon">🥬</div><div class="prep-text"><strong>Romaine</strong> — Mon (Caesar), Wed (Taco), Fri (BBQ Chopped), Sat (Greek), Sun (Cobb)</div></div>
+        <div class="prep-step"><div class="prep-icon">🍗</div><div class="prep-text"><strong>Chicken breasts (batch-cooked Sunday)</strong> — Mon (Caesar), Sat (Greek, using leftovers)</div></div>
+        <div class="prep-step"><div class="prep-icon">🧀</div><div class="prep-text"><strong>Feta</strong> — Tue (Steak salad), Sat (Greek)</div></div>
+        <div class="prep-step"><div class="prep-icon">🧀</div><div class="prep-text"><strong>Cheddar</strong> — Wed (Taco), Fri (BBQ Chopped)</div></div>
+        <div class="prep-step"><div class="prep-icon">🌽</div><div class="prep-text"><strong>Canned sweet corn</strong> — Wed (Taco), Fri (BBQ Chopped)</div></div>
+        <div class="prep-step"><div class="prep-icon">🥓</div><div class="prep-text"><strong>Bacon</strong> — Fri (BBQ Chopped), Sun (Cobb)</div></div>
+        <div class="prep-step"><div class="prep-icon">🍅</div><div class="prep-text"><strong>Cherry tomatoes</strong> — Thu (Salmon), Sat (Greek), Sun (Cobb)</div></div>
+        <div class="prep-step"><div class="prep-icon">🫙</div><div class="prep-text"><strong>Red onion</strong> — Tue (Steak), Sat (Greek), Sun (Cobb)</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 4: TIPS
+══════════════════════════════════════════ -->
+<div class="panel" id="panel-tips">
+  <div class="panel-inner">
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-title">🥬 Keeping Greens Fresh All Week</div>
+        <div class="tip-body">
+          <ul>
+            <li>Wash and spin dry all greens on Sunday before storing.</li>
+            <li>Store with a dry paper towel in a zip-lock bag — the towel absorbs moisture and keeps greens crisp 5–6 days.</li>
+            <li>Never dress greens ahead of time — always dress right before serving.</li>
+            <li>Arugula wilts faster than Romaine. Use it by Thursday.</li>
+            <li>If greens start to go limp, soak in ice water for 5 min — they'll crisp right back up.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-title">💪 Exercise-Aligned Nutrition</div>
+        <div class="tip-body">
+          <ul>
+            <li>Every salad here hits 40–50g protein per serving — well above the minimum for muscle recovery.</li>
+            <li>On heavy lift days (Mon, Tue, Thu) lean into the higher-carb salads: Taco, Steak with sweet potato.</li>
+            <li>Add a second chicken breast or extra egg to any salad to bump protein without changing the recipe.</li>
+            <li>Dressings add fat (and calories) — measure if you're tracking, pour freely if you're not.</li>
+            <li>Avocado in the Cobb is quality fat — leave it in, it supports hormone production and recovery.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-title">🛒 Shopping Smart for Eureka</div>
+        <div class="tip-body">
+          <ul>
+            <li>Costco first, Macey's second on the same trip — Costco is on the way back from Spanish Fork.</li>
+            <li>Buy avocados firm at the start of the week — they'll ripen perfectly by Wednesday–Sunday.</li>
+            <li>Rotisserie chicken from Macey's or Costco is a completely valid swap for any recipe — saves 25 min.</li>
+            <li>All canned goods (beans, corn, olives) and bottled dressings keep indefinitely — stock up so future weeks need fewer stops.</li>
+            <li>Frozen salmon works perfectly fine if the fresh counter is picked over.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-title">🔄 Swaps &amp; Variations</div>
+        <div class="tip-body">
+          <ul>
+            <li>Don't eat fish? Swap Thursday's salmon for more chicken thighs.</li>
+            <li>Want more carbs? Add a cup of cooked quinoa or brown rice to any salad as a base layer.</li>
+            <li>Avocados not ripe? The Cobb works fine without — or sub in extra bacon.</li>
+            <li>Kids not into salad? The taco and BBQ chicken toppings work as taco bowls or wraps with the same ingredients.</li>
+            <li>Repeat a favorite: if Wednesday's Taco Salad was a hit, there's enough beef for a second batch Friday.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Tab switching ──
+  function switchTab(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // ── Meal card expand ──
+  function toggleMeal(card) {
+    card.classList.toggle('open');
+  }
+
+  // ── Grocery list ──
+  function toggleGrocery(item) {
+    item.classList.toggle('checked');
+    updateGroceryProgress();
+  }
+
+  function updateGroceryProgress() {
+    const total = document.querySelectorAll('.grocery-item').length;
+    const checked = document.querySelectorAll('.grocery-item.checked').length;
+    const el = document.getElementById('grocery-progress');
+    if (checked === 0) {
+      el.textContent = 'Click items to check them off as you shop.';
+    } else if (checked === total) {
+      el.textContent = '✓ Cart is packed — you\'re ready for the week.';
+    } else {
+      el.textContent = `${checked} of ${total} items checked.`;
+    }
+  }
+
+  function clearAll() {
+    document.querySelectorAll('.grocery-item').forEach(i => i.classList.remove('checked'));
+    updateGroceryProgress();
+  }
+
+  function checkAll() {
+    document.querySelectorAll('.grocery-item').forEach(i => i.classList.add('checked'));
+    updateGroceryProgress();
+  }
+
+  // ── Prep accordion ──
+  function togglePrep(header) {
+    const body = header.nextElementSibling;
+    const isOpen = body.style.display === 'none';
+    body.style.display = isOpen ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>
