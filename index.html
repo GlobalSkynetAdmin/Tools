@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Tools — GlobalSkynetAdmin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0A0A0A;
+    --surface: #141414;
+    --border:  #222;
+    --border2: #2E2E2E;
+    --chalk:   #E8E4DC;
+    --mid:     #888;
+    --ghost:   #444;
+    --moss:    #5A7A3A;
+    --moss-lt: #8ABB5A;
+    --gold:    #C8963A;
+    --gold-lt: #E0B860;
+    --rust:    #C04828;
+    --sky:     #3A7AAA;
+    --berry:   #7A3F6E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--chalk);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  * { position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  header {
+    padding: 3rem 1.5rem 2rem;
+    max-width: 680px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .site-label {
+    font-family: 'Syne Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .site-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--moss-lt);
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  h1 .dim { color: var(--ghost); font-weight: 400; }
+
+  .header-desc {
+    font-size: 0.82rem;
+    color: var(--mid);
+    line-height: 1.7;
+    max-width: 420px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 0;
+  }
+
+  .section-label {
+    font-family: 'Syne Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── TOOL CARDS ── */
+  .tools-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tool-card:hover { border-color: var(--border2); background: #181818; transform: translateY(-1px); }
+  .tool-card:active { transform: scale(0.98); background: #161616; }
+
+  .tool-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+
+  .tool-info { flex: 1; min-width: 0; }
+
+  .tool-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tool-desc {
+    font-size: 0.72rem;
+    color: var(--mid);
+    line-height: 1.4;
+  }
+
+  .tool-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+    flex-shrink: 0;
+  }
+
+  .tool-tag {
+    font-family: 'Syne Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.18rem 0.45rem;
+    border-radius: 20px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+  }
+
+  .tag-fitness  { color: var(--rust); }
+  .tag-food     { color: var(--gold); }
+  .tag-field    { color: var(--moss-lt); }
+  .tag-mobile   { color: var(--sky); }
+
+  .tool-arrow {
+    color: var(--ghost);
+    font-size: 0.9rem;
+    margin-left: 0.25rem;
+    transition: transform 0.15s, color 0.15s;
+  }
+
+  .tool-card:hover .tool-arrow { color: var(--chalk); transform: translateX(3px); }
+
+  /* ── FOOTER ── */
+  footer {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .footer-left {
+    font-family: 'Syne Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--ghost);
+  }
+
+  .footer-right {
+    font-size: 0.65rem;
+    color: var(--ghost);
+  }
+
+  /* ── MOBILE TWEAKS ── */
+  @media (max-width: 480px) {
+    header { padding: 2rem 1rem 1.5rem; }
+    .section { padding: 1.5rem 1rem 0; }
+    footer { padding: 1.25rem 1rem 2rem; }
+    .tool-desc { display: none; }
+    .tool-name { white-space: normal; font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-label">GlobalSkynetAdmin · Tools</div>
+  <h1>Personal<br><span class="dim">Tools</span></h1>
+  <p class="header-desc">Fitness trackers, meal planners, and field tools. Built for real use — phone-friendly, no login required.</p>
+</header>
+
+<!-- FITNESS -->
+<div class="section">
+  <div class="section-label">Fitness</div>
+  <div class="tools-list">
+
+    <a class="tool-card" href="workout-routine.html">
+      <div class="tool-icon">🔥</div>
+      <div class="tool-info">
+        <div class="tool-name">Fat Burn Home</div>
+        <div class="tool-desc">5-day bodyweight fat-burn program · 20–30 min · zero equipment · interval timer</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-fitness">Fitness</span>
+        <span class="tool-tag tag-fitness">Bodyweight</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+    <a class="tool-card" href="starting-strength.html">
+      <div class="tool-icon">🏋️</div>
+      <div class="tool-info">
+        <div class="tool-name">Starting Strength</div>
+        <div class="tool-desc">Rippetoe A/B barbell program · weight logging · rest timer · 4-week tracker</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-fitness">Fitness</span>
+        <span class="tool-tag tag-fitness">Barbell</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+    <a class="tool-card" href="iron-three.html">
+      <div class="tool-icon">⚙️</div>
+      <div class="tool-info">
+        <div class="tool-name">Iron Three</div>
+        <div class="tool-desc">Barbell · kettlebell · bodyweight strength · 5-day · no planks · weight logging</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-fitness">Fitness</span>
+        <span class="tool-tag tag-fitness">Strength</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- FOOD -->
+<div class="section">
+  <div class="section-label">Meal Plans</div>
+  <div class="tools-list">
+
+    <a class="tool-card" href="salad-week-v2.html">
+      <div class="tool-icon">🥗</div>
+      <div class="tool-info">
+        <div class="tool-name">The Salad Week</div>
+        <div class="tool-desc">Week 1 · rotisserie chicken · charcoal steak · 7 dinners · Macey's + Costco grocery list</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-food">Meal Plan</span>
+        <span class="tool-tag tag-food">Week 1</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+    <a class="tool-card" href="fresh-week.html">
+      <div class="tool-icon">🍓</div>
+      <div class="tool-info">
+        <div class="tool-name">The Fresh Week</div>
+        <div class="tool-desc">Week 2 · fruit-forward · chicken + vegetarian · grilled peach · drink pairings</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-food">Meal Plan</span>
+        <span class="tool-tag tag-food">Week 2</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- FIELD -->
+<div class="section">
+  <div class="section-label">Photography</div>
+  <div class="tools-list">
+
+    <a class="tool-card" href="photography-field-log.html">
+      <div class="tool-icon">📷</div>
+      <div class="tool-info">
+        <div class="tool-name">Field Log</div>
+        <div class="tool-desc">GPS location · species · gear · conditions · caption seeds · CSV export to Google Sheets</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-field">Field</span>
+        <span class="tool-tag tag-mobile">Mobile</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">globalskynetadmin.github.io/Tools</div>
+  <div class="footer-right">Bookmark this page · Updated as tools are added</div>
+</footer>
+
+</body>
+</html>
