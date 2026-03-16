@@ -23,11 +23,12 @@
     --rust:    #C04828;
     --sky:     #3A7AAA;
     --berry:   #7A3F6E;
+    --star:    #F1C40F;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior:smooth; }
 
   body {
     background: var(--bg);
@@ -38,20 +39,17 @@
     overflow-x: hidden;
   }
 
-  /* Subtle grid background */
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
+    content:'';
+    position:fixed; inset:0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
     background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    pointer-events:none; z-index:0;
   }
 
-  * { position: relative; z-index: 1; }
+  * { position:relative; z-index:1; }
 
   /* ── HEADER ── */
   header {
@@ -63,20 +61,20 @@
 
   .site-label {
     font-family: 'Syne Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.25em;
+    font-size: .62rem;
+    letter-spacing: .25em;
     text-transform: uppercase;
     color: var(--ghost);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: .5rem;
   }
 
   .site-label::before {
-    content: '';
-    display: inline-block;
-    width: 6px; height: 6px;
+    content:'';
+    display:inline-block;
+    width:6px; height:6px;
     background: var(--moss-lt);
     border-radius: 50%;
   }
@@ -85,15 +83,15 @@
     font-family: 'Syne', sans-serif;
     font-size: clamp(2.5rem, 8vw, 4.5rem);
     font-weight: 800;
-    line-height: 0.92;
-    letter-spacing: -0.03em;
+    line-height: .92;
+    letter-spacing: -.03em;
     margin-bottom: 1rem;
   }
 
-  h1 .dim { color: var(--ghost); font-weight: 400; }
+  h1 .dim { color:var(--ghost); font-weight:400; }
 
   .header-desc {
-    font-size: 0.82rem;
+    font-size: .82rem;
     color: var(--mid);
     line-height: 1.7;
     max-width: 420px;
@@ -108,20 +106,20 @@
 
   .section-label {
     font-family: 'Syne Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
+    font-size: .6rem;
+    letter-spacing: .25em;
     text-transform: uppercase;
     color: var(--ghost);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: .75rem;
   }
 
   .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
+    content:'';
+    flex:1;
+    height:1px;
     background: var(--border);
   }
 
@@ -129,7 +127,7 @@
   .tools-list {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: .6rem;
     margin-bottom: 2rem;
   }
 
@@ -143,41 +141,38 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: all 0.15s;
+    transition: all .15s;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .tool-card:hover { border-color: var(--border2); background: #181818; transform: translateY(-1px); }
-  .tool-card:active { transform: scale(0.98); background: #161616; }
+  .tool-card:hover { border-color:var(--border2); background:#181818; transform:translateY(-1px); }
+  .tool-card:active { transform:scale(.98); background:#161616; }
 
   .tool-icon {
     font-size: 1.75rem;
     flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 44px; height: 44px;
+    display: flex; align-items:center; justify-content:center;
     border-radius: 8px;
     background: var(--bg);
     border: 1px solid var(--border);
   }
 
-  .tool-info { flex: 1; min-width: 0; }
+  .tool-info { flex:1; min-width:0; }
 
   .tool-name {
     font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
+    font-size: .95rem;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    margin-bottom: 0.2rem;
+    letter-spacing: -.01em;
+    margin-bottom: .2rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .tool-desc {
-    font-size: 0.72rem;
+    font-size: .72rem;
     color: var(--mid);
     line-height: 1.4;
   }
@@ -186,34 +181,35 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.3rem;
+    gap: .3rem;
     flex-shrink: 0;
   }
 
   .tool-tag {
     font-family: 'Syne Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.1em;
+    font-size: .55rem;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    padding: 0.18rem 0.45rem;
+    padding: .18rem .45rem;
     border-radius: 20px;
     border: 1px solid currentColor;
     white-space: nowrap;
   }
 
-  .tag-fitness  { color: var(--rust); }
-  .tag-food     { color: var(--gold); }
-  .tag-field    { color: var(--moss-lt); }
-  .tag-mobile   { color: var(--sky); }
+  .tag-fitness { color: var(--rust); }
+  .tag-food    { color: var(--gold); }
+  .tag-field   { color: var(--moss-lt); }
+  .tag-mobile  { color: var(--sky); }
+  .tag-kids    { color: var(--star); }
 
   .tool-arrow {
     color: var(--ghost);
-    font-size: 0.9rem;
-    margin-left: 0.25rem;
-    transition: transform 0.15s, color 0.15s;
+    font-size: .9rem;
+    margin-left: .25rem;
+    transition: transform .15s, color .15s;
   }
 
-  .tool-card:hover .tool-arrow { color: var(--chalk); transform: translateX(3px); }
+  .tool-card:hover .tool-arrow { color:var(--chalk); transform:translateX(3px); }
 
   /* ── FOOTER ── */
   footer {
@@ -225,28 +221,24 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: .5rem;
   }
 
   .footer-left {
     font-family: 'Syne Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
+    font-size: .6rem;
+    letter-spacing: .1em;
     color: var(--ghost);
   }
 
-  .footer-right {
-    font-size: 0.65rem;
-    color: var(--ghost);
-  }
+  .footer-right { font-size: .65rem; color:var(--ghost); }
 
-  /* ── MOBILE TWEAKS ── */
-  @media (max-width: 480px) {
-    header { padding: 2rem 1rem 1.5rem; }
-    .section { padding: 1.5rem 1rem 0; }
-    footer { padding: 1.25rem 1rem 2rem; }
-    .tool-desc { display: none; }
-    .tool-name { white-space: normal; font-size: 0.9rem; }
+  @media (max-width:480px) {
+    header { padding:2rem 1rem 1.5rem; }
+    .section { padding:1.5rem 1rem 0; }
+    footer { padding:1.25rem 1rem 2rem; }
+    .tool-desc { display:none; }
+    .tool-name { white-space:normal; font-size:.9rem; }
   }
 </style>
 </head>
@@ -255,7 +247,7 @@
 <header>
   <div class="site-label">GlobalSkynetAdmin · Tools</div>
   <h1>Personal<br><span class="dim">Tools</span></h1>
-  <p class="header-desc">Fitness trackers, meal planners, and field tools. Built for real use — phone-friendly, no login required.</p>
+  <p class="header-desc">Fitness trackers, meal planners, field tools, and family tools. Built for real use — phone-friendly, no login required.</p>
 </header>
 
 <!-- FITNESS -->
@@ -339,7 +331,7 @@
   </div>
 </div>
 
-<!-- FIELD -->
+<!-- PHOTOGRAPHY -->
 <div class="section">
   <div class="section-label">Photography</div>
   <div class="tools-list">
@@ -352,6 +344,27 @@
       </div>
       <div class="tool-meta">
         <span class="tool-tag tag-field">Field</span>
+        <span class="tool-tag tag-mobile">Mobile</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- KIDS -->
+<div class="section">
+  <div class="section-label">Kids</div>
+  <div class="tools-list">
+
+    <a class="tool-card" href="wilder-chore-chart.html">
+      <div class="tool-icon">⭐</div>
+      <div class="tool-info">
+        <div class="tool-name">Wilder's Chore Chart</div>
+        <div class="tool-desc">Bi-weekly chores · real calendar dates · earnings tracker · bedtime deductions · savings bonus · print pay stub</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-kids">Kids</span>
         <span class="tool-tag tag-mobile">Mobile</span>
       </div>
       <div class="tool-arrow">›</div>
