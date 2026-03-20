@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Spring Reset</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #F5F0E8;
+    --warm:    #EDE5D4;
+    --card:    #FDFAF5;
+    --border:  #DDD4C0;
+    --border2: #C8BC A8;
+    --ink:     #252018;
+    --mid:     #7A7060;
+    --ghost:   #ACA090;
+    --rule:    #E4DDD0;
+
+    --urgent:  #C04828;
+    --high:    #C8963A;
+    --normal:  #4A7C59;
+    --wilder:  #3A7AAA;
+
+    --spring:  #5A8A3A;
+    --spring-lt:#8ABB5A;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0;
+  }
+  * { position:relative; z-index:1; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--spring);
+    color: #F5F0E8;
+    padding: 1.5rem 1.25rem 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(138,187,90,.25) 0%, transparent 60%);
+    pointer-events:none;
+  }
+
+  .header-inner { position:relative; }
+
+  .header-kicker {
+    font-size:.62rem; letter-spacing:.25em; text-transform:uppercase;
+    color:rgba(245,240,232,.6); margin-bottom:.5rem;
+  }
+
+  h1 {
+    font-family:'Fraunces',serif;
+    font-size:clamp(2rem,6vw,3rem);
+    font-weight:700; line-height:.95; letter-spacing:-.02em;
+  }
+
+  h1 em { font-style:italic; font-weight:400; color:#B8D4A0; display:block; }
+
+  .header-sub {
+    font-size:.75rem; color:rgba(245,240,232,.65);
+    margin-top:.65rem; line-height:1.6; max-width:480px;
+  }
+
+  /* stats row */
+  .stats-row {
+    display:flex; gap:.5rem; margin-top:1rem; flex-wrap:wrap;
+  }
+
+  .stat-pill {
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:20px; padding:.3rem .8rem;
+    font-size:.68rem; font-weight:500;
+    color:rgba(245,240,232,.9);
+    display:flex; align-items:center; gap:.4rem;
+  }
+
+  .stat-pill .val {
+    font-family:'Fraunces',serif;
+    font-size:.95rem; font-weight:700; color:#fff;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display:flex; overflow-x:auto; scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar { display:none; }
+
+  .tab {
+    flex:1; min-width:80px; background:none; border:none;
+    border-bottom:2px solid transparent;
+    padding:.75rem .6rem; cursor:pointer; text-align:center;
+    font-family:'DM Sans',sans-serif; font-size:.68rem;
+    font-weight:500; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--ghost); transition:all .15s; white-space:nowrap;
+    margin-bottom:-1px;
+  }
+  .tab.active { color:var(--spring); border-bottom-color:var(--spring); }
+
+  /* ── PANELS ── */
+  .panel { display:none; animation:fadeUp .2s ease; }
+  .panel.active { display:block; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── AREA WRAP ── */
+  .area-wrap { padding:.75rem .9rem 5rem; max-width:600px; margin:0 auto; }
+
+  /* ── AREA SECTION ── */
+  .area-section { margin-bottom:1.25rem; }
+
+  .area-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:.7rem .9rem;
+    background:var(--warm); border:1px solid var(--border);
+    border-radius:10px 10px 0 0;
+    cursor:pointer; user-select:none;
+    transition:background .12s;
+  }
+  .area-header:active { background:var(--border); }
+
+  .area-header-left { display:flex; align-items:center; gap:.6rem; }
+  .area-icon { font-size:1.2rem; }
+
+  .area-name {
+    font-family:'Fraunces',serif;
+    font-size:.95rem; font-weight:700; letter-spacing:-.01em;
+  }
+
+  .area-progress {
+    font-size:.62rem; color:var(--mid);
+    font-style:italic; margin-top:.1rem;
+  }
+
+  .area-chevron {
+    font-size:.8rem; color:var(--ghost);
+    transition:transform .2s;
+  }
+  .area-section.open .area-chevron { transform:rotate(180deg); }
+
+  .area-body {
+    display:none;
+    border:1px solid var(--border); border-top:none;
+    border-radius:0 0 10px 10px;
+    background:var(--card);
+    overflow:hidden;
+  }
+  .area-section.open .area-body { display:block; animation:fadeUp .15s ease; }
+
+  /* ── TASK ITEM ── */
+  .task-item {
+    border-bottom:1px solid var(--rule);
+    transition:background .12s;
+  }
+  .task-item:last-child { border-bottom:none; }
+
+  .task-main {
+    display:flex; align-items:flex-start; gap:.75rem;
+    padding:.75rem .9rem;
+    cursor:pointer; user-select:none;
+  }
+  .task-main:active { background:var(--warm); }
+
+  .task-chk {
+    width:20px; height:20px; flex-shrink:0;
+    border:1.5px solid var(--border); border-radius:5px;
+    background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    font-size:.7rem; transition:all .15s; margin-top:1px;
+  }
+  .task-item.done .task-chk { background:var(--spring); border-color:var(--spring); color:white; }
+
+  .task-body { flex:1; }
+
+  .task-top { display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; }
+
+  .task-name {
+    font-size:.85rem; font-weight:400; color:var(--ink); line-height:1.3;
+    flex:1;
+  }
+  .task-item.done .task-name { text-decoration:line-through; color:var(--ghost); }
+
+  .task-flags { display:flex; gap:.3rem; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
+
+  .flag {
+    font-size:.52rem; letter-spacing:.07em; text-transform:uppercase;
+    padding:.14rem .38rem; border-radius:20px; border:1px solid currentColor;
+    font-weight:500; white-space:nowrap;
+  }
+  .flag-urgent { color:var(--urgent); }
+  .flag-high   { color:var(--high); }
+  .flag-normal { color:var(--normal); }
+  .flag-wilder { color:var(--wilder); }
+
+  .task-hint {
+    font-size:.68rem; color:var(--mid);
+    margin-top:.18rem; line-height:1.4; font-style:italic;
+  }
+
+  /* notes expand */
+  .task-notes-wrap {
+    padding:0 .9rem .65rem 2.45rem;
+    display:none;
+  }
+  .task-item.notes-open .task-notes-wrap { display:block; }
+
+  .task-note-input {
+    width:100%; background:var(--warm);
+    border:1px solid var(--border); border-radius:7px;
+    padding:.55rem .7rem;
+    font-family:'DM Sans',sans-serif; font-size:.78rem;
+    font-weight:300; color:var(--ink);
+    outline:none; resize:none; min-height:56px;
+    line-height:1.5; transition:border-color .15s;
+    -webkit-appearance:none;
+  }
+  .task-note-input:focus { border-color:var(--spring); }
+  .task-note-input::placeholder { color:var(--ghost); font-style:italic; }
+
+  .notes-toggle {
+    font-size:.6rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ghost); cursor:pointer; padding:.2rem 0 0 2.45rem;
+    display:block; padding-bottom:.4rem;
+    transition:color .12s;
+  }
+  .notes-toggle:active { color:var(--spring); }
+  .task-item.notes-open .notes-toggle { color:var(--spring); }
+
+  /* ── WEED SECTION ── */
+  .weed-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; padding:1rem 1.1rem; margin-bottom:.65rem;
+  }
+
+  .weed-title {
+    font-family:'Fraunces',serif;
+    font-size:.92rem; font-weight:700; margin-bottom:.25rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+
+  .weed-desc {
+    font-size:.75rem; color:var(--mid); line-height:1.65; margin-bottom:.75rem;
+  }
+
+  .weed-recipe {
+    background:var(--warm); border:1px solid var(--border);
+    border-radius:7px; padding:.65rem .8rem;
+    font-size:.72rem; color:var(--mid); line-height:1.65;
+  }
+
+  .weed-recipe strong { color:var(--ink); font-weight:500; }
+
+  /* ── PROGRESS BAR ── */
+  .prog-bar-wrap {
+    background:var(--warm); padding:.6rem .9rem;
+    border-bottom:1px solid var(--border);
+  }
+  .prog-labels { display:flex; justify-content:space-between; font-size:.6rem; color:var(--mid); margin-bottom:.3rem; }
+  .prog-track  { background:var(--border); border-radius:20px; height:5px; overflow:hidden; }
+  .prog-fill   { height:100%; border-radius:20px; background:linear-gradient(90deg,var(--spring),var(--spring-lt)); transition:width .4s ease; }
+
+  /* ── RESET ── */
+  .reset-btn {
+    width:100%; background:transparent;
+    border:1px solid var(--border); border-radius:8px;
+    color:var(--mid); font-family:'DM Sans',sans-serif;
+    font-size:.72rem; font-weight:500; letter-spacing:.05em;
+    padding:.7rem; cursor:pointer; transition:all .15s;
+    margin-top:1rem; text-transform:uppercase;
+  }
+  .reset-btn:active { background:rgba(192,72,40,.1); border-color:var(--urgent); color:var(--urgent); }
+
+  /* toast */
+  .toast {
+    position:fixed; bottom:1.25rem; left:50%;
+    transform:translateX(-50%) translateY(8px);
+    background:var(--ink); color:var(--bg);
+    font-family:'DM Sans',sans-serif; font-size:.76rem; font-weight:500;
+    padding:.5rem 1.1rem; border-radius:20px;
+    opacity:0; transition:all .2s ease;
+    pointer-events:none; white-space:nowrap; z-index:200;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* legend */
+  .legend {
+    display:flex; gap:.5rem; flex-wrap:wrap;
+    padding:.6rem .9rem; background:var(--warm);
+    border-bottom:1px solid var(--border);
+    font-size:.6rem;
+  }
+  .legend-item { display:flex; align-items:center; gap:.3rem; color:var(--mid); }
+  .legend-dot  { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-kicker">2026 Spring Reset — Eureka, Utah</div>
+    <h1>Spring<em>Cleaning & Prep</em></h1>
+    <div class="header-sub">
+      Dumpster is in the driveway. Work through each area at your own pace — check things off, add notes, assign to whoever makes sense.
+    </div>
+    <div class="stats-row">
+      <div class="stat-pill"><span class="val" id="stat-done">0</span> done</div>
+      <div class="stat-pill"><span class="val" id="stat-left">0</span> remaining</div>
+      <div class="stat-pill"><span class="val" id="stat-pct">0%</span> complete</div>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS BAR -->
+<div class="prog-bar-wrap">
+  <div class="prog-labels"><span>Overall progress</span><span id="prog-label">0 of 0 tasks</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--urgent)"></div>Do first</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--high)"></div>High priority</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--normal)"></div>When you get to it</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--wilder)"></div>Wilder's job</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" id="tab-house"    onclick="switchTab('house')">🏠 House</button>
+  <button class="tab"        id="tab-garage"   onclick="switchTab('garage')">🚗 Garage</button>
+  <button class="tab"        id="tab-exterior" onclick="switchTab('exterior')">🌿 Exterior</button>
+  <button class="tab"        id="tab-stove"    onclick="switchTab('stove')">🔥 Stove</button>
+  <button class="tab"        id="tab-weeds"    onclick="switchTab('weeds')">🌱 Weeds</button>
+</div>
+
+<!-- ══════════ HOUSE ══════════ -->
+<div class="panel active" id="panel-house">
+  <div class="area-wrap" id="house-wrap"></div>
+</div>
+
+<!-- ══════════ GARAGE ══════════ -->
+<div class="panel" id="panel-garage">
+  <div class="area-wrap" id="garage-wrap"></div>
+</div>
+
+<!-- ══════════ EXTERIOR ══════════ -->
+<div class="panel" id="panel-exterior">
+  <div class="area-wrap" id="exterior-wrap"></div>
+</div>
+
+<!-- ══════════ STOVE ══════════ -->
+<div class="panel" id="panel-stove">
+  <div class="area-wrap" id="stove-wrap"></div>
+</div>
+
+<!-- ══════════ WEEDS ══════════ -->
+<div class="panel" id="panel-weeds">
+  <div class="area-wrap">
+
+    <div class="weed-card">
+      <div class="weed-title">🌿 Weed Strategy — No Lawn, Gravel & Dirt</div>
+      <div class="weed-desc">
+        You don't need to win the war all at once. The goal is to knock back the worst offenders now while the dumpster is here, then keep on top of it with low-cost methods through spring and summer. Hit them early before they seed — one weed that seeds means hundreds next year.
+      </div>
+    </div>
+
+    <div id="weed-tasks-wrap"></div>
+
+    <div class="weed-card" style="margin-top:.75rem;">
+      <div class="weed-title">🧪 Vinegar + Salt Spray Recipe</div>
+      <div class="weed-recipe">
+        <strong>Mix:</strong> 1 gallon white vinegar + 1 cup table salt + 1 tbsp dish soap<br><br>
+        Spray directly on weeds on a sunny day — the sun amplifies the kill. Works best on young weeds. <strong>Do not spray near anything you want to keep</strong> — this kills indiscriminately and can affect soil for a season.<br><br>
+        <strong>Cost:</strong> Under $5 per gallon. Works within 24–48 hrs. Re-apply after rain.
+      </div>
+    </div>
+
+    <div class="weed-card">
+      <div class="weed-title">🔥 Torch Notes</div>
+      <div class="weed-recipe">
+        Propane torch works well on gravel driveways and rock areas where you can't easily spray. <strong>Check wind conditions first.</strong> Best in early morning when everything is still slightly damp. Don't torch during dry spell warnings — Utah spring can get dry fast. Hit the base of the plant, not the top.
+      </div>
+    </div>
+
+    <div class="weed-card">
+      <div class="weed-title">💧 Boiling Water</div>
+      <div class="weed-recipe">
+        Best for weeds coming up through gravel near the house foundation or in tight spots where a torch is too risky. Boil a full kettle, pour directly onto the root zone. Kills on contact. Free. Works in two pours for established roots.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── TASK DATA ─────────────────────────────────────────────────────────────
+// priority: 'urgent' | 'high' | 'normal'
+// who: '' | 'wilder' | 'adults'
+// hint: short tip shown under task name
+
+const AREAS = {
+  house: [
+    {
+      name: 'Living Room / Wilder\'s Bedroom Area', icon: '🛋️',
+      tasks: [
+        { id:'lr1', name:'Declutter — fill dumpster runs from this room',          priority:'urgent', who:'adults', hint:'Dumpster is here now. Go room by room, not all at once.' },
+        { id:'lr2', name:'Wilder sorts his own stuff — keep, donate, trash',        priority:'urgent', who:'wilder', hint:'Sit with him — he needs help deciding or it won\'t get done.' },
+        { id:'lr3', name:'Move furniture, sweep/vacuum underneath',                 priority:'high',   who:'adults', hint:'' },
+        { id:'lr4', name:'Wipe down baseboards and window sills',                   priority:'normal', who:'adults', hint:'' },
+        { id:'lr5', name:'Wash windows inside, check screens for holes',            priority:'high',   who:'adults', hint:'Replace any torn screens before bug season.' },
+        { id:'lr6', name:'Wipe light switches, door handles, and high-touch spots', priority:'normal', who:'wilder', hint:'Give him a damp cloth and a list — he can do this.' },
+        { id:'lr7', name:'Check under bed / in corners for pests or droppings',     priority:'high',   who:'adults', hint:'Early spring is when mice get active again.' },
+      ]
+    },
+    {
+      name: 'Your Bedroom', icon: '🛏️',
+      tasks: [
+        { id:'br1', name:'Declutter — pull out anything that should go in dumpster', priority:'urgent', who:'adults', hint:'' },
+        { id:'br2', name:'Wash all bedding including duvet covers and pillows',       priority:'high',   who:'adults', hint:'Hang outside if it\'s sunny — Utah spring sun is a natural sanitizer.' },
+        { id:'br3', name:'Move furniture, vacuum underneath and behind',              priority:'normal', who:'adults', hint:'' },
+        { id:'br4', name:'Wipe down surfaces, nightstands, tops of furniture',        priority:'normal', who:'adults', hint:'' },
+        { id:'br5', name:'Wash windows inside, check screens',                        priority:'high',   who:'adults', hint:'' },
+        { id:'br6', name:'Check closet — purge anything not used in a year',          priority:'high',   who:'adults', hint:'Goes in the dumpster or donation box while dumpster is here.' },
+        { id:'br7', name:'Pest check — look behind furniture and in corners',         priority:'high',   who:'adults', hint:'' },
+      ]
+    },
+    {
+      name: 'Kitchen', icon: '🍳',
+      tasks: [
+        { id:'kt1', name:'Declutter pantry and cabinets — toss expired goods',        priority:'urgent', who:'adults', hint:'Good dumpster run candidate. Check everything.' },
+        { id:'kt2', name:'Pull out appliances, clean behind/under them',              priority:'high',   who:'adults', hint:'Especially fridge coils — clogged coils reduce efficiency.' },
+        { id:'kt3', name:'Deep clean oven and stovetop',                              priority:'high',   who:'adults', hint:'' },
+        { id:'kt4', name:'Wipe inside all cabinets and drawers',                      priority:'normal', who:'adults', hint:'' },
+        { id:'kt5', name:'Wash windows, check screens',                               priority:'high',   who:'adults', hint:'' },
+        { id:'kt6', name:'Check under sink for leaks, moisture, or pests',            priority:'urgent', who:'adults', hint:'Common mouse entry point — seal any gaps you find.' },
+        { id:'kt7', name:'Wipe down walls, especially above the stove',               priority:'normal', who:'adults', hint:'Grease builds up over winter with the stove running.' },
+        { id:'kt8', name:'Wipe exterior of fridge, dishwasher, microwave',            priority:'normal', who:'wilder', hint:'Wipe-down jobs are perfect for him to own.' },
+      ]
+    },
+    {
+      name: 'Bathroom', icon: '🚿',
+      tasks: [
+        { id:'bth1', name:'Declutter medicine cabinet and under sink',                priority:'high',   who:'adults', hint:'Toss expired medications and products you haven\'t used.' },
+        { id:'bth2', name:'Deep clean toilet, tub/shower, and sink',                 priority:'high',   who:'adults', hint:'' },
+        { id:'bth3', name:'Scrub grout if needed',                                   priority:'normal', who:'adults', hint:'Baking soda + old toothbrush works well.' },
+        { id:'bth4', name:'Wash or replace bath mats and shower curtain',             priority:'high',   who:'adults', hint:'' },
+        { id:'bth5', name:'Check for any moisture damage or mold around tub/sink',   priority:'urgent', who:'adults', hint:'Catch it early before it spreads.' },
+        { id:'bth6', name:'Wash window, check screen',                               priority:'normal', who:'adults', hint:'' },
+        { id:'bth7', name:'Wipe walls and baseboards',                               priority:'normal', who:'wilder', hint:'' },
+      ]
+    },
+    {
+      name: 'The Parlor (Cat Room)', icon: '🐱',
+      tasks: [
+        { id:'pr1', name:'Full Litter Robot 4 deep clean — drawer, globe, base',      priority:'urgent', who:'adults', hint:'Spring is a good reset point. Unplug, take apart, wash thoroughly.' },
+        { id:'pr2', name:'Wash cat tower — vacuum fabric, wipe base and posts',       priority:'high',   who:'adults', hint:'' },
+        { id:'pr3', name:'Sweep and mop floor thoroughly — litter gets everywhere',   priority:'high',   who:'adults', hint:'' },
+        { id:'pr4', name:'Wipe down all walls in the parlor',                         priority:'normal', who:'adults', hint:'Cat hair and dander sticks to walls over time.' },
+        { id:'pr5', name:'Declutter anything stored in the parlor',                   priority:'high',   who:'adults', hint:'Good dumpster candidate if stuff has piled up.' },
+        { id:'pr6', name:'Check for any cat damage to walls, trim, or baseboards',    priority:'normal', who:'adults', hint:'' },
+        { id:'pr7', name:'Wash any cat bedding or blankets',                          priority:'high',   who:'wilder', hint:'He can carry these to the laundry — simple job for him.' },
+        { id:'pr8', name:'Wipe window sill and check screen',                         priority:'normal', who:'wilder', hint:'' },
+      ]
+    },
+    {
+      name: 'Attic Office', icon: '🖥️',
+      tasks: [
+        { id:'at1', name:'Declutter — anything up here that\'s not office-related goes', priority:'urgent', who:'adults', hint:'Attics collect things that have no other home. Hard purge.' },
+        { id:'at2', name:'Vacuum thoroughly — dust accumulates fast in attic spaces',    priority:'high',   who:'adults', hint:'Especially corners, around the eaves, and under desk.' },
+        { id:'at3', name:'Check for any signs of pest activity (droppings, nesting)',    priority:'urgent', who:'adults', hint:'Attics are a prime mouse entry point — check carefully.' },
+        { id:'at4', name:'Check insulation condition if visible',                        priority:'high',   who:'adults', hint:'Disturbed or compressed insulation affects heating efficiency.' },
+        { id:'at5', name:'Wipe down desk, shelves, all surfaces',                        priority:'normal', who:'adults', hint:'' },
+        { id:'at6', name:'Check all cable management — tidy any loose cables',           priority:'normal', who:'adults', hint:'' },
+        { id:'at7', name:'Check roof from inside — any light coming through? Any stains?', priority:'urgent', who:'adults', hint:'Best time to catch a roof issue is before summer storms.' },
+        { id:'at8', name:'Wipe attic windows inside, check screen condition',            priority:'normal', who:'adults', hint:'' },
+      ]
+    },
+  ],
+
+  garage: [
+    {
+      name: 'Garage', icon: '🚗',
+      tasks: [
+        { id:'gr1', name:'Full sort and dumpster run — this is the priority',          priority:'urgent', who:'adults', hint:'Dumpster is here. Aggressive purge. If you haven\'t used it in 2 years, it goes.' },
+        { id:'gr2', name:'Sort tools — keep only what you use, donate or toss rest',   priority:'urgent', who:'adults', hint:'' },
+        { id:'gr3', name:'Sweep entire floor thoroughly',                              priority:'high',   who:'adults', hint:'' },
+        { id:'gr4', name:'Check for mouse activity — traps, droppings, nesting',       priority:'urgent', who:'adults', hint:'Garages are prime winter rodent habitat. Check every corner.' },
+        { id:'gr5', name:'Set or refresh mouse traps in corners and along walls',      priority:'urgent', who:'adults', hint:'Snap traps with peanut butter, repositioned in early spring.' },
+        { id:'gr6', name:'Check any stored chemicals — safely dispose of old ones',    priority:'high',   who:'adults', hint:'Old gas, oil, paint — many can go in the dumpster (check labels) or a hazmat drop.' },
+        { id:'gr7', name:'Organize what remains — wall hooks, shelves, zones',         priority:'normal', who:'adults', hint:'' },
+        { id:'gr8', name:'Check garage door operation and weather seals',              priority:'high',   who:'adults', hint:'Replace door bottom seal if light/air is getting through.' },
+        { id:'gr9', name:'Wipe down any windows',                                      priority:'normal', who:'wilder', hint:'' },
+      ]
+    },
+  ],
+
+  exterior: [
+    {
+      name: 'Exterior Building (Outbuilding)', icon: '🏚️',
+      tasks: [
+        { id:'eb1', name:'Full sort and dumpster run — aggressive purge',              priority:'urgent', who:'adults', hint:'Dumpster is here now. Don\'t move things around — throw them out.' },
+        { id:'eb2', name:'Check structure — roof, walls, foundation for damage',       priority:'urgent', who:'adults', hint:'Catch anything that got worse over winter before it gets worse over summer.' },
+        { id:'eb3', name:'Check for pest activity inside',                             priority:'urgent', who:'adults', hint:'' },
+        { id:'eb4', name:'Sweep floor, clear out cobwebs',                             priority:'high',   who:'adults', hint:'' },
+        { id:'eb5', name:'Seal any obvious gaps or holes in walls/foundation',         priority:'high',   who:'adults', hint:'Steel wool + caulk for small holes. Hardware cloth for larger gaps.' },
+        { id:'eb6', name:'Organize whatever is staying — give everything a place',     priority:'normal', who:'adults', hint:'' },
+      ]
+    },
+    {
+      name: 'Driveway & Exterior Grounds', icon: '🪨',
+      tasks: [
+        { id:'dv1', name:'Rake and level gravel where it has shifted over winter',     priority:'high',   who:'adults', hint:'Gravel migrates to edges and low spots over freeze/thaw cycles.' },
+        { id:'dv2', name:'Rake out any debris — dead weeds, leaves, winter trash',     priority:'high',   who:'wilder', hint:'Great Wilder job with supervision. Get him a good rake.' },
+        { id:'dv3', name:'First round weed patrol — pull everything while still small', priority:'urgent', who:'adults', hint:'Pull now before they seed. This is the most important weed timing.' },
+        { id:'dv4', name:'Vinegar+salt spray pass on all visible weeds',               priority:'urgent', who:'adults', hint:'See Weeds tab for recipe. Do on a sunny afternoon.' },
+        { id:'dv5', name:'Torch pass on gravel areas — driveway edges and cracks',     priority:'high',   who:'adults', hint:'Check wind and conditions first. Stay away from dry brush.' },
+        { id:'dv6', name:'Check exterior of house foundation — any cracks or gaps',    priority:'high',   who:'adults', hint:'Spring melt can open cracks. Seal anything you find.' },
+        { id:'dv7', name:'Inspect exterior walls for winter damage',                   priority:'high',   who:'adults', hint:'' },
+        { id:'dv8', name:'Clean up any winter debris piled against the house',         priority:'high',   who:'adults', hint:'Debris against the foundation invites moisture and pests.' },
+        { id:'dv9', name:'Wipe down exterior windows',                                 priority:'normal', who:'adults', hint:'' },
+        { id:'dv10',name:'Check weatherstripping on all exterior doors',               priority:'high',   who:'adults', hint:'Replace any that are cracked, flattened, or letting air through.' },
+      ]
+    },
+  ],
+
+  stove: [
+    {
+      name: 'Wood / Coal Stove — End of Season', icon: '🔥',
+      tasks: [
+        { id:'st1', name:'PRIORITY: Schedule chimney/flue inspection and sweep',       priority:'urgent', who:'adults', hint:'End of heating season is the best time. Creosote builds up over winter and is a fire hazard. Do this before closing it up.' },
+        { id:'st2', name:'Clean out all ash and clinkers completely',                  priority:'urgent', who:'adults', hint:'Wait 24 hrs after last use to ensure everything is cold. Ash in a metal bucket — never plastic.' },
+        { id:'st3', name:'Check door gaskets (rope seals) for wear',                  priority:'high',   who:'adults', hint:'Press a dollar bill in the door and close it. If it slides out easily, the gasket needs replacing before next season.' },
+        { id:'st4', name:'Inspect firebox interior for cracks in the firebrick',       priority:'high',   who:'adults', hint:'Small cracks can be repaired with refractory cement. Large cracks need a pro.' },
+        { id:'st5', name:'Clean exterior of stove — remove soot and residue',          priority:'normal', who:'adults', hint:'Stove polish or black paint touch-up if needed. Protects the metal over summer.' },
+        { id:'st6', name:'Check coal/wood supply — store remaining stock properly',    priority:'high',   who:'adults', hint:'Stack wood off the ground, covered but with airflow. Keep away from house foundation.' },
+        { id:'st7', name:'Damper check — open fully, inspect for corrosion or damage', priority:'high',   who:'adults', hint:'' },
+        { id:'st8', name:'Leave damper slightly cracked over summer',                  priority:'normal', who:'adults', hint:'Prevents moisture from condensing inside the flue. Prevents odors too.' },
+        { id:'st9', name:'Take a photo of the stove and flue connection for records',  priority:'normal', who:'adults', hint:'Useful if you ever need to describe it to an inspector or repair person.' },
+      ]
+    },
+  ],
+};
+
+const WEED_TASKS = [
+  { id:'wd1', name:'First weed pull — do this week while dumpster is here',     priority:'urgent', hint:'Young weeds pull easily. Once roots establish it\'s 5x the work.' },
+  { id:'wd2', name:'Mix and apply vinegar + salt spray to driveway and grounds', priority:'urgent', hint:'See recipe card below. Sunny day, calm wind.' },
+  { id:'wd3', name:'Torch pass along gravel driveway edges',                     priority:'high',   hint:'Most effective on weeds coming through gravel. Check conditions first.' },
+  { id:'wd4', name:'Boiling water on any weeds near house foundation',           priority:'high',   hint:'Safer near the house than torch. Same kill rate.' },
+  { id:'wd5', name:'Identify the worst repeat offenders',                        priority:'normal', hint:'Note where weeds keep coming back — those spots need more aggressive treatment or smothering.' },
+  { id:'wd6', name:'Cardboard smothering on worst patches',                      priority:'normal', hint:'Lay cardboard over bare dirt patches, wet it, cover with gravel or wood chips. Smothers weeds for a full season. Free if you save moving boxes.' },
+  { id:'wd7', name:'Set up a weekly 10-min weed patrol habit',                   priority:'normal', hint:'10 min once a week is all it takes to stay ahead of it. Do it on the same day each week.' },
+  { id:'wd8', name:'Targeted spot spray on any late-season stragglers',          priority:'normal', hint:'One pass of commercial spray on the ones that survive the natural methods.' },
+];
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let S = { done: {}, notes: {} };
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  buildAll();
+  refreshStats();
+});
+
+// ─── BUILD ──────────────────────────────────────────────────────────────────
+function buildAll() {
+  buildAreas('house-wrap',    AREAS.house);
+  buildAreas('garage-wrap',   AREAS.garage);
+  buildAreas('exterior-wrap', AREAS.exterior);
+  buildAreas('stove-wrap',    AREAS.stove);
+  buildWeedTasks();
+}
+
+function buildAreas(wrapperId, areas) {
+  const wrap = document.getElementById(wrapperId);
+  if (!wrap) return;
+  wrap.innerHTML = '';
+
+  areas.forEach((area, ai) => {
+    const sec = document.createElement('div');
+    sec.className = 'area-section';
+    sec.id = `area-${wrapperId}-${ai}`;
+
+    const done  = area.tasks.filter(t => S.done[t.id]).length;
+    const total = area.tasks.length;
+
+    sec.innerHTML = `
+      <div class="area-header" onclick="toggleArea('area-${wrapperId}-${ai}')">
+        <div class="area-header-left">
+          <span class="area-icon">${area.icon}</span>
+          <div>
+            <div class="area-name">${area.name}</div>
+            <div class="area-progress" id="prog-${wrapperId}-${ai}">${done} of ${total} done</div>
+          </div>
+        </div>
+        <span class="area-chevron">▼</span>
+      </div>
+      <div class="area-body">
+        ${area.tasks.map(t => buildTask(t)).join('')}
+      </div>`;
+
+    wrap.appendChild(sec);
+  });
+
+  // Add reset button at bottom
+  const resetBtn = document.createElement('button');
+  resetBtn.className = 'reset-btn';
+  resetBtn.textContent = '↺ Reset this section';
+  resetBtn.onclick = () => resetSection(wrapperId, areas);
+  wrap.appendChild(resetBtn);
+}
+
+function buildTask(t) {
+  const isDone   = !!S.done[t.id];
+  const note     = S.notes[t.id] || '';
+  const flagHTML = buildFlags(t);
+
+  return `
+    <div class="task-item${isDone?' done':''}" id="ti-${t.id}">
+      <div class="task-main" onclick="toggleTask('${t.id}')">
+        <div class="task-chk" id="chk-${t.id}">${isDone?'✓':''}</div>
+        <div class="task-body">
+          <div class="task-top">
+            <div class="task-name">${t.name}</div>
+            <div class="task-flags">${flagHTML}</div>
+          </div>
+          ${t.hint ? `<div class="task-hint">${t.hint}</div>` : ''}
+        </div>
+      </div>
+      <span class="notes-toggle" onclick="toggleNotes('${t.id}')">📝 ${note ? 'Edit note' : 'Add note'}</span>
+      <div class="task-notes-wrap">
+        <textarea class="task-note-input"
+          id="note-${t.id}"
+          placeholder="Add a note for this task…"
+          oninput="saveNote('${t.id}',this.value)">${note}</textarea>
+      </div>
+    </div>`;
+}
+
+function buildFlags(t) {
+  let html = '';
+  if (t.priority === 'urgent') html += `<span class="flag flag-urgent">Do first</span>`;
+  if (t.priority === 'high')   html += `<span class="flag flag-high">High</span>`;
+  if (t.who === 'wilder')      html += `<span class="flag flag-wilder">Wilder</span>`;
+  return html;
+}
+
+function buildWeedTasks() {
+  const wrap = document.getElementById('weed-tasks-wrap');
+  if (!wrap) return;
+  const card = document.createElement('div');
+  card.className = 'area-section';
+  card.id = 'area-weeds-0';
+
+  const done  = WEED_TASKS.filter(t => S.done[t.id]).length;
+  const total = WEED_TASKS.length;
+
+  card.innerHTML = `
+    <div class="area-header" onclick="toggleArea('area-weeds-0')">
+      <div class="area-header-left">
+        <span class="area-icon">✅</span>
+        <div>
+          <div class="area-name">Weed Management Tasks</div>
+          <div class="area-progress" id="prog-weeds-0">${done} of ${total} done</div>
+        </div>
+      </div>
+      <span class="area-chevron">▼</span>
+    </div>
+    <div class="area-body">
+      ${WEED_TASKS.map(t => buildTask(t)).join('')}
+    </div>`;
+
+  wrap.appendChild(card);
+}
+
+// ─── INTERACTIONS ───────────────────────────────────────────────────────────
+function toggleArea(id) {
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.toggle('open');
+}
+
+function toggleTask(id) {
+  S.done[id] = !S.done[id];
+  const ti  = document.getElementById(`ti-${id}`);
+  const chk = document.getElementById(`chk-${id}`);
+  if (ti)  ti.classList.toggle('done', S.done[id]);
+  if (chk) chk.textContent = S.done[id] ? '✓' : '';
+  saveState();
+  refreshStats();
+  refreshAllProgBars();
+  if (S.done[id]) toast('✓ Done');
+}
+
+function toggleNotes(id) {
+  const ti = document.getElementById(`ti-${id}`);
+  if (ti) ti.classList.toggle('notes-open');
+}
+
+function saveNote(id, val) {
+  if (val.trim()) S.notes[id] = val.trim();
+  else delete S.notes[id];
+  saveState();
+}
+
+// ─── STATS ──────────────────────────────────────────────────────────────────
+function allTasks() {
+  const tasks = [];
+  Object.values(AREAS).forEach(areas => areas.forEach(a => a.tasks.forEach(t => tasks.push(t))));
+  WEED_TASKS.forEach(t => tasks.push(t));
+  return tasks;
+}
+
+function refreshStats() {
+  const all   = allTasks();
+  const done  = all.filter(t => S.done[t.id]).length;
+  const total = all.length;
+  const pct   = total > 0 ? Math.round(done/total*100) : 0;
+
+  document.getElementById('stat-done').textContent  = done;
+  document.getElementById('stat-left').textContent  = total - done;
+  document.getElementById('stat-pct').textContent   = pct + '%';
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('prog-label').textContent = `${done} of ${total} tasks`;
+}
+
+function refreshAllProgBars() {
+  const allAreas = [
+    { id:'house-wrap',    areas: AREAS.house },
+    { id:'garage-wrap',   areas: AREAS.garage },
+    { id:'exterior-wrap', areas: AREAS.exterior },
+    { id:'stove-wrap',    areas: AREAS.stove },
+  ];
+
+  allAreas.forEach(({ id, areas }) => {
+    areas.forEach((area, ai) => {
+      const done  = area.tasks.filter(t => S.done[t.id]).length;
+      const total = area.tasks.length;
+      const el    = document.getElementById(`prog-${id}-${ai}`);
+      if (el) el.textContent = `${done} of ${total} done`;
+    });
+  });
+
+  // Weeds
+  const wdDone  = WEED_TASKS.filter(t => S.done[t.id]).length;
+  const wdEl    = document.getElementById('prog-weeds-0');
+  if (wdEl) wdEl.textContent = `${wdDone} of ${WEED_TASKS.length} done`;
+}
+
+function resetSection(wrapperId, areas) {
+  if (!confirm('Reset all tasks in this section?')) return;
+  areas.forEach(area => area.tasks.forEach(t => { delete S.done[t.id]; }));
+  saveState();
+  buildAreas(wrapperId, areas);
+  refreshStats();
+  toast('Section reset');
+}
+
+// ─── TABS ───────────────────────────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ─── STORAGE ────────────────────────────────────────────────────────────────
+function saveState() {
+  try { localStorage.setItem('spring_reset', JSON.stringify(S)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('spring_reset');
+    if (raw) {
+      const l = JSON.parse(raw);
+      S = { done: l.done||{}, notes: l.notes||{} };
+    }
+  } catch(e) {}
+}
+
+// ─── TOAST ──────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1800);
+}
+</script>
+</body>
+</html>
