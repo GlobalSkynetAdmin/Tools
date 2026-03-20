@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pause</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #F7F3EE;
+    --warm:     #EDE7DC;
+    --card:     #FFFFFF;
+    --border:   #DDD6C8;
+    --border2:  #C8BEA8;
+    --ink:      #2C2416;
+    --mid:      #7A6E5E;
+    --ghost:    #B0A898;
+    --rule:     #E4DDD2;
+
+    --actual:   #4A7C59;   /* green — real hunger */
+    --stress:   #B85C38;   /* terracotta — stress */
+    --neutral:  #7A6E5E;   /* neutral */
+    --amber:    #C8963A;
+    --blue:     #4A6E8A;
+    --purple:   #7A5C8A;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* subtle paper texture */
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0;
+  }
+  * { position:relative; z-index:1; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.25rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .app-title {
+    font-family: 'Lora', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: var(--ink);
+  }
+
+  .app-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--mid);
+  }
+
+  .header-right { display:flex; gap:.5rem; }
+
+  .hdr-btn {
+    background: var(--warm);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .4rem .75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .7rem;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .hdr-btn:active { background: var(--border); }
+  .hdr-btn.primary { background: var(--ink); color: #F7F3EE; border-color: var(--ink); }
+  .hdr-btn.primary:active { background: #444; }
+
+  /* ── TABS ── */
+  .tabs {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+  }
+
+  .tab {
+    flex: 1;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: .75rem .5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .72rem;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    cursor: pointer;
+    transition: all .15s;
+    margin-bottom: -1px;
+  }
+
+  .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .tab:active { color: var(--mid); }
+
+  /* ── PANELS ── */
+  .panel { display:none; animation: fadeUp .2s ease; }
+  .panel.active { display:block; }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(6px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── CHECK-IN FORM ── */
+  .checkin-wrap {
+    padding: 1.25rem 1.25rem 6rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: .65rem;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+
+  .section-title:first-child { margin-top: 0; }
+
+  .section-title::after {
+    content:''; flex:1; height:1px; background: var(--rule);
+  }
+
+  /* Time since last eat */
+  .time-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .6rem;
+  }
+
+  .field-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem .9rem;
+  }
+
+  .field-label {
+    font-size: .6rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: .3rem;
+    display: block;
+  }
+
+  .field-val {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .field-val.time-auto { color: var(--mid); font-style: italic; font-size: .92rem; font-weight: 400; }
+
+  /* last ate input */
+  .last-ate-row {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+  }
+
+  .last-ate-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .5rem .7rem;
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all .12s;
+    white-space: nowrap;
+  }
+  .last-ate-btn:active    { background: var(--warm); }
+  .last-ate-btn.selected  { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* Scale rows */
+  .scale-row {
+    display: flex;
+    gap: .4rem;
+    flex-wrap: wrap;
+  }
+
+  .scale-btn {
+    flex: 1;
+    min-width: 40px;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: .55rem .3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all .12s;
+    user-select: none;
+  }
+
+  .scale-btn:active { transform: scale(.93); }
+
+  .scale-num {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--mid);
+    display: block;
+    line-height: 1;
+  }
+
+  .scale-lbl {
+    font-size: .52rem;
+    color: var(--ghost);
+    display: block;
+    margin-top: .15rem;
+    line-height: 1.2;
+  }
+
+  /* Hunger scale colors */
+  .scale-btn.selected-hunger-1 { background:#FFF5F2; border-color:#E8B4A0; }
+  .scale-btn.selected-hunger-1 .scale-num { color:#B85C38; }
+  .scale-btn.selected-hunger-2 { background:#FFF8F2; border-color:#E8C880; }
+  .scale-btn.selected-hunger-2 .scale-num { color:#C8963A; }
+  .scale-btn.selected-hunger-3 { background:#FAFFF5; border-color:#A0C8B0; }
+  .scale-btn.selected-hunger-3 .scale-num { color:#4A7C59; }
+  .scale-btn.selected-hunger-4 { background:#F2FFF5; border-color:#80C898; }
+  .scale-btn.selected-hunger-4 .scale-num { color:#2E7C4A; }
+  .scale-btn.selected-hunger-5 { background:#EAFFF2; border-color:#60C888; }
+  .scale-btn.selected-hunger-5 .scale-num { color:#1A7040; }
+
+  /* Stress scale colors */
+  .scale-btn.selected-stress-1 { background:#F5FFF8; border-color:#80C898; }
+  .scale-btn.selected-stress-1 .scale-num { color:#4A7C59; }
+  .scale-btn.selected-stress-2 { background:#FAFFF5; border-color:#A8D0A0; }
+  .scale-btn.selected-stress-2 .scale-num { color:#5A8C5A; }
+  .scale-btn.selected-stress-3 { background:#FFFDF0; border-color:#E8D080; }
+  .scale-btn.selected-stress-3 .scale-num { color:#AA8A20; }
+  .scale-btn.selected-stress-4 { background:#FFF8F0; border-color:#E8B870; }
+  .scale-btn.selected-stress-4 .scale-num { color:#B87030; }
+  .scale-btn.selected-stress-5 { background:#FFF3EE; border-color:#E89080; }
+  .scale-btn.selected-stress-5 .scale-num { color:#B84030; }
+
+  /* Trigger chips */
+  .trigger-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .4rem;
+  }
+
+  .trigger-chip {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: .6rem .75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    cursor: pointer;
+    transition: all .12s;
+    user-select: none;
+  }
+
+  .trigger-chip:active { transform: scale(.97); }
+
+  .trigger-chip.selected {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .tc-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+  .tc-label {
+    font-size: .75rem;
+    font-weight: 400;
+    color: var(--mid);
+    line-height: 1.2;
+  }
+
+  .trigger-chip.selected .tc-label { color: var(--bg); }
+
+  /* What are you reaching for */
+  .food-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem .9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem;
+    font-weight: 300;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+  }
+  .food-input:focus { border-color: var(--border2); }
+  .food-input::placeholder { color: var(--ghost); }
+
+  /* Notes */
+  .notes-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem .9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .88rem;
+    font-weight: 300;
+    color: var(--ink);
+    outline: none;
+    resize: none;
+    min-height: 70px;
+    line-height: 1.5;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+  }
+  .notes-input:focus { border-color: var(--border2); }
+  .notes-input::placeholder { color: var(--ghost); font-style: italic; }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    background: var(--ink);
+    border: none;
+    border-radius: 10px;
+    color: var(--bg);
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    font-style: italic;
+    padding: .95rem;
+    cursor: pointer;
+    transition: all .15s;
+    margin-top: 1.5rem;
+  }
+  .submit-btn:active { background: #444; transform: scale(.99); }
+
+  /* ── REFLECTION CARD ── */
+  .reflection-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    display: none;
+    animation: fadeUp .25s ease;
+  }
+
+  .reflection-card.visible { display: block; }
+
+  .reflection-type {
+    font-size: .62rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+
+  .reflection-type.actual  { color: var(--actual); }
+  .reflection-type.stress  { color: var(--stress); }
+  .reflection-type.mixed   { color: var(--amber); }
+
+  .reflection-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .actual  .reflection-dot { background: var(--actual); }
+  .stress  .reflection-dot { background: var(--stress); }
+  .mixed   .reflection-dot { background: var(--amber); }
+
+  .reflection-text {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: .75rem;
+  }
+
+  .reflection-suggestion {
+    font-size: .78rem;
+    color: var(--mid);
+    line-height: 1.65;
+    border-top: 1px solid var(--rule);
+    padding-top: .65rem;
+    font-style: italic;
+  }
+
+  /* ── HISTORY PANEL ── */
+  .history-wrap {
+    padding: 1rem 1.25rem 6rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .history-empty {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    color: var(--ghost);
+  }
+
+  .history-empty-icon { font-size: 2.5rem; margin-bottom: .75rem; opacity: .5; }
+
+  .history-empty-title {
+    font-family: 'Lora', serif;
+    font-size: .9rem;
+    font-style: italic;
+    color: var(--mid);
+    margin-bottom: .35rem;
+  }
+
+  .history-empty-sub { font-size: .75rem; line-height: 1.6; }
+
+  .history-filters {
+    display: flex;
+    gap: .4rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: .2rem;
+  }
+  .history-filters::-webkit-scrollbar { display: none; }
+
+  .filter-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: .3rem .75rem;
+    font-size: .68rem;
+    font-weight: 500;
+    color: var(--mid);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .12s;
+  }
+  .filter-pill:active { transform: scale(.95); }
+  .filter-pill.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+  .history-count {
+    font-size: .68rem;
+    color: var(--ghost);
+    margin-bottom: .75rem;
+    font-style: italic;
+  }
+
+  /* Entry card */
+  .entry-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .9rem 1rem;
+    margin-bottom: .55rem;
+    cursor: pointer;
+    transition: all .12s;
+    border-left: 4px solid transparent;
+  }
+
+  .entry-card:active { background: var(--warm); }
+  .entry-card.open   { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+
+  .entry-card.type-actual { border-left-color: var(--actual); }
+  .entry-card.type-stress { border-left-color: var(--stress); }
+  .entry-card.type-mixed  { border-left-color: var(--amber); }
+
+  .entry-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .5rem;
+  }
+
+  .entry-type-badge {
+    font-size: .58rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: .2rem;
+  }
+  .badge-actual { color: var(--actual); }
+  .badge-stress { color: var(--stress); }
+  .badge-mixed  { color: var(--amber); }
+
+  .entry-food {
+    font-family: 'Lora', serif;
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .entry-food.no-food { font-style: italic; color: var(--ghost); font-weight: 400; }
+
+  .entry-trigger {
+    font-size: .7rem;
+    color: var(--mid);
+    margin-top: .2rem;
+  }
+
+  .entry-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .entry-time {
+    font-size: .7rem;
+    color: var(--ghost);
+    white-space: nowrap;
+  }
+
+  .entry-scores {
+    display: flex;
+    gap: .4rem;
+    margin-top: .35rem;
+    justify-content: flex-end;
+  }
+
+  .score-pip {
+    font-size: .62rem;
+    background: var(--warm);
+    border-radius: 4px;
+    padding: .12rem .35rem;
+    color: var(--mid);
+    font-weight: 500;
+  }
+
+  /* Entry detail */
+  .entry-detail {
+    display: none;
+    background: var(--warm);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: .85rem 1rem;
+    margin-bottom: .55rem;
+    margin-top: -1px;
+  }
+
+  .entry-card.open + .entry-detail { display: block; animation: fadeUp .15s ease; }
+
+  .detail-row {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: .45rem;
+    font-size: .75rem;
+    align-items: flex-start;
+  }
+
+  .detail-row:last-child { margin-bottom: 0; }
+
+  .detail-key {
+    font-size: .58rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    flex-shrink: 0;
+    width: 68px;
+    padding-top: .05rem;
+  }
+
+  .detail-val { color: var(--mid); flex: 1; line-height: 1.45; }
+  .detail-val.highlight { color: var(--ink); font-family: 'Lora', serif; font-style: italic; }
+
+  .entry-delete-btn {
+    margin-top: .75rem;
+    padding-top: .65rem;
+    border-top: 1px solid var(--border);
+    width: 100%;
+    background: transparent;
+    border-radius: 6px;
+    border: none;
+    font-size: .68rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    cursor: pointer;
+    padding: .5rem;
+    transition: all .12s;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .entry-delete-btn:active { color: var(--stress); border-color: var(--stress); background: rgba(184,92,56,.06); }
+
+  /* ── EXPORT PANEL ── */
+  .export-wrap {
+    padding: 1rem 1.25rem 6rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .export-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem;
+    margin-bottom: .75rem;
+  }
+
+  .export-title {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: .3rem;
+  }
+
+  .export-sub {
+    font-size: .75rem;
+    color: var(--mid);
+    line-height: 1.6;
+    margin-bottom: .9rem;
+  }
+
+  .exp-btn {
+    width: 100%;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .04em;
+    padding: .75rem;
+    cursor: pointer;
+    transition: all .15s;
+    margin-bottom: .4rem;
+    border: 1.5px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+  }
+  .exp-btn:active { transform: scale(.98); }
+  .exp-btn.dark { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .exp-btn.dark:active { background: #444; }
+  .exp-btn.outline { background: transparent; border-color: var(--border2); color: var(--mid); }
+  .exp-btn.outline:active { background: var(--warm); }
+  .exp-btn.danger { background: transparent; border-color: rgba(184,92,56,.3); color: var(--stress); }
+  .exp-btn.danger:active { background: rgba(184,92,56,.08); }
+
+  /* stats mini grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: .5rem;
+    margin-bottom: .75rem;
+  }
+
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem .6rem;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .stat-lbl {
+    font-size: .58rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-top: .2rem;
+    line-height: 1.3;
+  }
+
+  /* toast */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--ink);
+    color: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: .78rem;
+    font-weight: 500;
+    padding: .55rem 1.2rem;
+    border-radius: 20px;
+    opacity: 0;
+    transition: all .2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 380px) {
+    .trigger-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="app-title">Pause <em>& check in</em></div>
+  <div class="header-right">
+    <button class="hdr-btn primary" onclick="switchTab('checkin')">+ Check In</button>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" id="tab-checkin"  onclick="switchTab('checkin')">Check In</button>
+  <button class="tab"        id="tab-history"  onclick="switchTab('history')">History</button>
+  <button class="tab"        id="tab-export"   onclick="switchTab('export')">Export</button>
+</div>
+
+<!-- ══════════ CHECK-IN PANEL ══════════ -->
+<div class="panel active" id="panel-checkin">
+  <div class="checkin-wrap">
+
+    <!-- Time context -->
+    <div class="section-title">Right now</div>
+    <div class="time-row">
+      <div class="field-box">
+        <span class="field-label">Current time</span>
+        <div class="field-val time-auto" id="current-time">—</div>
+      </div>
+      <div class="field-box">
+        <span class="field-label">Last ate</span>
+        <div class="last-ate-row" id="last-ate-row" style="flex-wrap:wrap;gap:.35rem;margin-top:.1rem;">
+          <button class="last-ate-btn" onclick="setLastAte(this,'< 1 hr')">﹤1hr</button>
+          <button class="last-ate-btn" onclick="setLastAte(this,'1–2 hrs')">1–2hr</button>
+          <button class="last-ate-btn" onclick="setLastAte(this,'2–4 hrs')">2–4hr</button>
+          <button class="last-ate-btn" onclick="setLastAte(this,'4+ hrs')">4+hr</button>
+          <button class="last-ate-btn" onclick="setLastAte(this,'Not sure')">?</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Physical hunger -->
+    <div class="section-title">Physical hunger</div>
+    <div class="scale-row" id="hunger-scale">
+      <div class="scale-btn" onclick="setScale('hunger',1,this)">
+        <span class="scale-num">1</span>
+        <span class="scale-lbl">None</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('hunger',2,this)">
+        <span class="scale-num">2</span>
+        <span class="scale-lbl">Slight</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('hunger',3,this)">
+        <span class="scale-num">3</span>
+        <span class="scale-lbl">Moderate</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('hunger',4,this)">
+        <span class="scale-num">4</span>
+        <span class="scale-lbl">Hungry</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('hunger',5,this)">
+        <span class="scale-num">5</span>
+        <span class="scale-lbl">Very hungry</span>
+      </div>
+    </div>
+
+    <!-- Stress / mood -->
+    <div class="section-title">Stress / mood right now</div>
+    <div class="scale-row" id="stress-scale">
+      <div class="scale-btn" onclick="setScale('stress',1,this)">
+        <span class="scale-num">1</span>
+        <span class="scale-lbl">Calm</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('stress',2,this)">
+        <span class="scale-num">2</span>
+        <span class="scale-lbl">Mild tension</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('stress',3,this)">
+        <span class="scale-num">3</span>
+        <span class="scale-lbl">Noticeable</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('stress',4,this)">
+        <span class="scale-num">4</span>
+        <span class="scale-lbl">Stressed</span>
+      </div>
+      <div class="scale-btn" onclick="setScale('stress',5,this)">
+        <span class="scale-num">5</span>
+        <span class="scale-lbl">Very stressed</span>
+      </div>
+    </div>
+
+    <!-- Trigger -->
+    <div class="section-title">What triggered this?</div>
+    <div class="trigger-grid">
+      <div class="trigger-chip" onclick="toggleTrigger(this,'actual')">
+        <span class="tc-icon">🍽️</span>
+        <span class="tc-label">Actual hunger</span>
+      </div>
+      <div class="trigger-chip" onclick="toggleTrigger(this,'stress')">
+        <span class="tc-icon">😰</span>
+        <span class="tc-label">Stress / anxiety</span>
+      </div>
+      <div class="trigger-chip" onclick="toggleTrigger(this,'boredom')">
+        <span class="tc-icon">😐</span>
+        <span class="tc-label">Boredom</span>
+      </div>
+      <div class="trigger-chip" onclick="toggleTrigger(this,'emotions')">
+        <span class="tc-icon">😔</span>
+        <span class="tc-label">Emotions</span>
+      </div>
+      <div class="trigger-chip" onclick="toggleTrigger(this,'habit')">
+        <span class="tc-icon">🔄</span>
+        <span class="tc-label">Habit / routine</span>
+      </div>
+      <div class="trigger-chip" onclick="toggleTrigger(this,'procrastinating')">
+        <span class="tc-icon">⏳</span>
+        <span class="tc-label">Procrastinating</span>
+      </div>
+      <div class="trigger-chip" onclick="toggleTrigger(this,'social')">
+        <span class="tc-icon">👥</span>
+        <span class="tc-label">Social eating</span>
+      </div>
+      <div class="trigger-chip" onclick="toggleTrigger(this,'there')">
+        <span class="tc-icon">👀</span>
+        <span class="tc-label">It's just there</span>
+      </div>
+    </div>
+
+    <!-- What are you reaching for -->
+    <div class="section-title">What are you reaching for?</div>
+    <input type="text" class="food-input" id="food-input" placeholder="e.g. chips, leftover pasta, a snack…">
+
+    <!-- Notes (optional) -->
+    <div class="section-title">Anything else? <span style="font-family:'DM Sans';font-size:.65rem;font-weight:300;color:var(--ghost);text-transform:none;letter-spacing:0;">(optional)</span></div>
+    <textarea class="notes-input" id="notes-input" placeholder="What's going on right now…"></textarea>
+
+    <!-- Reflection -->
+    <div class="reflection-card" id="reflection-card">
+      <div class="reflection-type" id="reflection-type">
+        <div class="reflection-dot"></div>
+        <span id="reflection-type-text">—</span>
+      </div>
+      <div class="reflection-text" id="reflection-text">—</div>
+      <div class="reflection-suggestion" id="reflection-suggestion">—</div>
+    </div>
+
+    <button class="submit-btn" onclick="submitCheckin()">Log this check-in →</button>
+
+  </div>
+</div>
+
+<!-- ══════════ HISTORY PANEL ══════════ -->
+<div class="panel" id="panel-history">
+  <div class="history-wrap">
+
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-box"><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">Total Check-ins</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-stress">0%</div><div class="stat-lbl">Stress Hunger</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-actual">0%</div><div class="stat-lbl">Real Hunger</div></div>
+    </div>
+
+    <div class="history-filters">
+      <button class="filter-pill active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-pill" onclick="setFilter('stress',this)">Stress</button>
+      <button class="filter-pill" onclick="setFilter('actual',this)">Actual hunger</button>
+      <button class="filter-pill" onclick="setFilter('mixed',this)">Mixed</button>
+      <button class="filter-pill" onclick="setFilter('today',this)">Today</button>
+      <button class="filter-pill" onclick="setFilter('week',this)">This week</button>
+    </div>
+
+    <div class="history-count" id="history-count"></div>
+    <div id="history-list"></div>
+
+  </div>
+</div>
+
+<!-- ══════════ EXPORT PANEL ══════════ -->
+<div class="panel" id="panel-export">
+  <div class="export-wrap">
+
+    <div class="export-card">
+      <div class="export-title">Weekly CSV Export</div>
+      <div class="export-sub">Downloads all entries as a spreadsheet. Open in Google Sheets to spot patterns — when stress eating happens most, which triggers are most common, how hunger levels correlate with mood.</div>
+      <button class="exp-btn dark" onclick="exportCSV('all')">⬇ Download All Entries (CSV)</button>
+      <button class="exp-btn outline" onclick="exportCSV('week')">⬇ This Week Only (CSV)</button>
+    </div>
+
+    <div class="export-card">
+      <div class="export-title">Backup &amp; Restore</div>
+      <div class="export-sub">Save a full JSON backup to Google Drive. Restore it if you ever clear your browser or switch devices.</div>
+      <button class="exp-btn outline" onclick="exportJSON()">⬇ Download Full Backup (JSON)</button>
+      <button class="exp-btn outline" onclick="importJSON()">⬆ Restore from Backup</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
+    </div>
+
+    <div class="export-card" style="border-color:rgba(184,92,56,.25);">
+      <div class="export-title" style="color:var(--stress);">Clear All Data</div>
+      <div class="export-sub">Permanently deletes all check-in history from this device. Download a backup first.</div>
+      <button class="exp-btn danger" onclick="clearAll()">Delete All Entries</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────
+let entries = [];
+
+// Current check-in form state
+let form = {
+  lastAte:  '',
+  hunger:   0,
+  stress:   0,
+  triggers: new Set(),
+};
+
+let historyFilter = 'all';
+
+// ─── INIT ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  loadEntries();
+  updateClock();
+  setInterval(updateClock, 30000);
+  renderHistory();
+  renderStats();
+  autoReflect();
+});
+
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes().toString().padStart(2,'0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = ((h % 12) || 12);
+  document.getElementById('current-time').textContent = `${h12}:${m} ${ampm}`;
+}
+
+// ─── TABS ─────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'history') { renderHistory(); renderStats(); }
+}
+
+// ─── FORM INTERACTIONS ────────────────────────────────
+function setLastAte(btn, val) {
+  document.querySelectorAll('.last-ate-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  form.lastAte = val;
+  autoReflect();
+}
+
+function setScale(type, val, btn) {
+  const container = document.getElementById(type + '-scale');
+  container.querySelectorAll('.scale-btn').forEach(b => {
+    b.className = 'scale-btn';
+  });
+  btn.classList.add(`selected-${type}-${val}`);
+  form[type] = val;
+  autoReflect();
+}
+
+function toggleTrigger(chip, val) {
+  chip.classList.toggle('selected');
+  if (chip.classList.contains('selected')) form.triggers.add(val);
+  else form.triggers.delete(val);
+  autoReflect();
+}
+
+// ─── REFLECTION ENGINE ────────────────────────────────
+function autoReflect() {
+  const card = document.getElementById('reflection-card');
+  if (!form.hunger && !form.stress && form.triggers.size === 0) {
+    card.classList.remove('visible');
+    return;
+  }
+
+  const { type, headline, suggestion } = getReflection();
+  const typeEl = document.getElementById('reflection-type');
+  const typeText = document.getElementById('reflection-type-text');
+  const textEl = document.getElementById('reflection-text');
+  const sugEl  = document.getElementById('reflection-suggestion');
+
+  typeEl.className = `reflection-type ${type}`;
+  const labels = { actual:'Real Hunger', stress:'Stress Hunger', mixed:'Mixed Signals' };
+  typeText.textContent = labels[type] || type;
+  textEl.textContent   = headline;
+  sugEl.textContent    = suggestion;
+
+  card.classList.add('visible');
+}
+
+function getReflection() {
+  const h = form.hunger || 0;
+  const s = form.stress || 0;
+  const t = form.triggers;
+  const lastAte = form.lastAte;
+
+  const stressTriggers   = ['stress','boredom','emotions','procrastinating'];
+  const emotionalCount   = stressTriggers.filter(x => t.has(x)).length;
+  const hasActual        = t.has('actual');
+  const longSinceEating  = lastAte === '4+ hrs' || lastAte === '2–4 hrs';
+
+  // Decision logic
+  if (h >= 4 && s <= 2 && (hasActual || longSinceEating)) {
+    return {
+      type: 'actual',
+      headline: "Your body is genuinely asking for food. High physical hunger, low stress — this looks like real hunger.",
+      suggestion: "Go ahead and eat. Pay attention to what you choose and how much you actually need."
+    };
+  }
+
+  if (h <= 2 && s >= 3 && emotionalCount >= 1) {
+    return {
+      type: 'stress',
+      headline: "Low physical hunger, high stress — this pattern usually means you're reaching for food as comfort, not fuel.",
+      suggestion: "Try waiting 5–10 minutes. Get a glass of water first. Ask: what do I actually need right now?"
+    };
+  }
+
+  if (h >= 3 && s >= 3) {
+    return {
+      type: 'mixed',
+      headline: "You're both stressed and physically hungry — that combination makes it hard to eat mindfully.",
+      suggestion: "Eat something, but try to slow down. Stress amplifies portions. A smaller amount might be enough."
+    };
+  }
+
+  if (h <= 2 && emotionalCount >= 2) {
+    return {
+      type: 'stress',
+      headline: "Multiple emotional triggers and low physical hunger — your body probably doesn't need food right now.",
+      suggestion: "Notice the feeling without judging it. A short walk, a drink of water, or just naming what's bothering you can interrupt the pattern."
+    };
+  }
+
+  if (t.has('habit') || t.has('there')) {
+    return {
+      type: 'mixed',
+      headline: "This looks like habit eating — not driven by hunger or stress, just circumstance.",
+      suggestion: "Worth a quick pause. Are you actually hungry? If not, try drinking water and waiting 5 minutes."
+    };
+  }
+
+  if (t.has('social')) {
+    return {
+      type: 'mixed',
+      headline: "Social eating — not necessarily a problem, just worth noting as a pattern.",
+      suggestion: "No need to skip it, but checking in like this helps you notice how often environment drives eating rather than hunger."
+    };
+  }
+
+  if (h >= 3) {
+    return {
+      type: 'actual',
+      headline: "Physical hunger is present. You probably need to eat.",
+      suggestion: "Try to eat something nourishing and check in with how full you feel as you go."
+    };
+  }
+
+  return {
+    type: 'mixed',
+    headline: "Hard to read — not a clear hunger signal, but not strongly emotional either.",
+    suggestion: "Check in with how your body actually feels. Sometimes pausing for 5 minutes is all it takes to know."
+  };
+}
+
+// ─── SUBMIT ───────────────────────────────────────────
+function submitCheckin() {
+  const food  = document.getElementById('food-input').value.trim();
+  const notes = document.getElementById('notes-input').value.trim();
+  const { type } = getReflection();
+
+  const entry = {
+    id:        Date.now(),
+    ts:        new Date().toISOString(),
+    lastAte:   form.lastAte   || 'Not specified',
+    hunger:    form.hunger    || 0,
+    stress:    form.stress    || 0,
+    triggers:  [...form.triggers],
+    food:      food           || '',
+    notes:     notes          || '',
+    type:      type           || 'mixed',
+  };
+
+  entries.unshift(entry);
+  saveEntries();
+  resetForm();
+  toast('Check-in logged ✓');
+}
+
+function resetForm() {
+  form = { lastAte:'', hunger:0, stress:0, triggers: new Set() };
+  document.querySelectorAll('.last-ate-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#hunger-scale .scale-btn').forEach(b => b.className = 'scale-btn');
+  document.querySelectorAll('#stress-scale .scale-btn').forEach(b => b.className = 'scale-btn');
+  document.querySelectorAll('.trigger-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('food-input').value  = '';
+  document.getElementById('notes-input').value = '';
+  document.getElementById('reflection-card').classList.remove('visible');
+}
+
+// ─── HISTORY RENDER ───────────────────────────────────
+function setFilter(f, btn) {
+  historyFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderHistory();
+}
+
+function renderHistory() {
+  const list    = document.getElementById('history-list');
+  const countEl = document.getElementById('history-count');
+
+  const filtered = filterEntries();
+
+  if (entries.length === 0) {
+    list.innerHTML = `<div class="history-empty">
+      <div class="history-empty-icon">📓</div>
+      <div class="history-empty-title">No check-ins yet</div>
+      <div class="history-empty-sub">Your first check-in will appear here.<br>Patterns emerge after a week or two.</div>
+    </div>`;
+    countEl.textContent = '';
+    return;
+  }
+
+  countEl.textContent = `${filtered.length} ${filtered.length === 1 ? 'entry' : 'entries'}`;
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--ghost);font-size:.8rem;font-style:italic;">No entries match this filter.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(e => {
+    const d    = new Date(e.ts);
+    const time = fmtTime(d);
+    const date = fmtDate(d);
+    const typeLabel = { actual:'Real Hunger', stress:'Stress Hunger', mixed:'Mixed' }[e.type] || 'Mixed';
+    const badgeClass = `badge-${e.type}`;
+    const triggers = e.triggers.length > 0 ? e.triggers.map(t => TRIGGER_LABELS[t] || t).join(', ') : 'No trigger selected';
+
+    return `
+      <div class="entry-card type-${e.type}" id="ec-${e.id}" onclick="toggleEntry(${e.id})">
+        <div class="entry-top">
+          <div>
+            <div class="entry-type-badge ${badgeClass}">${typeLabel}</div>
+            <div class="entry-food ${e.food ? '' : 'no-food'}">${e.food || 'No food noted'}</div>
+            <div class="entry-trigger">${triggers}</div>
+          </div>
+          <div class="entry-meta">
+            <div class="entry-time">${time}<br>${date}</div>
+            <div class="entry-scores">
+              <span class="score-pip">H:${e.hunger||'—'}</span>
+              <span class="score-pip">S:${e.stress||'—'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="entry-detail" id="ed-${e.id}">
+        ${e.lastAte ? detailRow('Last ate', e.lastAte) : ''}
+        ${detailRow('Hunger', `${e.hunger}/5`)}
+        ${detailRow('Stress', `${e.stress}/5`)}
+        ${e.food  ? detailRow('Reaching for', e.food, true) : ''}
+        ${e.notes ? detailRow('Notes', e.notes, true) : ''}
+        <button class="entry-delete-btn" onclick="deleteEntry(event,${e.id})">Delete this entry</button>
+      </div>`;
+  }).join('');
+}
+
+function detailRow(key, val, highlight=false) {
+  return `<div class="detail-row">
+    <div class="detail-key">${key}</div>
+    <div class="detail-val ${highlight?'highlight':''}">${val}</div>
+  </div>`;
+}
+
+function toggleEntry(id) {
+  const card = document.getElementById(`ec-${id}`);
+  card.classList.toggle('open');
+}
+
+function deleteEntry(e, id) {
+  e.stopPropagation();
+  if (!confirm('Delete this entry?')) return;
+  entries = entries.filter(x => x.id !== id);
+  saveEntries();
+  renderHistory();
+  renderStats();
+  toast('Entry deleted');
+}
+
+function filterEntries() {
+  const now   = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const weekAgo = new Date(today.getTime() - 6 * 86400000);
+
+  return entries.filter(e => {
+    if (historyFilter === 'all')    return true;
+    if (historyFilter === 'stress') return e.type === 'stress';
+    if (historyFilter === 'actual') return e.type === 'actual';
+    if (historyFilter === 'mixed')  return e.type === 'mixed';
+    if (historyFilter === 'today')  return new Date(e.ts) >= today;
+    if (historyFilter === 'week')   return new Date(e.ts) >= weekAgo;
+    return true;
+  });
+}
+
+// ─── STATS ────────────────────────────────────────────
+function renderStats() {
+  const total  = entries.length;
+  const stress = entries.filter(e => e.type === 'stress').length;
+  const actual = entries.filter(e => e.type === 'actual').length;
+
+  document.getElementById('stat-total').textContent  = total;
+  document.getElementById('stat-stress').textContent = total > 0 ? Math.round(stress/total*100)+'%' : '—';
+  document.getElementById('stat-actual').textContent = total > 0 ? Math.round(actual/total*100)+'%' : '—';
+}
+
+// ─── TRIGGER LABELS ───────────────────────────────────
+const TRIGGER_LABELS = {
+  actual:         'Actual hunger',
+  stress:         'Stress / anxiety',
+  boredom:        'Boredom',
+  emotions:       'Emotions',
+  habit:          'Habit / routine',
+  procrastinating:'Procrastinating',
+  social:         'Social eating',
+  there:          "It's just there",
+};
+
+// ─── EXPORT ───────────────────────────────────────────
+function exportCSV(range) {
+  if (entries.length === 0) { toast('No entries to export'); return; }
+
+  const now     = new Date();
+  const weekAgo = new Date(now.getTime() - 7 * 86400000);
+  const data    = range === 'week' ? entries.filter(e => new Date(e.ts) >= weekAgo) : entries;
+
+  if (data.length === 0) { toast('No entries this week'); return; }
+
+  const headers = ['Timestamp','Date','Time','Last Ate','Hunger (1-5)','Stress (1-5)','Type','Triggers','Food / Reaching For','Notes'];
+  const rows = data.map(e => {
+    const d = new Date(e.ts);
+    return [
+      e.ts, fmtDate(d), fmtTime(d),
+      e.lastAte, e.hunger, e.stress,
+      { actual:'Real Hunger', stress:'Stress Hunger', mixed:'Mixed' }[e.type] || e.type,
+      e.triggers.map(t => TRIGGER_LABELS[t]||t).join('; '),
+      e.food, e.notes,
+    ].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+  });
+
+  const csv   = [headers.join(','), ...rows].join('\n');
+  const label = range === 'week' ? 'this-week' : 'all';
+  download(csv, `pause-checkins-${label}-${fmtDateFile(now)}.csv`, 'text/csv');
+  toast('CSV downloaded ✓');
+}
+
+function exportJSON() {
+  if (entries.length === 0) { toast('No entries to export'); return; }
+  download(JSON.stringify(entries, null, 2), `pause-backup-${fmtDateFile(new Date())}.json`, 'application/json');
+  toast('Backup downloaded ✓');
+}
+
+function importJSON() { document.getElementById('import-file').click(); }
+
+function handleImport(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      if (!Array.isArray(imported)) throw new Error();
+      const existingIds = new Set(entries.map(x => x.id));
+      const newOnes = imported.filter(x => !existingIds.has(x.id));
+      entries = [...entries, ...newOnes].sort((a,b) => b.id - a.id);
+      saveEntries(); renderHistory(); renderStats();
+      toast(`Imported ${newOnes.length} entries ✓`);
+    } catch { toast('Invalid backup file'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function clearAll() {
+  if (entries.length === 0) { toast('Nothing to delete'); return; }
+  if (!confirm(`Delete all ${entries.length} entries permanently? Download a backup first.`)) return;
+  entries = []; saveEntries(); renderHistory(); renderStats();
+  toast('All entries deleted');
+}
+
+// ─── STORAGE ──────────────────────────────────────────
+function saveEntries() {
+  try { localStorage.setItem('pause_entries', JSON.stringify(entries)); } catch(e) {}
+}
+
+function loadEntries() {
+  try {
+    const raw = localStorage.getItem('pause_entries');
+    if (raw) entries = JSON.parse(raw);
+  } catch(e) { entries = []; }
+}
+
+// ─── UTILS ────────────────────────────────────────────
+function fmtTime(d) {
+  const h = d.getHours(), m = d.getMinutes().toString().padStart(2,'0');
+  return `${((h%12)||12)}:${m} ${h>=12?'PM':'AM'}`;
+}
+
+function fmtDate(d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function fmtDateFile(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function download(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
