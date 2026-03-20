@@ -22,12 +22,11 @@
     --gold-lt: #E0B860;
     --rust:    #C04828;
     --sky:     #3A7AAA;
-    --berry:   #7A3F6E;
     --star:    #F1C40F;
+    --warm:    #C8845A;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
-
   html { scroll-behavior:smooth; }
 
   body {
@@ -117,10 +116,7 @@
   }
 
   .section-label::after {
-    content:'';
-    flex:1;
-    height:1px;
-    background: var(--border);
+    content:''; flex:1; height:1px; background: var(--border);
   }
 
   /* ── TOOL CARDS ── */
@@ -196,11 +192,12 @@
     white-space: nowrap;
   }
 
-  .tag-fitness { color: var(--rust); }
-  .tag-food    { color: var(--gold); }
-  .tag-field   { color: var(--moss-lt); }
-  .tag-mobile  { color: var(--sky); }
-  .tag-kids    { color: var(--star); }
+  .tag-fitness  { color: var(--rust); }
+  .tag-food     { color: var(--gold); }
+  .tag-field    { color: var(--moss-lt); }
+  .tag-mobile   { color: var(--sky); }
+  .tag-kids     { color: var(--star); }
+  .tag-wellbeing { color: var(--warm); }
 
   .tool-arrow {
     color: var(--ghost);
@@ -247,7 +244,7 @@
 <header>
   <div class="site-label">GlobalSkynetAdmin · Tools</div>
   <h1>Personal<br><span class="dim">Tools</span></h1>
-  <p class="header-desc">Fitness trackers, meal planners, field tools, and family tools. Built for real use — phone-friendly, no login required.</p>
+  <p class="header-desc">Fitness trackers, meal planners, field tools, wellbeing tools, and family tools. Built for real use — phone-friendly, no login required.</p>
 </header>
 
 <!-- FITNESS -->
@@ -297,7 +294,7 @@
   </div>
 </div>
 
-<!-- FOOD -->
+<!-- MEAL PLANS -->
 <div class="section">
   <div class="section-label">Meal Plans</div>
   <div class="tools-list">
@@ -324,6 +321,27 @@
       <div class="tool-meta">
         <span class="tool-tag tag-food">Meal Plan</span>
         <span class="tool-tag tag-food">Week 2</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- WELLBEING -->
+<div class="section">
+  <div class="section-label">Wellbeing</div>
+  <div class="tools-list">
+
+    <a class="tool-card" href="pause.html">
+      <div class="tool-icon">🍃</div>
+      <div class="tool-info">
+        <div class="tool-name">Pause</div>
+        <div class="tool-desc">Stress eating check-in · hunger vs emotion · pattern history · weekly CSV export</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-wellbeing">Wellbeing</span>
+        <span class="tool-tag tag-mobile">Mobile</span>
       </div>
       <div class="tool-arrow">›</div>
     </a>
@@ -361,7 +379,7 @@
       <div class="tool-icon">⭐</div>
       <div class="tool-info">
         <div class="tool-name">Wilder's Chore Chart</div>
-        <div class="tool-desc">Bi-weekly chores · real calendar dates · earnings tracker · bedtime deductions · savings bonus · print pay stub</div>
+        <div class="tool-desc">Bi-weekly chores · real calendar dates · earnings tracker · bedtime &amp; attitude deductions · savings bonus · print pay stub</div>
       </div>
       <div class="tool-meta">
         <span class="tool-tag tag-kids">Kids</span>
