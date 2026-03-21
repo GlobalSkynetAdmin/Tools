@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Audio Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0E0E0E;
+    --surface:  #141414;
+    --card:     #1A1A1A;
+    --border:   #252525;
+    --border2:  #303030;
+    --chalk:    #E8E4DC;
+    --mid:      #888;
+    --ghost:    #555;
+    --rule:     #1E1E1E;
+
+    --mo:       #C8963A;   /* Manual Override — warm gold */
+    --mo-dk:    #A07828;
+    --aia:      #4A7AAA;   /* Asses in Armchairs — cool blue */
+    --aia-dk:   #385888;
+    --green:    #4A8A5A;
+    --green-lt: #6AAA7A;
+    --red:      #C04828;
+    --purple:   #7A5AAA;
+    --teal:     #3A8A8A;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--chalk);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image: repeating-linear-gradient(
+      90deg, transparent, transparent 60px,
+      rgba(255,255,255,.004) 60px, rgba(255,255,255,.004) 61px
+    );
+    pointer-events:none; z-index:0;
+  }
+  * { position:relative; z-index:1; }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 1.25rem 1.25rem;
+    position: relative; overflow: hidden;
+  }
+
+  header::after {
+    content:'🎙';
+    position:absolute; right:.5rem; top:50%;
+    transform:translateY(-50%);
+    font-size:6rem; opacity:.04;
+    pointer-events:none;
+  }
+
+  .header-kicker {
+    font-family:'JetBrains Mono',monospace;
+    font-size:.6rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ghost);
+    margin-bottom:.5rem;
+  }
+
+  h1 {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:clamp(1.8rem,6vw,2.8rem);
+    font-weight:800; line-height:.95;
+    letter-spacing:-.01em; text-transform:uppercase;
+  }
+
+  .h1-sub {
+    font-size:.75rem; color:var(--mid);
+    margin-top:.4rem; line-height:1.5;
+  }
+
+  .gear-row {
+    display:flex; gap:.4rem; margin-top:.85rem; flex-wrap:wrap;
+  }
+
+  .gear-pill {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:4px; padding:.28rem .65rem;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.62rem; color:var(--mid);
+    letter-spacing:.06em;
+  }
+
+  /* TABS */
+  .tabs {
+    display:flex; background:var(--surface);
+    border-bottom:1px solid var(--border);
+  }
+
+  .tab {
+    flex:1; background:none; border:none;
+    border-bottom:2px solid transparent;
+    padding:.8rem .5rem; cursor:pointer;
+    text-align:center; transition:all .15s;
+  }
+
+  .tab-label {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.75rem; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ghost); display:block;
+  }
+
+  .tab-sub {
+    font-size:.58rem; color:var(--ghost);
+    display:block; margin-top:.08rem;
+  }
+
+  .tab.mo-tab.active  { border-bottom-color:var(--mo); }
+  .tab.mo-tab.active .tab-label  { color:var(--mo); }
+  .tab.mo-tab.active .tab-sub    { color:var(--mid); }
+
+  .tab.aia-tab.active { border-bottom-color:var(--aia); }
+  .tab.aia-tab.active .tab-label { color:var(--aia); }
+  .tab.aia-tab.active .tab-sub   { color:var(--mid); }
+
+  .tab.ref-tab.active { border-bottom-color:var(--green); }
+  .tab.ref-tab.active .tab-label { color:var(--green-lt); }
+  .tab.ref-tab.active .tab-sub   { color:var(--mid); }
+
+  /* PANELS */
+  .panel { display:none; animation:fadeUp .2s ease; }
+  .panel.active { display:block; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+  /* MAIN WRAP */
+  .wrap { padding:.75rem 1rem 5rem; max-width:640px; margin:0 auto; }
+
+  /* SECTION */
+  .sec-title {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.65rem; font-weight:700;
+    letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ghost); margin:1.25rem 0 .6rem;
+    display:flex; align-items:center; gap:.6rem;
+  }
+  .sec-title:first-child { margin-top:0; }
+  .sec-title::after { content:''; flex:1; height:1px; background:var(--rule); }
+
+  /* PROFILE CARD */
+  .profile-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:.75rem;
+  }
+
+  .profile-header {
+    padding:.8rem 1rem;
+    display:flex; align-items:center;
+    justify-content:space-between; gap:.75rem;
+    border-bottom:1px solid var(--border);
+  }
+
+  .profile-name {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.1rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.03em;
+  }
+
+  .profile-badge {
+    font-family:'JetBrains Mono',monospace;
+    font-size:.58rem; letter-spacing:.1em;
+    text-transform:uppercase; padding:.2rem .5rem;
+    border-radius:3px; border:1px solid currentColor;
+  }
+
+  /* SETTING ROW */
+  .setting-row {
+    display:flex; align-items:flex-start;
+    padding:.7rem 1rem;
+    border-bottom:1px solid var(--rule);
+    gap:.85rem;
+  }
+  .setting-row:last-child { border-bottom:none; }
+
+  .setting-left { flex:1; min-width:0; }
+
+  .setting-name {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.9rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:.03em;
+    color:var(--chalk); margin-bottom:.12rem;
+  }
+
+  .setting-desc {
+    font-size:.7rem; color:var(--mid);
+    line-height:1.55;
+  }
+
+  .setting-why {
+    font-size:.65rem; color:var(--ghost);
+    font-style:italic; margin-top:.15rem;
+    line-height:1.4;
+  }
+
+  .setting-val {
+    flex-shrink:0; text-align:right;
+    min-width:80px;
+  }
+
+  .val-main {
+    font-family:'JetBrains Mono',monospace;
+    font-size:1rem; font-weight:700;
+    line-height:1; display:block;
+  }
+
+  .val-sub {
+    font-size:.58rem; color:var(--ghost);
+    display:block; margin-top:.2rem;
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:.04em;
+  }
+
+  /* Color-coded values */
+  .val-mo    { color:var(--mo); }
+  .val-aia   { color:var(--aia); }
+  .val-green { color:var(--green-lt); }
+  .val-warn  { color:var(--red); }
+  .val-teal  { color:var(--teal); }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-radius:8px; padding:.85rem 1rem;
+    margin-bottom:.65rem; font-size:.75rem;
+    line-height:1.65;
+  }
+
+  .callout.problem {
+    background:rgba(192,72,40,.08);
+    border:1px solid rgba(192,72,40,.25);
+    color:var(--chalk);
+  }
+
+  .callout.solution {
+    background:rgba(74,138,90,.08);
+    border:1px solid rgba(74,138,90,.25);
+    color:var(--chalk);
+  }
+
+  .callout.info {
+    background:rgba(74,122,170,.08);
+    border:1px solid rgba(74,122,170,.25);
+    color:var(--chalk);
+  }
+
+  .callout.gold {
+    background:rgba(200,150,58,.08);
+    border:1px solid rgba(200,150,58,.25);
+    color:var(--chalk);
+  }
+
+  .callout strong {
+    font-weight:600;
+    display:block; margin-bottom:.25rem;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.8rem; letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+
+  /* KNOB VISUAL */
+  .knob-row {
+    display:flex; gap:.5rem;
+    flex-wrap:wrap; margin:.5rem 0;
+  }
+
+  .knob-box {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:.55rem .7rem;
+    text-align:center; min-width:70px;
+  }
+
+  .knob-name {
+    font-family:'JetBrains Mono',monospace;
+    font-size:.55rem; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--ghost);
+    display:block; margin-bottom:.2rem;
+  }
+
+  .knob-val {
+    font-family:'JetBrains Mono',monospace;
+    font-size:.95rem; font-weight:700;
+    display:block; line-height:1;
+  }
+
+  /* REFERENCE CARDS */
+  .ref-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; padding:.9rem 1rem;
+    margin-bottom:.6rem;
+  }
+
+  .ref-title {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.95rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.04em;
+    margin-bottom:.5rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+
+  .ref-body {
+    font-size:.73rem; color:var(--mid);
+    line-height:1.7;
+  }
+
+  .ref-body strong { color:var(--chalk); font-weight:500; }
+
+  /* STEP LIST */
+  .step-list { list-style:none; margin:.4rem 0; }
+
+  .step-list li {
+    display:flex; gap:.65rem;
+    padding:.3rem 0;
+    font-size:.73rem; color:var(--mid);
+    line-height:1.5; align-items:flex-start;
+    border-bottom:1px solid var(--rule);
+  }
+  .step-list li:last-child { border-bottom:none; }
+
+  .step-num {
+    font-family:'JetBrains Mono',monospace;
+    font-size:.65rem; font-weight:700;
+    color:var(--ghost); flex-shrink:0;
+    width:18px; padding-top:.05rem;
+  }
+
+  /* BLEED WARNING */
+  .bleed-warn {
+    background:rgba(122,90,170,.08);
+    border:1px solid rgba(122,90,170,.3);
+    border-radius:8px; padding:.85rem 1rem;
+    font-size:.73rem; color:var(--chalk);
+    line-height:1.65; margin-bottom:.65rem;
+  }
+
+  .bleed-warn strong {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.78rem; letter-spacing:.06em;
+    text-transform:uppercase; color:#A080D0;
+    display:block; margin-bottom:.2rem;
+  }
+
+  /* TOGGLE */
+  .toggle-wrap {
+    display:flex; gap:.4rem; margin-bottom:.75rem;
+  }
+
+  .toggle-btn {
+    flex:1; background:var(--card);
+    border:1px solid var(--border); border-radius:6px;
+    padding:.5rem; cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.7rem; font-weight:600;
+    letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ghost); transition:all .15s; text-align:center;
+  }
+  .toggle-btn.active { background:rgba(74,138,90,.12); border-color:var(--green); color:var(--green-lt); }
+  .toggle-btn:active { transform:scale(.97); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--bg); border-top:1px solid var(--border);
+    display:flex; padding:.4rem 0 .6rem; z-index:100;
+  }
+  .nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:.12rem; background:none; border:none; cursor:pointer; padding:.3rem 0; }
+  .nav-btn:active { transform:scale(.88); }
+  .nav-ico { font-size:1.2rem; }
+  .nav-lbl { font-family:'Barlow Condensed',sans-serif; font-size:.55rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ghost); }
+  .nav-btn.active .nav-lbl { color:var(--green-lt); }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:5rem; left:50%;
+    transform:translateX(-50%) translateY(8px);
+    background:#333; color:var(--chalk);
+    font-family:'JetBrains Mono',monospace;
+    font-size:.72rem; padding:.5rem 1rem;
+    border-radius:20px; opacity:0;
+    transition:all .2s ease; pointer-events:none;
+    white-space:nowrap; z-index:200;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-kicker">Rodecaster Pro 2 · SM7B × 2 · Adobe Audition</div>
+  <h1>Audio<br>Cheat Sheet</h1>
+  <div class="h1-sub">Settings reference for Manual Override and Asses in Armchairs.<br>Keep this open while you're setting up.</div>
+  <div class="gear-row">
+    <span class="gear-pill">Rodecaster Pro 2</span>
+    <span class="gear-pill">Shure SM7B ×2</span>
+    <span class="gear-pill">Adobe Audition 2026</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab mo-tab active" id="tab-mo" onclick="switchTab('mo')">
+    <span class="tab-label">Manual Override</span>
+    <span class="tab-sub">Solo · Warm &amp; Full</span>
+  </button>
+  <button class="tab aia-tab" id="tab-aia" onclick="switchTab('aia')">
+    <span class="tab-label">Asses in Armchairs</span>
+    <span class="tab-sub">Duo · Face-to-Face</span>
+  </button>
+  <button class="tab ref-tab" id="tab-ref" onclick="switchTab('ref')">
+    <span class="tab-label">Reference</span>
+    <span class="tab-sub">What things mean</span>
+  </button>
+</div>
+
+<!-- ══════════ MANUAL OVERRIDE ══════════ -->
+<div class="panel active" id="panel-mo">
+  <div class="wrap">
+
+    <div class="callout problem">
+      <strong>⚠ Your Current Problem</strong>
+      Words dropping at the start and end of sentences = your noise gate threshold is set too high. The gate is closing between words and cutting the quiet parts of your voice. Every setting below is tuned to fix this while keeping background noise out.
+    </div>
+
+    <!-- PHYSICAL SETUP -->
+    <div class="sec-title">Physical Setup First</div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">SM7B Position</div>
+        <div class="profile-badge" style="color:var(--mo)">Solo Recording</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Mic Distance</div>
+          <div class="setting-desc">2–4 inches from your lips. Close mic technique is everything on the SM7B — it's a dynamic mic that rewards proximity. The closer you are, the more bass you get (proximity effect) and the less room noise gets in.</div>
+          <div class="setting-why">Why: At 6+ inches the SM7B loses low end and requires more gain, which brings in more noise.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">2–4"</span>
+          <span class="val-sub">from lips</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Mic Angle</div>
+          <div class="setting-desc">Slightly off-axis — angle the capsule about 15–20° away from directly facing your mouth. Reduces plosives (P and B sounds) and sibilance (S sounds) without killing presence.</div>
+          <div class="setting-why">Why: Direct on-axis pickup of plosives causes low-frequency thuds that are hard to remove in post.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">15–20°</span>
+          <span class="val-sub">off-axis</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Pop Filter</div>
+          <div class="setting-desc">If you have one, use it. If not, the off-axis technique above is your substitute. The SM7B's built-in A7WS windscreen helps but a separate filter is better for close work.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-green">USE IT</span>
+          <span class="val-sub">if you have one</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RODECASTER SETTINGS -->
+    <div class="sec-title">Rodecaster Pro 2 — Channel Settings</div>
+
+    <div class="callout info">
+      <strong>ℹ How to access these on the Rodecaster Pro 2</strong>
+      Tap the channel fader area for your SM7B channel → tap the settings/processing icon → you'll see tabs for EQ, Compressor, Gate, De-esser, and Noise. Set each one per the values below.
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Gain (Preamp)</div>
+        <div class="profile-badge" style="color:var(--mo)">Set This First</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Input Gain</div>
+          <div class="setting-desc">The SM7B is a low-output dynamic mic — it needs a lot of gain. Speak at your normal podcast volume and watch the channel meter. You want peaks hitting around -12dB to -6dB on the channel meter. Adjust the gain knob until you're in that range.</div>
+          <div class="setting-why">Why: Too little gain = quiet recording that requires heavy boosting in Audition which amplifies noise. Too much = distortion and clipping.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">-12 to<br>-6dB</span>
+          <span class="val-sub">peak on meter</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Fader Level</div>
+          <div class="setting-desc">Set the channel fader to unity (0dB / 12 o'clock position). Do your gain adjustment with the preamp gain knob, not the fader.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">0 dB</span>
+          <span class="val-sub">unity / 12 o'clock</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Noise Gate — Fix the Dropout Problem</div>
+        <div class="profile-badge" style="color:var(--red)">Your Main Issue</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Gate Threshold</div>
+          <div class="setting-desc">This is the volume level below which the gate cuts audio. If set too high, quiet parts of your voice (sentence starts, trailing ends, softer words) get cut. Set it LOW enough that your quietest speaking voice stays open.</div>
+          <div class="setting-why">Start here: set to -55dB and test. If background noise comes through, raise to -50dB. Never go above -45dB or you'll get dropouts again.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">-55 dB</span>
+          <span class="val-sub">start point</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Attack</div>
+          <div class="setting-desc">How fast the gate opens when sound hits the threshold. Too slow = clipped word beginnings (your current problem). Too fast = gate chatters on and off rapidly.</div>
+          <div class="setting-why">A fast attack (1–3ms) opens instantly when you start speaking — no clipping.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">1 ms</span>
+          <span class="val-sub">fast open</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Release / Hold</div>
+          <div class="setting-desc">How long the gate stays open after your voice drops below threshold. Too short = gate snaps shut mid-word or between syllables. Too long = background noise bleeds in between sentences.</div>
+          <div class="setting-why">200–300ms is the sweet spot — holds open long enough for natural speech pacing.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">250 ms</span>
+          <span class="val-sub">hold time</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Compressor — Even Out Your Voice</div>
+        <div class="profile-badge" style="color:var(--mo)">Warm &amp; Full</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Threshold</div>
+          <div class="setting-desc">The level above which compression kicks in. Set it so compression engages on your normal speaking volume — not just the loud peaks.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">-18 dB</span>
+          <span class="val-sub">engage point</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Ratio</div>
+          <div class="setting-desc">How aggressively loud sounds are reduced. 3:1 means for every 3dB above threshold, only 1dB comes through. For a warm vocal podcast sound you want moderate compression — not squashed, not untouched.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">3:1</span>
+          <span class="val-sub">moderate</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Attack</div>
+          <div class="setting-desc">Slow attack lets the initial transient (the punch at the start of a word) through before compression clamps down. This preserves the natural weight of your voice.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">10 ms</span>
+          <span class="val-sub">slow-ish</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Release</div>
+          <div class="setting-desc">How fast compression lets go. Too fast = pumping sound. Too slow = voice sounds crushed.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">120 ms</span>
+          <span class="val-sub">natural</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Makeup Gain</div>
+          <div class="setting-desc">Compression reduces overall volume — makeup gain brings it back up. Adjust until your output meter reads the same as before compression was applied.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">+4 dB</span>
+          <span class="val-sub">typical starting point</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">EQ — Shape the Warm Full Sound</div>
+        <div class="profile-badge" style="color:var(--mo)">Tone Shaping</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">High Pass Filter</div>
+          <div class="setting-desc">Cuts everything below a set frequency. Removes desk rumble, HVAC hum, footsteps, and low-frequency room noise that you can't hear clearly but muddies the recording.</div>
+          <div class="setting-why">Set at 80Hz — cuts the junk without touching your voice's bass body.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">80 Hz</span>
+          <span class="val-sub">high pass cut</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Low Shelf Boost</div>
+          <div class="setting-desc">Adds warmth and body to your voice. The SM7B already has good low end — a gentle boost here thickens it further for the warm/full target tone.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">+2 dB</span>
+          <span class="val-sub">@ 150 Hz</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Low-Mid Cut</div>
+          <div class="setting-desc">The 250–400Hz range can make voices sound boxy or muddy if it builds up. A small cut cleans this up without thinning the voice.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">-2 dB</span>
+          <span class="val-sub">@ 300 Hz</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Presence Boost</div>
+          <div class="setting-desc">The 2–5kHz range is where vocal intelligibility lives — where consonants, clarity, and articulation sit. A gentle boost here makes words land clearly even on small speakers or earbuds.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">+2 dB</span>
+          <span class="val-sub">@ 3 kHz</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">High Shelf Cut</div>
+          <div class="setting-desc">Gentle roll-off above 10kHz removes harshness and sibilance without killing air. Keeps the warm character of the SM7B intact.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">-1 dB</span>
+          <span class="val-sub">@ 10 kHz</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">De-esser &amp; Noise</div>
+        <div class="profile-badge" style="color:var(--mo)">Cleanup</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">De-esser</div>
+          <div class="setting-desc">Reduces harsh sibilance — the piercing quality on S, SH, and T sounds. The SM7B is relatively smooth but close-mic recording can still exaggerate sibilance.</div>
+          <div class="setting-why">Frequency: 6–8kHz. Threshold: start at -20dB, reduce until sibilance softens without lisping.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">ON</span>
+          <span class="val-sub">6–8 kHz</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Airmix Noise Reduction</div>
+          <div class="setting-desc">The Rodecaster Pro 2's built-in noise reduction. Set to a moderate level — heavy noise reduction creates an unnatural "underwater" sound. You have good acoustic treatment so you don't need heavy-handed processing.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">30–40%</span>
+          <span class="val-sub">moderate</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDITION SETTINGS -->
+    <div class="sec-title">Adobe Audition — Final Chain</div>
+
+    <div class="callout gold">
+      <strong>📋 Audition Processing Order Matters</strong>
+      Apply effects in this order on the voice track: Noise Reduction → EQ → Compression → Limiter. Running them out of order produces worse results. The Rodecaster handles the gate and initial compression — Audition is your final polish pass.
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Audition Effect Chain — Manual Override</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">1. Noise Reduction</div>
+          <div class="setting-desc">Capture a noise print from a silent section at the start of your recording (2-3 seconds of room tone). Apply at 60–70% reduction. Don't go higher — artifacts start appearing above 75%.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">60–70%</span>
+          <span class="val-sub">reduction</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">2. Parametric EQ</div>
+          <div class="setting-desc">Fine-tune what the Rodecaster started. The Audition EQ is more precise. Use it to fix any remaining muddiness or harshness that slipped through. Subtle adjustments only — the heavy lifting is done.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">subtle</span>
+          <span class="val-sub">fine-tune only</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">3. Dynamics Compressor</div>
+          <div class="setting-desc">A light second pass of compression for consistency. Ratio 2:1, threshold around -20dB. This catches anything the Rodecaster's compressor missed — especially helpful if you moved closer or further from the mic during recording.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">2:1</span>
+          <span class="val-sub">light pass</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">4. Hard Limiter</div>
+          <div class="setting-desc">The final ceiling. Set at -1dB to -0.3dB true peak. This absolutely prevents clipping in the export. Non-negotiable — always the last effect in the chain.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">-1 dB</span>
+          <span class="val-sub">true peak ceiling</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Target Loudness (Export)</div>
+          <div class="setting-desc">Podcast platforms want -16 LUFS for stereo, -19 LUFS for mono. Use Audition's Match Loudness panel before exporting. Spotify, Apple Podcasts, and most platforms normalize to -14 LUFS on playback — hitting -16 LUFS on export lands you right in the sweet spot.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-mo">-16 LUFS</span>
+          <span class="val-sub">stereo export</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ ASSES IN ARMCHAIRS ══════════ -->
+<div class="panel" id="panel-aia">
+  <div class="wrap">
+
+    <div class="bleed-warn">
+      <strong>⚠ Face-to-Face Mic Bleed — Your Biggest Challenge</strong>
+      With two SM7Bs 4–6 feet apart facing each other, each mic will pick up the other person's voice at a lower level. This creates a "double voice" effect and phase issues in post. The settings below are specifically tuned to minimize this. The gate is your primary weapon — it must be set to cut between speakers.
+    </div>
+
+    <!-- PHYSICAL SETUP -->
+    <div class="sec-title">Physical Setup — Duo Recording</div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Room & Mic Positioning</div>
+        <div class="profile-badge" style="color:var(--aia)">Do This Before Settings</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Mic Rejection Angles</div>
+          <div class="setting-desc">The SM7B rejects sound from the sides and rear (it's a cardioid mic). Point each mic slightly away from the other person — not directly at the speaker's mouth of the person across from you. This uses the mic's natural rejection pattern to reduce bleed.</div>
+          <div class="setting-why">The null point (maximum rejection) is directly to the rear of the SM7B capsule. Position so each mic's rear faces roughly toward the other speaker.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">REAR NULL</span>
+          <span class="val-sub">face away from<br>opposite speaker</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Distance from Mouth</div>
+          <div class="setting-desc">Both speakers should be consistent — 2–4 inches. If one person is louder naturally, the quieter person moves slightly closer rather than boosting gain.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">2–4"</span>
+          <span class="val-sub">both mics</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Acoustic Panels</div>
+          <div class="setting-desc">Your existing hex panels are doing real work here. If you can position so each mic has an acoustic panel directly behind the speaker (absorbing reflections that would otherwise travel to the opposite mic) that reduces bleed further.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-green">USE THEM</span>
+          <span class="val-sub">panels behind<br>each speaker</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RODECASTER CHANNEL 1 -->
+    <div class="sec-title">Rodecaster — Both Channels (Same Settings)</div>
+
+    <div class="callout info">
+      <strong>ℹ Two Channels, Same Core Settings</strong>
+      Set both SM7B channels identically on the Rodecaster. The gate is more aggressive here than on Manual Override because bleed is a bigger problem than it is solo. You want each gate to cut firmly between sentences so the opposite voice doesn't creep in.
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Gate — More Aggressive for Duo</div>
+        <div class="profile-badge" style="color:var(--red)">Critical Setting</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Gate Threshold</div>
+          <div class="setting-desc">Slightly higher than solo to cut the opposite person's voice leaking into the non-speaking mic. Start at -45dB and test — speak while your wife is silent and check if her voice appears on your channel's meter. Raise threshold if it does.</div>
+          <div class="setting-why">The goal: gate opens for your voice, stays closed for the other person's voice coming from across the room.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">-45 dB</span>
+          <span class="val-sub">start point</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Attack</div>
+          <div class="setting-desc">Same as solo — fast to catch word beginnings.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">1 ms</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Release / Hold</div>
+          <div class="setting-desc">Slightly shorter than solo — you want the gate to close faster between speakers to prevent bleed during the conversational back-and-forth.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">150 ms</span>
+          <span class="val-sub">shorter than solo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Compressor — Conversational Balance</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Threshold</div>
+          <div class="setting-desc">Match both channels so neither voice dominates. If one person is naturally louder, lower their threshold slightly so compression engages earlier and brings them down to match.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">-18 dB</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Ratio</div>
+          <div class="setting-desc">Slightly more compression than solo to keep both voices consistently balanced in the mix. Conversational podcasts benefit from tighter dynamic control.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">4:1</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Attack / Release</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">10 / 100ms</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">EQ — Natural Conversation Tone</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">High Pass Filter</div>
+          <div class="setting-desc">Same as solo — cuts room rumble and low-frequency noise on both channels.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">80 Hz</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Low-Mid Cut</div>
+          <div class="setting-desc">Cut slightly more mud in the duo setup — close conversation can build up in the 200–350Hz range on both channels simultaneously, making the mix feel thick and unclear.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">-3 dB</span>
+          <span class="val-sub">@ 280 Hz</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">Presence / Clarity</div>
+          <div class="setting-desc">Boost presence on both channels equally so the conversation sounds clear and natural on earbuds — where most podcast listeners are.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">+2 dB</span>
+          <span class="val-sub">@ 3 kHz</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDITION DUO -->
+    <div class="sec-title">Adobe Audition — Duo Post-Processing</div>
+
+    <div class="callout gold">
+      <strong>📋 Record Each Person on a Separate Track</strong>
+      In Audition, import Channel 1 and Channel 2 as separate mono tracks. Process each one individually first, then mix together. Never mix down before processing — you lose control of each voice permanently.
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-name">Audition Duo Workflow</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">1. Noise Reduction</div>
+          <div class="setting-desc">Capture separate noise prints for each track — your background noise floor may differ slightly from your wife's mic position. Apply 60% each.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">60%</span>
+          <span class="val-sub">each track</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">2. DeBleed (if needed)</div>
+          <div class="setting-desc">If bleed is still audible after the gate work, Audition's Dynamics processor can be used as a secondary gate pass on each track. Threshold just above the bleed level, fast attack, short hold.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">if needed</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">3. Match Loudness</div>
+          <div class="setting-desc">Use Match Loudness on both tracks before mixing — both voices should hit -16 LUFS individually so they sit at the same perceived volume in the final mix.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">-16 LUFS</span>
+          <span class="val-sub">each track</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">4. Pan (optional)</div>
+          <div class="setting-desc">Some duo podcasts pan one voice slightly left and one slightly right (10–15%) to create a sense of space in the conversation. Others keep both centered. Either works — try it and decide.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">L10 / R10</span>
+          <span class="val-sub">optional</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-name">5. Hard Limiter on Master</div>
+          <div class="setting-desc">Apply the hard limiter at -1dB on the master bus after mixing both voices together.</div>
+        </div>
+        <div class="setting-val">
+          <span class="val-main val-aia">-1 dB</span>
+          <span class="val-sub">master bus</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ REFERENCE ══════════ -->
+<div class="panel" id="panel-ref">
+  <div class="wrap">
+
+    <div class="sec-title">What Each Thing Actually Does</div>
+
+    <div class="ref-card">
+      <div class="ref-title">🚪 Noise Gate</div>
+      <div class="ref-body">
+        Think of it as a door that only opens when someone knocks loud enough. <strong>Threshold</strong> is how hard the knock needs to be. <strong>Attack</strong> is how fast the door swings open. <strong>Release/Hold</strong> is how long it stays open after the knocking stops.<br><br>
+        Your problem: the door was set to need too hard a knock, so the first word of each sentence (which starts quietly before building) wasn't loud enough to open it. Solution: lower the threshold so a quieter knock (quieter voice) still opens the gate.
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-title">🗜 Compressor</div>
+      <div class="ref-body">
+        Compressors even out the volume difference between your loud moments and quiet moments. Without compression, a whisper and a shout can be 20dB apart — unlistenable on earbuds. With compression, they sit within 6dB of each other — comfortable to listen to.<br><br>
+        <strong>Threshold:</strong> how loud before it engages. <strong>Ratio:</strong> how much it clamps down (3:1 = gentle, 10:1 = aggressive). <strong>Attack:</strong> how fast it grabs. <strong>Release:</strong> how fast it lets go. <strong>Makeup Gain:</strong> turns the overall volume back up after compression has reduced it.
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-title">🎛 EQ (Equalizer)</div>
+      <div class="ref-body">
+        EQ is a tone control that boosts or cuts specific frequency ranges. Your voice is a mix of many frequencies simultaneously — bass body (80–250Hz), muddy mids (250–500Hz), nasal range (500Hz–2kHz), presence and clarity (2–5kHz), air and brightness (5kHz+).<br><br>
+        <strong>High pass filter:</strong> cuts everything below a frequency — removes rumble and hum. <strong>Shelf:</strong> gradually boosts or cuts an entire range above or below a point. <strong>Bell/Peak:</strong> boosts or cuts a specific narrow frequency range.
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-title">🔇 De-esser</div>
+      <div class="ref-body">
+        A frequency-specific compressor that only activates on harsh S, SH, and T sounds. Those consonants live in the 6–8kHz range. When they peak, the de-esser clamps down only on that frequency range — leaving the rest of your voice untouched. The result is smoother sibilance without losing vocal presence.
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-title">📊 LUFS — Loudness Units</div>
+      <div class="ref-body">
+        LUFS is how loudness is measured for streaming and podcasting. Unlike dB which measures peak levels, LUFS measures perceived loudness over time — which is what actually matters for listener experience.<br><br>
+        <strong>-16 LUFS:</strong> standard podcast target. <strong>-14 LUFS:</strong> Spotify's normalization point. <strong>-23 LUFS:</strong> broadcast TV standard (much quieter). Hitting -16 LUFS means your show sounds consistent with professional podcasts on every platform.
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-title">🎙 The SM7B + Gain</div>
+      <div class="ref-body">
+        The SM7B is a dynamic microphone with low output sensitivity. It needs significantly more gain than a condenser mic — typically 60dB or more of clean preamp gain. The Rodecaster Pro 2 can provide this cleanly.<br><br>
+        <strong>Proximity effect:</strong> the closer you are to a dynamic mic, the more bass it picks up. This is a feature, not a bug — it's why close-mic technique on the SM7B sounds warm and full. Pull back and it sounds thinner and requires more gain (which adds noise).
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-title">🔄 Signal Chain Order</div>
+      <div class="ref-body">
+        The order effects are applied matters. Standard podcast chain:<br><br>
+        <strong>1. Gain/Preamp</strong> — set input level correctly<br>
+        <strong>2. High Pass Filter / EQ</strong> — remove unwanted frequencies before compressing them<br>
+        <strong>3. Gate</strong> — cut silence and bleed<br>
+        <strong>4. Compression</strong> — even out dynamics<br>
+        <strong>5. De-esser</strong> — tame sibilance after compression<br>
+        <strong>6. Final EQ</strong> — fine-tune tone<br>
+        <strong>7. Limiter</strong> — hard ceiling, always last
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-title">⚡ Quick Troubleshooting</div>
+      <div class="ref-body">
+        <strong>Words dropping at start of sentences →</strong> Gate threshold too high or attack too slow. Lower threshold, set attack to 1ms.<br><br>
+        <strong>Words trailing off at end →</strong> Gate release too short. Increase hold time to 250ms.<br><br>
+        <strong>Voice sounds thin or distant →</strong> Move closer to mic. Check high pass filter isn't set too high (above 120Hz).<br><br>
+        <strong>Voice sounds muddy or boxy →</strong> Cut 250–400Hz range by 2–3dB.<br><br>
+        <strong>Harsh S sounds →</strong> De-esser threshold too high or not engaged. Check 6–8kHz de-esser.<br><br>
+        <strong>Background noise still audible →</strong> Audition noise reduction — capture a better noise print from a longer silent section.<br><br>
+        <strong>Other person's voice bleeding into your track →</strong> Raise gate threshold, check mic null point positioning.<br><br>
+        <strong>Volume inconsistent between episodes →</strong> Use Audition Match Loudness panel. Target -16 LUFS every time.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-mo" onclick="switchTab('mo')">
+    <span class="nav-ico">🎙</span>
+    <span class="nav-lbl">Manual Override</span>
+  </button>
+  <button class="nav-btn" id="nav-aia" onclick="switchTab('aia')">
+    <span class="nav-ico">🎙🎙</span>
+    <span class="nav-lbl">Armchairs</span>
+  </button>
+  <button class="nav-btn" id="nav-ref" onclick="switchTab('ref')">
+    <span class="nav-ico">📖</span>
+    <span class="nav-lbl">Reference</span>
+  </button>
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+}
+</script>
+</body>
+</html>
