@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Alex's Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0C0C0C;
+    --surface:  #141414;
+    --card:     #1A1A1A;
+    --border:   #262626;
+    --border2:  #333;
+    --chalk:    #E8E4DC;
+    --mid:      #888;
+    --ghost:    #555;
+    --rule:     #1E1E1E;
+    --fire:     #E85D20;
+    --fire-lt:  #F08050;
+    --steel:    #4A7AAA;
+    --steel-lt: #6A9ACA;
+    --gold:     #C89040;
+    --gold-lt:  #E0B060;
+    --green:    #4A8A5A;
+    --green-lt: #6AAA7A;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--chalk);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image: repeating-linear-gradient(
+      -45deg, transparent, transparent 40px,
+      rgba(255,255,255,.006) 40px, rgba(255,255,255,.006) 41px
+    );
+    pointer-events:none; z-index:0;
+  }
+  * { position:relative; z-index:1; }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 1.25rem 1.25rem;
+    position: relative; overflow: hidden;
+  }
+
+  header::after {
+    content:'AP';
+    position:absolute; right:-.5rem; top:50%;
+    transform:translateY(-50%);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:9rem; font-weight:800;
+    color:var(--fire); opacity:.04;
+    line-height:1; pointer-events:none;
+  }
+
+  .header-kicker {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.7rem; letter-spacing:.3em;
+    text-transform:uppercase; color:var(--fire);
+    margin-bottom:.5rem;
+  }
+
+  h1 {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:clamp(2.2rem,7vw,3.5rem);
+    font-weight:800; line-height:.92;
+    letter-spacing:-.01em; text-transform:uppercase;
+  }
+
+  .h1-sub {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ghost);
+    margin-top:.4rem; display:block;
+  }
+
+  .header-stats {
+    display:flex; gap:.5rem; margin-top:.9rem; flex-wrap:wrap;
+  }
+
+  .hstat {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:4px; padding:.3rem .7rem;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.7rem; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--mid);
+  }
+  .hstat strong { color:var(--chalk); }
+
+  /* PROTEIN BAR */
+  .protein-wrap {
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    padding:.6rem 1.25rem;
+  }
+
+  .protein-top {
+    display:flex; align-items:center;
+    justify-content:space-between; gap:.75rem;
+    margin-bottom:.35rem;
+  }
+
+  .protein-label {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.62rem; letter-spacing:.15em;
+    text-transform:uppercase; color:var(--ghost);
+  }
+
+  .protein-val {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.88rem; font-weight:700; color:var(--steel-lt);
+  }
+
+  .protein-track {
+    background:var(--border); border-radius:20px;
+    height:5px; overflow:hidden; margin-bottom:.45rem;
+  }
+
+  .protein-fill {
+    height:100%; border-radius:20px;
+    background:linear-gradient(90deg,var(--steel),var(--steel-lt));
+    transition:width .3s ease; min-width:0;
+  }
+
+  .protein-input-row { display:flex; gap:.4rem; }
+
+  .p-input {
+    flex:1; background:var(--card);
+    border:1px solid var(--border); border-radius:5px;
+    color:var(--chalk); font-family:'Barlow',sans-serif;
+    font-size:.82rem; padding:.4rem .65rem;
+    outline:none; -webkit-appearance:none;
+    transition:border-color .15s;
+  }
+  .p-input:focus { border-color:var(--steel); }
+  .p-input::placeholder { color:var(--ghost); font-size:.75rem; }
+
+  .p-btn {
+    background:var(--steel); border:none; border-radius:5px;
+    color:white; font-family:'Barlow Condensed',sans-serif;
+    font-size:.82rem; font-weight:600; letter-spacing:.06em;
+    padding:.4rem .9rem; cursor:pointer; transition:all .15s;
+    white-space:nowrap;
+  }
+  .p-btn:active { background:var(--steel-lt); }
+
+  .p-reset {
+    background:none; border:1px solid var(--border);
+    border-radius:5px; color:var(--ghost);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem; letter-spacing:.06em;
+    padding:.4rem .6rem; cursor:pointer; transition:all .15s;
+  }
+  .p-reset:active { color:var(--fire); border-color:var(--fire); }
+
+  /* PHASE TABS */
+  .phase-tabs {
+    display:flex; background:var(--surface);
+    border-bottom:1px solid var(--border);
+    overflow-x:auto; scrollbar-width:none;
+  }
+  .phase-tabs::-webkit-scrollbar { display:none; }
+
+  .phase-tab {
+    flex:1; min-width:72px; background:none; border:none;
+    border-bottom:2px solid transparent;
+    padding:.75rem .4rem; cursor:pointer;
+    text-align:center; transition:all .15s;
+  }
+
+  .pt-label {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.7rem; font-weight:600;
+    letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ghost); display:block;
+  }
+
+  .pt-sub {
+    font-size:.56rem; color:var(--ghost);
+    display:block; margin-top:.08rem;
+  }
+
+  .phase-tab.active .pt-label { color:var(--fire); }
+  .phase-tab.active { border-bottom-color:var(--fire); }
+  .phase-tab.active .pt-sub { color:var(--mid); }
+  .phase-tab.complete .pt-label { color:var(--green-lt); }
+  .phase-tab.complete { border-bottom-color:var(--green); }
+
+  /* PANELS */
+  .panel { display:none; animation:fadeUp .2s ease; }
+  .panel.active { display:block; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* PHASE INTRO CARD */
+  .phase-intro {
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:1rem 1.25rem;
+  }
+
+  .pi-header {
+    display:flex; align-items:flex-start;
+    justify-content:space-between; gap:.75rem;
+    margin-bottom:.5rem;
+  }
+
+  .pi-title {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.25rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.03em; line-height:1;
+  }
+
+  .pi-weeks {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--fire);
+    border:1px solid var(--fire); padding:.2rem .5rem;
+    border-radius:3px; white-space:nowrap; flex-shrink:0;
+  }
+
+  .pi-desc {
+    font-size:.76rem; color:var(--mid); line-height:1.65;
+  }
+
+  .pi-goal {
+    font-size:.72rem; color:var(--gold-lt);
+    font-style:italic; margin-top:.5rem;
+    padding-top:.5rem; border-top:1px solid var(--rule);
+  }
+
+  /* MAIN AREA */
+  .main { padding:.75rem; padding-bottom:5.5rem; }
+
+  /* WEEK LABEL */
+  .wk-label {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.62rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ghost);
+    margin:.85rem 0 .5rem;
+    display:flex; align-items:center; gap:.6rem;
+  }
+  .wk-label:first-child { margin-top:0; }
+  .wk-label::after { content:''; flex:1; height:1px; background:var(--rule); }
+
+  /* DAY SCROLL */
+  .day-scroll {
+    display:flex; gap:.35rem; overflow-x:auto;
+    padding-bottom:.35rem; margin-bottom:.65rem;
+    scrollbar-width:none;
+  }
+  .day-scroll::-webkit-scrollbar { display:none; }
+
+  .day-btn {
+    flex-shrink:0; min-width:54px;
+    background:var(--card); border:1.5px solid var(--border);
+    border-radius:8px; padding:.45rem .5rem;
+    cursor:pointer; text-align:center;
+    transition:all .12s; user-select:none;
+  }
+  .day-btn:active { transform:scale(.93); }
+  .day-btn.active  { border-color:var(--fire); background:rgba(232,93,32,.1); }
+  .day-btn.done    { border-color:var(--green); background:rgba(74,138,90,.08); }
+  .day-btn.rest-day { opacity:.5; cursor:default; }
+
+  .db-name { font-family:'Barlow Condensed',sans-serif; font-size:.65rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ghost); display:block; }
+  .db-type { font-size:.55rem; color:var(--ghost); display:block; margin-top:.08rem; line-height:1.2; }
+  .db-tick { font-size:.58rem; color:var(--green-lt); display:block; margin-top:.12rem; }
+
+  .day-btn.active .db-name { color:var(--fire); }
+  .day-btn.done   .db-name { color:var(--green-lt); }
+
+  /* DAY VIEWS */
+  .day-view { display:none; animation:fadeUp .15s ease; }
+  .day-view.active { display:block; }
+
+  /* SESSION HEADER */
+  .session-hdr {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:8px; padding:.8rem 1rem;
+    margin-bottom:.6rem;
+    display:flex; align-items:center;
+    justify-content:space-between; gap:.75rem;
+  }
+
+  .sh-badge {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.6rem; letter-spacing:.15em;
+    text-transform:uppercase; margin-bottom:.18rem;
+  }
+  .badge-s { color:var(--fire); }
+  .badge-c { color:var(--steel-lt); }
+  .badge-r { color:var(--ghost); }
+  .badge-a { color:var(--green-lt); }
+
+  .sh-name {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.25rem; font-weight:700;
+    text-transform:uppercase; line-height:1;
+  }
+
+  .sh-right { text-align:right; flex-shrink:0; }
+
+  .sh-dur {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.5rem; font-weight:700;
+    color:var(--gold); line-height:1;
+  }
+
+  .sh-dur-lbl {
+    font-size:.52rem; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--ghost);
+    display:block; margin-top:.1rem;
+  }
+
+  /* SECTION LABEL */
+  .sec-lbl {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.6rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ghost);
+    margin:1rem 0 .5rem;
+    display:flex; align-items:center; gap:.6rem;
+  }
+  .sec-lbl::after { content:''; flex:1; height:1px; background:var(--rule); }
+
+  /* EXERCISE CARD */
+  .ex-card {
+    background:var(--card);
+    border:1.5px solid var(--border);
+    border-left:3px solid var(--border);
+    border-radius:8px; padding:.75rem .9rem;
+    margin-bottom:.38rem;
+    display:flex; align-items:center; gap:.7rem;
+    cursor:pointer; transition:all .15s; user-select:none;
+  }
+  .ex-card:active { transform:scale(.98); }
+
+  .ex-card.str  { border-left-color:var(--fire); }
+  .ex-card.cnd  { border-left-color:var(--steel); }
+  .ex-card.acc  { border-left-color:var(--gold); }
+  .ex-card.done { border-left-color:var(--green) !important; background:rgba(74,138,90,.06); opacity:.5; }
+
+  .ex-chk {
+    width:22px; height:22px; flex-shrink:0;
+    border:1.5px solid var(--border2); border-radius:5px;
+    background:var(--surface);
+    display:flex; align-items:center; justify-content:center;
+    font-size:.7rem; transition:all .15s;
+  }
+  .ex-card.done .ex-chk { background:var(--green); border-color:var(--green); color:white; }
+
+  .ex-ico  { font-size:1.15rem; flex-shrink:0; }
+  .ex-info { flex:1; min-width:0; }
+
+  .ex-name {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.9rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:.02em;
+    color:var(--chalk); line-height:1.1;
+  }
+
+  .ex-detail {
+    font-size:.66rem; color:var(--mid);
+    margin-top:.1rem; line-height:1.35;
+  }
+
+  .ex-tip {
+    font-size:.62rem; color:var(--ghost);
+    margin-top:.08rem; font-style:italic; line-height:1.3;
+  }
+
+  .ex-scheme {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.95rem; font-weight:600;
+    color:var(--gold); text-align:right;
+    white-space:nowrap; flex-shrink:0;
+  }
+
+  .ex-wt {
+    display:flex; align-items:center; gap:.25rem;
+    margin-top:.28rem;
+  }
+  .ex-wt input {
+    width:55px; border:none;
+    border-bottom:1px solid var(--border2);
+    background:transparent;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.8rem; font-weight:600;
+    color:var(--chalk); padding:.08rem .2rem;
+    text-align:right; outline:none;
+    transition:border-color .15s;
+  }
+  .ex-wt input:focus { border-bottom-color:var(--fire); }
+  .ex-wt input::placeholder { color:var(--ghost); font-size:.65rem; font-family:'Barlow',sans-serif; font-weight:300; }
+  .ex-wt span { font-size:.58rem; color:var(--ghost); }
+
+  /* REST DAY */
+  .rest-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:8px; padding:2.5rem 1.5rem;
+    text-align:center; margin-top:.5rem;
+  }
+  .rest-ico   { font-size:2.5rem; margin-bottom:.75rem; opacity:.45; }
+  .rest-title {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:2rem; font-weight:700;
+    text-transform:uppercase; color:var(--ghost);
+    letter-spacing:.05em; margin-bottom:.4rem;
+  }
+  .rest-sub { font-size:.76rem; color:var(--ghost); line-height:1.65; max-width:280px; margin:0 auto; }
+
+  /* SESSION DONE BUTTON */
+  .done-btn {
+    width:100%; margin-top:1.1rem;
+    background:var(--fire); border:none; border-radius:6px;
+    color:white; font-family:'Barlow Condensed',sans-serif;
+    font-size:1rem; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; padding:.9rem;
+    cursor:pointer; transition:all .15s;
+  }
+  .done-btn:active { background:var(--fire-lt); transform:scale(.99); }
+  .done-btn.completed { background:var(--green); pointer-events:none; }
+
+  /* PROGRESS BAR */
+  .prog-wrap {
+    background:var(--surface); padding:.5rem 1.25rem .6rem;
+    border-bottom:1px solid var(--border);
+  }
+  .prog-labels { display:flex; justify-content:space-between; font-size:.6rem; color:var(--ghost); margin-bottom:.28rem; }
+  .prog-track  { background:var(--border); border-radius:20px; height:5px; overflow:hidden; }
+  .prog-fill   { height:100%; border-radius:20px; background:linear-gradient(90deg,var(--fire),var(--fire-lt)); transition:width .4s ease; }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:5rem; left:50%;
+    transform:translateX(-50%) translateY(8px);
+    background:var(--fire); color:white;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.82rem; font-weight:600; letter-spacing:.06em;
+    padding:.55rem 1.2rem; border-radius:20px;
+    opacity:0; transition:all .2s ease;
+    pointer-events:none; white-space:nowrap; z-index:200;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.green { background:var(--green); }
+  .toast.steel { background:var(--steel); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--bg); border-top:1px solid var(--border);
+    display:flex; padding:.4rem 0 .6rem; z-index:100;
+  }
+  .nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:.12rem; background:none; border:none; cursor:pointer; padding:.3rem 0; transition:all .12s; }
+  .nav-btn:active { transform:scale(.88); }
+  .nav-ico { font-size:1.2rem; }
+  .nav-lbl { font-family:'Barlow Condensed',sans-serif; font-size:.55rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ghost); transition:color .12s; }
+  .nav-btn.active .nav-lbl { color:var(--fire); }
+
+  @media (max-width:360px) {
+    .phase-tabs { font-size:.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-kicker">Personal Program · Body Recomposition</div>
+  <h1>Alex's<br>Program</h1>
+  <span class="h1-sub">Cut fat · Build the upper body · Do the work</span>
+  <div class="header-stats">
+    <div class="hstat">Sessions: <strong id="hdr-sessions">0</strong></div>
+    <div class="hstat">Streak: <strong id="hdr-streak">0</strong> days</div>
+    <div class="hstat">Phase: <strong id="hdr-phase">Starter</strong></div>
+  </div>
+</header>
+
+<!-- PROTEIN TRACKER -->
+<div class="protein-wrap">
+  <div class="protein-top">
+    <span class="protein-label">🥩 Daily Protein Target — 160g</span>
+    <span class="protein-val" id="p-val">0 / 160g</span>
+  </div>
+  <div class="protein-track">
+    <div class="protein-fill" id="p-fill" style="width:0%"></div>
+  </div>
+  <div class="protein-input-row" style="margin-top:.4rem;">
+    <input type="number" class="p-input" id="p-input" placeholder="Add grams of protein…" min="0" max="200">
+    <button class="p-btn" onclick="addProtein()">+ Add</button>
+    <button class="p-reset" onclick="resetProtein()">Reset</button>
+  </div>
+</div>
+
+<!-- OVERALL PROGRESS -->
+<div class="prog-wrap">
+  <div class="prog-labels">
+    <span>Overall Program Progress</span>
+    <span id="prog-label">0 sessions logged</span>
+  </div>
+  <div class="prog-track">
+    <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- PHASE TABS -->
+<div class="phase-tabs">
+  <button class="phase-tab active" id="ptab-0" onclick="switchPhase(0)">
+    <span class="pt-label">Phase 1</span>
+    <span class="pt-sub">Starter</span>
+  </button>
+  <button class="phase-tab" id="ptab-1" onclick="switchPhase(1)">
+    <span class="pt-label">Phase 2</span>
+    <span class="pt-sub">Build</span>
+  </button>
+  <button class="phase-tab" id="ptab-2" onclick="switchPhase(2)">
+    <span class="pt-label">Phase 3</span>
+    <span class="pt-sub">Strength</span>
+  </button>
+  <button class="phase-tab" id="ptab-3" onclick="switchPhase(3)">
+    <span class="pt-label">Phase 4</span>
+    <span class="pt-sub">Recomp</span>
+  </button>
+</div>
+
+<!-- PHASE PANELS -->
+<div class="panel active" id="panel-0"></div>
+<div class="panel" id="panel-1"></div>
+<div class="panel" id="panel-2"></div>
+<div class="panel" id="panel-3"></div>
+
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-p0" onclick="switchPhase(0)">
+    <span class="nav-ico">1️⃣</span><span class="nav-lbl">Starter</span>
+  </button>
+  <button class="nav-btn" id="nav-p1" onclick="switchPhase(1)">
+    <span class="nav-ico">2️⃣</span><span class="nav-lbl">Build</span>
+  </button>
+  <button class="nav-btn" id="nav-p2" onclick="switchPhase(2)">
+    <span class="nav-ico">3️⃣</span><span class="nav-lbl">Strength</span>
+  </button>
+  <button class="nav-btn" id="nav-p3" onclick="switchPhase(3)">
+    <span class="nav-ico">4️⃣</span><span class="nav-lbl">Recomp</span>
+  </button>
+</div>
+
+<script>
+// ─── PROGRAM DEFINITION ───────────────────────────────────────────────────
+// Equipment: Barbell (~90lb), EZ curl bar (~90lb), Adjustable KB (45lb),
+//            Adjustable bench (flat/incline/decline), Bodyweight
+// Goal: Body recomposition — cut fat, build upper chest/shoulders/back
+// No planks. Incline push-up progressions instead.
+
+const PHASES = [
+  {
+    id: 0,
+    name: 'Phase 1 — Starter',
+    weeks: 'Weeks 1–3',
+    desc: 'Three weeks of lower volume to build the habit without destroying yourself. Your body is adapting — soreness is normal, crippling pain is not. Every session should finish with energy left in the tank. This is intentional.',
+    goal: 'Goal: Learn the movements, build consistency, wake up muscles that have been sleeping.',
+    schedule: [
+      // Week 1
+      [
+        { day:'Mon', type:'strength', name:'Upper Body A', duration:45, exercises:[
+          { id:'p1w1m1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'Bench at 45° — upper chest focus. This is your #1 movement.', tip:'Start light. Bar path to upper chest. Full range.', scheme:'3 × 8', weighted:true },
+          { id:'p1w1m2', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'Hinge 45°, pull bar to lower chest. Squeeze shoulder blades.', tip:'Keep back flat. No jerking.', scheme:'3 × 8', weighted:true },
+          { id:'p1w1m3', cat:'str', ico:'💪', name:'Overhead Press', detail:'Stand or sit, press bar overhead. Tight core.', tip:'Don\'t arch your lower back excessively.', scheme:'3 × 8', weighted:true },
+          { id:'p1w1m4', cat:'acc', ico:'🔔', name:'KB Shoulder Press', detail:'One arm at a time. Clean to rack position, press overhead.', tip:'Each arm independently — finds and fixes imbalances.', scheme:'3 × 10 each', weighted:true },
+          { id:'p1w1m5', cat:'acc', ico:'📐', name:'Incline Push-Up', detail:'Hands on bench or counter at waist height. Same motion as bench press.', tip:'This is NOT easy — it\'s the starting point. Progress matters more than pride.', scheme:'3 × 10' },
+        ]},
+        { day:'Tue', type:'cardio', name:'KB Conditioning', duration:30, exercises:[
+          { id:'p1w1t1', cat:'cnd', ico:'🔔', name:'KB Swing', detail:'Hip hinge power. Bell floats to shoulder height. Drive with hips, not arms.', tip:'If your lower back hurts, you\'re squatting it. It\'s a hinge.', scheme:'4 × 15' },
+          { id:'p1w1t2', cat:'cnd', ico:'🚶', name:'Farmer Carry', detail:'Pick up the KB heavy as you can hold with good posture. Walk 20m, turn, walk back.', tip:'Chest tall, shoulders back. This builds everything.', scheme:'3 × 20m', weighted:true },
+          { id:'p1w1t3', cat:'cnd', ico:'🧘', name:'Dead Bug', detail:'Lie flat. Lower opposite arm and leg slowly. Back stays pressed to floor.', tip:'Core anti-extension. Replaces plank — works the same muscles differently.', scheme:'3 × 8 each' },
+        ]},
+        { day:'Wed', type:'rest', name:'Rest & Recover', duration:0, exercises:[] },
+        { day:'Thu', type:'strength', name:'Upper Body B', duration:45, exercises:[
+          { id:'p1w1h1', cat:'str', ico:'🏋️', name:'Flat Bench Press', detail:'Flat bench. Controlled descent, drive up. Feet flat on floor.', tip:'Don\'t bounce off your chest. Touch and press.', scheme:'3 × 8', weighted:true },
+          { id:'p1w1h2', cat:'str', ico:'🏋️', name:'Deadlift', detail:'Bar close to shins. Pull the slack out first. Hips and shoulders rise together.', tip:'Slow setup every rep. No heaving.', scheme:'2 × 5', weighted:true },
+          { id:'p1w1h3', cat:'acc', ico:'💪', name:'EZ Bar Curl', detail:'EZ bar is easier on the wrists than straight bar. Full range, controlled.', tip:'Don\'t swing. If you need to swing, drop the weight.', scheme:'3 × 10', weighted:true },
+          { id:'p1w1h4', cat:'acc', ico:'🔔', name:'KB Lateral Raise', detail:'Arms slightly bent, raise to shoulder height. Side deltoids — creates width.', tip:'Go light. These are isolation. 15-20lb max at first.', scheme:'3 × 12', weighted:true },
+          { id:'p1w1h5', cat:'acc', ico:'📐', name:'Incline Push-Up', detail:'Same as Monday. Second set of the week builds the habit.', tip:'Try to add 1 rep compared to Monday if you can.', scheme:'3 × 10' },
+        ]},
+        { day:'Fri', type:'active', name:'Active Recovery', duration:25, exercises:[
+          { id:'p1w1f1', cat:'cnd', ico:'🚶', name:'Walk — 20 Minutes', detail:'Brisk walk. Outside if possible. This is real recovery work, not wasted time.', tip:'Utah spring air is free. Use it.', scheme:'20 min' },
+          { id:'p1w1f2', cat:'acc', ico:'🧘', name:'Full Body Stretch', detail:'Hip flexors, hamstrings, chest, shoulders. Hold each 30-45 seconds.', tip:'Stretch after the walk when muscles are warm.', scheme:'5 min' },
+        ]},
+        { day:'Sat', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+        { day:'Sun', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+      ],
+      // Week 2
+      [
+        { day:'Mon', type:'strength', name:'Upper Body A', duration:45, exercises:[
+          { id:'p1w2m1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'Add 5 lbs if last week felt manageable with good form.', tip:'Upper chest focus. Slow the descent to 2 seconds.', scheme:'3 × 8', weighted:true },
+          { id:'p1w2m2', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'Add 5 lbs if form was solid last week.', tip:'Lead with the elbows, not the hands.', scheme:'3 × 8', weighted:true },
+          { id:'p1w2m3', cat:'str', ico:'💪', name:'Overhead Press', detail:'Same weight or +5 lbs if last week felt strong.', tip:'Lock out fully at the top.', scheme:'3 × 8', weighted:true },
+          { id:'p1w2m4', cat:'acc', ico:'🔔', name:'KB Single Arm Press', detail:'Clean to rack, press strict. Each arm.', tip:'The arm that feels weaker — that\'s your focus arm.', scheme:'3 × 10 each', weighted:true },
+          { id:'p1w2m5', cat:'acc', ico:'📐', name:'Incline Push-Up', detail:'Try to lower the angle slightly if last week felt easy.', tip:'Progress the angle week to week. The floor is the goal, not a deadline.', scheme:'3 × 12' },
+        ]},
+        { day:'Tue', type:'cardio', name:'KB Conditioning', duration:30, exercises:[
+          { id:'p1w2t1', cat:'cnd', ico:'🔔', name:'KB Swing', detail:'Heavier than last week if form was solid.', tip:'Explosive hip drive. The bell is just along for the ride.', scheme:'4 × 15', weighted:true },
+          { id:'p1w2t2', cat:'cnd', ico:'🚶', name:'Farmer Carry', detail:'As heavy as you can maintain posture. Go heavier than week 1.', tip:'Your grip will give out before your body does at first.', scheme:'3 × 20m', weighted:true },
+          { id:'p1w2t3', cat:'cnd', ico:'🧘', name:'Dead Bug', detail:'Slow the movement down. 3 count on the way down.', tip:'Press your lower back into the floor actively.', scheme:'3 × 10 each' },
+        ]},
+        { day:'Wed', type:'rest', name:'Rest & Recover', duration:0, exercises:[] },
+        { day:'Thu', type:'strength', name:'Upper Body B', duration:45, exercises:[
+          { id:'p1w2h1', cat:'str', ico:'🏋️', name:'Flat Bench Press', detail:'+5 lbs from week 1 if form was clean.', tip:'Feet flat. Slight arch in lower back is fine and natural.', scheme:'3 × 8', weighted:true },
+          { id:'p1w2h2', cat:'str', ico:'🏋️', name:'Deadlift', detail:'+10 lbs from week 1. Deadlift progresses faster than other lifts.', tip:'Same deliberate setup every single rep.', scheme:'2 × 5', weighted:true },
+          { id:'p1w2h3', cat:'acc', ico:'💪', name:'EZ Bar Curl', detail:'Same weight as week 1 or +5 if it felt too easy.', tip:'Supinate at the top — turn your palms up fully.', scheme:'3 × 10', weighted:true },
+          { id:'p1w2h4', cat:'acc', ico:'🔔', name:'KB Lateral Raise', detail:'Same weight. Focus on form — controlled raise and lower.', tip:'Slight forward lean gets more side delt.', scheme:'3 × 12', weighted:true },
+          { id:'p1w2h5', cat:'acc', ico:'📐', name:'Incline Push-Up', detail:'Match or improve on Monday.', tip:'', scheme:'3 × 12' },
+        ]},
+        { day:'Fri', type:'active', name:'Active Recovery', duration:25, exercises:[
+          { id:'p1w2f1', cat:'cnd', ico:'🚶', name:'Walk — 20 Minutes', detail:'Same as last week. Brisk pace.', tip:'This is non-negotiable. Walk.', scheme:'20 min' },
+          { id:'p1w2f2', cat:'acc', ico:'🧘', name:'Full Body Stretch', detail:'Pay extra attention to chest and shoulders — you\'re working them hard.', tip:'', scheme:'5 min' },
+        ]},
+        { day:'Sat', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+        { day:'Sun', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+      ],
+      // Week 3
+      [
+        { day:'Mon', type:'strength', name:'Upper Body A', duration:50, exercises:[
+          { id:'p1w3m1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'End of starter phase. Push the weight. You should have 1-2 reps left in the tank after each set.', tip:'The incline is your primary chest builder. Protect it.', scheme:'4 × 8', weighted:true },
+          { id:'p1w3m2', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'Add volume — 4 sets this week.', tip:'Full range. Bar touches lower chest at the top.', scheme:'4 × 8', weighted:true },
+          { id:'p1w3m3', cat:'str', ico:'💪', name:'Overhead Press', detail:'Strict press. No leg drive yet.', tip:'Press in a straight line. Bar clears the chin, then press up and back slightly.', scheme:'3 × 8', weighted:true },
+          { id:'p1w3m4', cat:'acc', ico:'🔔', name:'KB Shoulder Press', detail:'Both arms together if you\'re ready. Otherwise still single arm.', tip:'', scheme:'3 × 10', weighted:true },
+          { id:'p1w3m5', cat:'acc', ico:'📐', name:'Incline Push-Up', detail:'Lower the angle this week. Aim for hands at knee height if possible.', tip:'You\'ve been at this 3 weeks. The angle is coming down.', scheme:'3 × 12' },
+        ]},
+        { day:'Tue', type:'cardio', name:'KB Conditioning', duration:35, exercises:[
+          { id:'p1w3t1', cat:'cnd', ico:'🔔', name:'KB Swing', detail:'Max weight you can do with good form.', tip:'', scheme:'5 × 15', weighted:true },
+          { id:'p1w3t2', cat:'cnd', ico:'🚶', name:'Farmer Carry', detail:'Heavier. Longer — 30m if space allows.', tip:'', scheme:'3 × 30m', weighted:true },
+          { id:'p1w3t3', cat:'cnd', ico:'🧘', name:'Dead Bug', detail:'4 count descent. Slow and deliberate.', tip:'', scheme:'3 × 12 each' },
+          { id:'p1w3t4', cat:'cnd', ico:'🔔', name:'KB Goblet Squat', detail:'Hold KB at chest. Squat deep. At 300 lbs this is serious leg and core work.', tip:'Elbows inside knees at the bottom.', scheme:'3 × 10', weighted:true },
+        ]},
+        { day:'Wed', type:'rest', name:'Rest & Recover', duration:0, exercises:[] },
+        { day:'Thu', type:'strength', name:'Upper Body B', duration:50, exercises:[
+          { id:'p1w3h1', cat:'str', ico:'🏋️', name:'Flat Bench Press', detail:'Best weight so far. This is your week 3 max.', tip:'', scheme:'4 × 8', weighted:true },
+          { id:'p1w3h2', cat:'str', ico:'🏋️', name:'Deadlift', detail:'Best weight so far.', tip:'Hips and shoulders rise at the same rate.', scheme:'2 × 5', weighted:true },
+          { id:'p1w3h3', cat:'str', ico:'🏋️', name:'Decline Bench Press', detail:'Bench at decline. Lower chest and serratus. Builds thickness.', tip:'Rack carefully. Spotter ideal but not required if you\'re smart about it.', scheme:'3 × 8', weighted:true },
+          { id:'p1w3h4', cat:'acc', ico:'💪', name:'EZ Bar Curl', detail:'Slow the negative — 3 count on the way down.', tip:'Muscle grows during the lowering phase.', scheme:'3 × 10', weighted:true },
+          { id:'p1w3h5', cat:'acc', ico:'🔔', name:'KB Lateral Raise', detail:'Add reps this week.', tip:'', scheme:'3 × 15', weighted:true },
+          { id:'p1w3h6', cat:'acc', ico:'📐', name:'Incline Push-Up', detail:'Lowest angle yet. Goal is the floor by end of Phase 2.', tip:'', scheme:'3 × 12' },
+        ]},
+        { day:'Fri', type:'active', name:'Active Recovery', duration:30, exercises:[
+          { id:'p1w3f1', cat:'cnd', ico:'🚶', name:'Walk — 25 Minutes', detail:'Slightly longer this week. You\'re building the aerobic base.', tip:'', scheme:'25 min' },
+          { id:'p1w3f2', cat:'acc', ico:'🧘', name:'Full Body Stretch', detail:'Chest opener — arms wide, hold a door frame and lean through. Hold 45 seconds.', tip:'', scheme:'8 min' },
+        ]},
+        { day:'Sat', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+        { day:'Sun', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+      ],
+    ]
+  },
+  {
+    id: 1,
+    name: 'Phase 2 — Build',
+    weeks: 'Weeks 4–8',
+    desc: 'Five weeks of progressive overload. Volume increases, intensity increases, and you start adding weight consistently every session. This is where the visible changes begin. The upper chest, shoulders, and back are the priority — every session is biased toward those three things.',
+    goal: 'Goal: Add 5 lbs to every lift every week. Build the chest/shoulder/back structure. Floor push-ups by end of this phase.',
+    schedule: [
+      [
+        { day:'Mon', type:'strength', name:'Upper — Push Focus', duration:55, exercises:[
+          { id:'p2w1m1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'This is the cornerstone. +5 lbs every Monday from your Phase 1 finish.', tip:'Upper chest. Every rep.', scheme:'4 × 6', weighted:true },
+          { id:'p2w1m2', cat:'str', ico:'🏋️', name:'Overhead Press', detail:'Standing strict press. Heavier than Phase 1.', tip:'No leg drive. Strict.', scheme:'4 × 6', weighted:true },
+          { id:'p2w1m3', cat:'str', ico:'🏋️', name:'Decline Bench Press', detail:'Lower chest thickness. Bench at full decline.', tip:'Controlled. No bouncing.', scheme:'3 × 8', weighted:true },
+          { id:'p2w1m4', cat:'acc', ico:'🔔', name:'KB Push Press', detail:'Small dip and drive — use legs to initiate. Heavier than strict press.', tip:'Lock out hard at the top.', scheme:'3 × 8 each', weighted:true },
+          { id:'p2w1m5', cat:'acc', ico:'📐', name:'Push-Up Progression', detail:'Lowest angle possible. On the floor if you\'re ready.', tip:'If you can\'t do floor yet, you will be by week 8.', scheme:'3 × max' },
+        ]},
+        { day:'Tue', type:'strength', name:'Upper — Pull Focus', duration:55, exercises:[
+          { id:'p2w1t1', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'Heavier than Phase 1. This builds the back thickness that completes the look.', tip:'Drive elbows back. Think about touching your back pockets.', scheme:'4 × 6', weighted:true },
+          { id:'p2w1t2', cat:'str', ico:'🏋️', name:'Deadlift', detail:'+10 lbs from Phase 1 finish. Deadlift responds fastest.', tip:'Setup. Every. Rep.', scheme:'3 × 5', weighted:true },
+          { id:'p2w1t3', cat:'acc', ico:'🔔', name:'KB Single Arm Row', detail:'Knee on bench. Drive elbow back. Heavy.', tip:'Full range — all the way down, all the way back.', scheme:'3 × 10 each', weighted:true },
+          { id:'p2w1t4', cat:'acc', ico:'💪', name:'EZ Bar Curl', detail:'Heavier and stricter than Phase 1.', tip:'3-second negative every rep.', scheme:'3 × 8', weighted:true },
+          { id:'p2w1t5', cat:'acc', ico:'🔔', name:'KB Face Pull', detail:'Bend over slightly, pull KB to forehead with flared elbows. Rear delts.', tip:'Rear delts complete the shoulder — don\'t skip this.', scheme:'3 × 15', weighted:true },
+        ]},
+        { day:'Wed', type:'cardio', name:'Conditioning', duration:35, exercises:[
+          { id:'p2w1w1', cat:'cnd', ico:'🔔', name:'KB Swing', detail:'Max weight, max power.', tip:'', scheme:'5 × 20', weighted:true },
+          { id:'p2w1w2', cat:'cnd', ico:'🚶', name:'Farmer Carry', detail:'Heaviest you\'ve done. Walk further.', tip:'', scheme:'4 × 30m', weighted:true },
+          { id:'p2w1w3', cat:'cnd', ico:'🔔', name:'KB Goblet Squat', detail:'Heavy. Full depth.', tip:'', scheme:'4 × 10', weighted:true },
+        ]},
+        { day:'Thu', type:'strength', name:'Full Upper Compound', duration:55, exercises:[
+          { id:'p2w1h1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'+5 lbs from Monday.', tip:'The incline is trained twice weekly now. It will grow.', scheme:'4 × 6', weighted:true },
+          { id:'p2w1h2', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'+5 lbs from Tuesday.', tip:'', scheme:'4 × 6', weighted:true },
+          { id:'p2w1h3', cat:'str', ico:'🏋️', name:'Overhead Press', detail:'Same weight as Monday or +5 if Monday felt strong.', tip:'', scheme:'3 × 8', weighted:true },
+          { id:'p2w1h4', cat:'acc', ico:'🔔', name:'KB Lateral Raise', detail:'Side delts — width. Keep it strict.', tip:'', scheme:'4 × 15', weighted:true },
+          { id:'p2w1h5', cat:'acc', ico:'📐', name:'Push-Up Progression', detail:'Match or beat Tuesday.', tip:'', scheme:'3 × max' },
+        ]},
+        { day:'Fri', type:'active', name:'Active Recovery', duration:30, exercises:[
+          { id:'p2w1f1', cat:'cnd', ico:'🚶', name:'Walk — 30 Minutes', detail:'Building the aerobic base. This burns fat while you recover.', tip:'', scheme:'30 min' },
+          { id:'p2w1f2', cat:'acc', ico:'🧘', name:'Chest & Shoulder Stretch', detail:'Doorframe chest stretch, overhead tricep stretch, cross-body shoulder.', tip:'', scheme:'8 min' },
+        ]},
+        { day:'Sat', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+        { day:'Sun', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+      ],
+    ]
+  },
+  {
+    id: 2,
+    name: 'Phase 3 — Strength',
+    weeks: 'Weeks 9–16',
+    desc: 'Eight weeks of heavy compound work. You\'re stronger now and the weights are getting serious. Lower rep ranges, higher weights, longer rest periods. This is where the density and thickness develop in the chest, back, and shoulders. The fat continues burning — you\'re carrying more muscle now which means your metabolism is working harder even at rest.',
+    goal: 'Goal: Hit meaningful weights on incline bench, row, and overhead press. The upper body structure becomes visible.',
+    schedule: [
+      [
+        { day:'Mon', type:'strength', name:'Heavy Upper Push', duration:60, exercises:[
+          { id:'p3w1m1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'Heavier than Phase 2. Lower reps, heavier weight. 3-4 min rest between sets.', tip:'This is your heaviest upper chest work. Protect the shoulder by warming up properly.', scheme:'5 × 5', weighted:true },
+          { id:'p3w1m2', cat:'str', ico:'🏋️', name:'Overhead Press', detail:'Heaviest strict press to date.', tip:'Brace your entire body. Squeeze your glutes at the top.', scheme:'4 × 5', weighted:true },
+          { id:'p3w1m3', cat:'str', ico:'🏋️', name:'Decline Bench Press', detail:'Heavy decline for lower chest thickness.', tip:'', scheme:'3 × 6', weighted:true },
+          { id:'p3w1m4', cat:'acc', ico:'📐', name:'Floor Push-Up', detail:'You\'re on the floor now. Full push-ups. Add weight with a backpack if bodyweight is too easy.', tip:'If not at floor push-ups yet — keep the angle low and keep working.', scheme:'4 × max' },
+          { id:'p3w1m5', cat:'acc', ico:'🔔', name:'KB Lateral Raise', detail:'Strict form. Heavy as you can while keeping form.', tip:'', scheme:'4 × 15', weighted:true },
+        ]},
+        { day:'Tue', type:'strength', name:'Heavy Upper Pull', duration:60, exercises:[
+          { id:'p3w1t1', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'Heaviest rows to date. 3-4 min rest.', tip:'The back is half of the look. Pull heavy.', scheme:'5 × 5', weighted:true },
+          { id:'p3w1t2', cat:'str', ico:'🏋️', name:'Deadlift', detail:'Heaviest deadlift to date.', tip:'Belt optional. Setup perfect.', scheme:'3 × 3', weighted:true },
+          { id:'p3w1t3', cat:'acc', ico:'🔔', name:'KB Single Arm Row', detail:'Heavy. Full range.', tip:'', scheme:'3 × 8 each', weighted:true },
+          { id:'p3w1t4', cat:'acc', ico:'💪', name:'EZ Bar Curl', detail:'Heavy curls. Slow negative.', tip:'', scheme:'4 × 8', weighted:true },
+          { id:'p3w1t5', cat:'acc', ico:'🔔', name:'KB Face Pull', detail:'Rear delts. Don\'t skip.', tip:'', scheme:'3 × 15', weighted:true },
+        ]},
+        { day:'Wed', type:'cardio', name:'Conditioning', duration:40, exercises:[
+          { id:'p3w1w1', cat:'cnd', ico:'🔔', name:'KB Swing', detail:'Max weight. Explosive.', tip:'', scheme:'6 × 20', weighted:true },
+          { id:'p3w1w2', cat:'cnd', ico:'🚶', name:'Farmer Carry', detail:'Heaviest yet. Maximum grip challenge.', tip:'', scheme:'4 × 40m', weighted:true },
+          { id:'p3w1w3', cat:'cnd', ico:'🔔', name:'KB Clean & Press', detail:'Clean to rack, press overhead. Full body conditioning.', tip:'', scheme:'3 × 8 each', weighted:true },
+        ]},
+        { day:'Thu', type:'strength', name:'Upper Compound + Volume', duration:60, exercises:[
+          { id:'p3w1h1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'Heavy sets. Same weight as Monday or slightly less — this is volume day.', tip:'', scheme:'4 × 6', weighted:true },
+          { id:'p3w1h2', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'Volume sets after Tuesday\'s heavy work.', tip:'', scheme:'4 × 6', weighted:true },
+          { id:'p3w1h3', cat:'str', ico:'🏋️', name:'Overhead Press', detail:'Push press allowed on last set — use legs to drive it.', tip:'', scheme:'3 × 6', weighted:true },
+          { id:'p3w1h4', cat:'acc', ico:'📐', name:'Floor Push-Up', detail:'Max reps per set. Rest 90 seconds.', tip:'', scheme:'4 × max' },
+          { id:'p3w1h5', cat:'acc', ico:'🔔', name:'KB Goblet Squat', detail:'Heavy. Full depth. Leg work keeps the metabolism firing.', tip:'', scheme:'3 × 10', weighted:true },
+        ]},
+        { day:'Fri', type:'active', name:'Active Recovery', duration:35, exercises:[
+          { id:'p3w1f1', cat:'cnd', ico:'🚶', name:'Walk — 35 Minutes', detail:'Longer walk now. You\'re in better shape than week 1.', tip:'Notice how much easier this is compared to Phase 1.', scheme:'35 min' },
+          { id:'p3w1f2', cat:'acc', ico:'🧘', name:'Full Body Mobility', detail:'Hip flexors, thoracic spine rotation, chest opener, shoulder circles.', tip:'', scheme:'10 min' },
+        ]},
+        { day:'Sat', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+        { day:'Sun', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+      ],
+    ]
+  },
+  {
+    id: 3,
+    name: 'Phase 4 — Recomp',
+    weeks: 'Ongoing',
+    desc: 'You\'ve built the base. Phase 4 is where you live now — maintaining and growing strength while the fat continues to come off. The upper body structure is visible. The work continues. Add weight whenever a session feels like it has room to spare. Never stop progressing.',
+    goal: 'Goal: Look like the work you\'ve put in. Keep going. This is permanent now.',
+    schedule: [
+      [
+        { day:'Mon', type:'strength', name:'Heavy Push Day', duration:60, exercises:[
+          { id:'p4w1m1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'Heaviest you\'ve ever done. This is your milestone lift.', tip:'', scheme:'5 × 5', weighted:true },
+          { id:'p4w1m2', cat:'str', ico:'🏋️', name:'Overhead Press', detail:'Strict. Heavy. Proud.', tip:'', scheme:'4 × 5', weighted:true },
+          { id:'p4w1m3', cat:'str', ico:'🏋️', name:'Decline Bench Press', detail:'', tip:'', scheme:'3 × 6', weighted:true },
+          { id:'p4w1m4', cat:'acc', ico:'📐', name:'Weighted Push-Up', detail:'Backpack with weight, or chains if you\'re feeling ambitious.', tip:'You earned this.', scheme:'4 × max' },
+          { id:'p4w1m5', cat:'acc', ico:'🔔', name:'KB Lateral Raise', detail:'', tip:'', scheme:'4 × 15', weighted:true },
+        ]},
+        { day:'Tue', type:'strength', name:'Heavy Pull Day', duration:60, exercises:[
+          { id:'p4w1t1', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'Heaviest ever.', tip:'', scheme:'5 × 5', weighted:true },
+          { id:'p4w1t2', cat:'str', ico:'🏋️', name:'Deadlift', detail:'This is your strongest lift. Push it.', tip:'', scheme:'3 × 3', weighted:true },
+          { id:'p4w1t3', cat:'acc', ico:'🔔', name:'KB Single Arm Row', detail:'', tip:'', scheme:'3 × 8 each', weighted:true },
+          { id:'p4w1t4', cat:'acc', ico:'💪', name:'EZ Bar Curl', detail:'', tip:'', scheme:'4 × 8', weighted:true },
+          { id:'p4w1t5', cat:'acc', ico:'🔔', name:'KB Face Pull', detail:'', tip:'', scheme:'3 × 15', weighted:true },
+        ]},
+        { day:'Wed', type:'cardio', name:'Conditioning', duration:45, exercises:[
+          { id:'p4w1w1', cat:'cnd', ico:'🔔', name:'KB Swing', detail:'Max weight. Max power. Every set.', tip:'', scheme:'6 × 20', weighted:true },
+          { id:'p4w1w2', cat:'cnd', ico:'🚶', name:'Farmer Carry', detail:'Heaviest possible. Full distance.', tip:'', scheme:'4 × 40m', weighted:true },
+          { id:'p4w1w3', cat:'cnd', ico:'🔔', name:'KB Clean & Press', detail:'', tip:'', scheme:'4 × 8 each', weighted:true },
+          { id:'p4w1w4', cat:'cnd', ico:'🔔', name:'KB Goblet Squat', detail:'', tip:'', scheme:'3 × 12', weighted:true },
+        ]},
+        { day:'Thu', type:'strength', name:'Upper Volume Day', duration:60, exercises:[
+          { id:'p4w1h1', cat:'str', ico:'🏋️', name:'Incline Bench Press', detail:'', tip:'', scheme:'4 × 6', weighted:true },
+          { id:'p4w1h2', cat:'str', ico:'🏋️', name:'Barbell Row', detail:'', tip:'', scheme:'4 × 6', weighted:true },
+          { id:'p4w1h3', cat:'str', ico:'🏋️', name:'Overhead Press', detail:'', tip:'', scheme:'3 × 6', weighted:true },
+          { id:'p4w1h4', cat:'acc', ico:'📐', name:'Weighted Push-Up', detail:'', tip:'', scheme:'4 × max' },
+          { id:'p4w1h5', cat:'acc', ico:'🔔', name:'KB Lateral Raise', detail:'', tip:'', scheme:'4 × 15', weighted:true },
+        ]},
+        { day:'Fri', type:'active', name:'Active Recovery', duration:40, exercises:[
+          { id:'p4w1f1', cat:'cnd', ico:'🚶', name:'Walk — 40 Minutes', detail:'You\'re in shape now. This walk is nothing compared to where you started.', tip:'', scheme:'40 min' },
+          { id:'p4w1f2', cat:'acc', ico:'🧘', name:'Full Body Mobility', detail:'', tip:'', scheme:'10 min' },
+        ]},
+        { day:'Sat', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+        { day:'Sun', type:'rest', name:'Rest Day', duration:0, exercises:[] },
+      ],
+    ]
+  },
+];
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let S = {
+  currentPhase: 0,
+  done:    {},   // exercise id -> true
+  sessions:{},   // 'phase-week-day' -> true
+  weights: {},   // exercise id -> weight string
+  protein: 0,
+  proteinDate: '',
+  totalSessions: 0,
+  lastSessionDate: '',
+  streak: 0,
+};
+
+const PROTEIN_TARGET = 160;
+
+// ─── INIT ──────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  checkProteinReset();
+  buildAllPhases();
+  refreshHeader();
+  refreshProtein();
+  refreshProgress();
+  switchPhase(S.currentPhase);
+});
+
+// ─── BUILD ─────────────────────────────────────────────────────────────────
+function buildAllPhases() {
+  PHASES.forEach((phase, pi) => {
+    const panel = document.getElementById(`panel-${pi}`);
+    if (!panel) return;
+
+    // Phase intro
+    let html = `<div class="phase-intro">
+      <div class="pi-header">
+        <div class="pi-title">${phase.name}</div>
+        <div class="pi-weeks">${phase.weeks}</div>
+      </div>
+      <div class="pi-desc">${phase.desc}</div>
+      <div class="pi-goal">🎯 ${phase.goal}</div>
+    </div>
+    <div class="main" id="main-${pi}">`;
+
+    // Weeks
+    phase.schedule.forEach((week, wi) => {
+      html += `<div class="wk-label">Week ${wi + 1}</div>`;
+
+      // Day scroll
+      html += `<div class="day-scroll" id="dscroll-${pi}-${wi}">`;
+      week.forEach((session, di) => {
+        const key = `${pi}-${wi}-${di}`;
+        const isDone = !!S.sessions[key];
+        const typeColor = session.type === 'strength' ? 'var(--fire)' :
+                          session.type === 'cardio'   ? 'var(--steel-lt)' :
+                          session.type === 'active'   ? 'var(--green-lt)' : 'var(--ghost)';
+        html += `<div class="day-btn${isDone?' done':''} ${session.type === 'rest' ? 'rest-day' : ''}"
+          id="db-${pi}-${wi}-${di}"
+          onclick="${session.type !== 'rest' ? `showDay(${pi},${wi},${di})` : ''}">
+          <span class="db-name" style="color:${session.type === 'rest' ? 'var(--ghost)' : ''}">${session.day}</span>
+          <span class="db-type">${session.type === 'rest' ? '—' : session.name.split(' ').slice(0,2).join(' ')}</span>
+          <span class="db-tick">${isDone ? '✓' : ''}</span>
+        </div>`;
+      });
+      html += '</div>';
+
+      // Day views
+      week.forEach((session, di) => {
+        html += `<div class="day-view" id="dv-${pi}-${wi}-${di}">`;
+
+        if (session.type === 'rest') {
+          html += `<div class="rest-card">
+            <div class="rest-ico">😴</div>
+            <div class="rest-title">Rest Day</div>
+            <div class="rest-sub">Muscle is built during recovery, not during the session. Eat your protein. Sleep well. Come back tomorrow.</div>
+          </div>`;
+        } else {
+          const key = `${pi}-${wi}-${di}`;
+          const isDone = !!S.sessions[key];
+          const typeBadge = session.type === 'strength' ? 'badge-s' :
+                            session.type === 'cardio'   ? 'badge-c' :
+                            session.type === 'active'   ? 'badge-a' : 'badge-r';
+          const typeLabel = session.type === 'strength' ? 'Strength' :
+                            session.type === 'cardio'   ? 'Conditioning' :
+                            session.type === 'active'   ? 'Active Recovery' : 'Rest';
+
+          html += `<div class="session-hdr">
+            <div>
+              <div class="sh-badge ${typeBadge}">${typeLabel}</div>
+              <div class="sh-name">${session.name}</div>
+            </div>
+            <div class="sh-right">
+              <div class="sh-dur">${session.duration || '—'}</div>
+              <span class="sh-dur-lbl">minutes</span>
+            </div>
+          </div>`;
+
+          // Group exercises by category
+          const warmup = session.type !== 'rest' ? [{
+            id: `wu-${pi}-${wi}-${di}`,
+            cat: 'wu', ico: '🔥',
+            name: 'Warm-Up',
+            detail: '5–8 min of light movement. Arm circles, leg swings, hip rotations, 2 sets of very light weight on your first lift.',
+            tip: 'Never skip this. Cold muscles tear.',
+            scheme: '5–8 min',
+            weighted: false,
+            isWarmup: true,
+          }] : [];
+
+          const allEx = [...warmup, ...session.exercises];
+
+          if (warmup.length) {
+            html += `<div class="sec-lbl">Warm-Up</div>`;
+            html += buildExCard(pi, wi, di, warmup[0]);
+          }
+
+          if (session.type === 'strength') {
+            const main = session.exercises.filter(e => e.cat === 'str');
+            const acc  = session.exercises.filter(e => e.cat === 'acc');
+            if (main.length) {
+              html += `<div class="sec-lbl">Main Lifts — Rest 2–3 min between sets</div>`;
+              main.forEach(e => { html += buildExCard(pi, wi, di, e); });
+            }
+            if (acc.length) {
+              html += `<div class="sec-lbl">Accessory Work — Rest 90s</div>`;
+              acc.forEach(e => { html += buildExCard(pi, wi, di, e); });
+            }
+          } else {
+            html += `<div class="sec-lbl">Session Work</div>`;
+            session.exercises.forEach(e => { html += buildExCard(pi, wi, di, e); });
+          }
+
+          html += `<button class="done-btn${isDone?' completed':''}"
+            id="donebtn-${pi}-${wi}-${di}"
+            onclick="completeSession(${pi},${wi},${di})"
+            ${isDone ? 'disabled' : ''}>
+            ${isDone ? '✓ Session Complete' : 'Mark Session Complete →'}
+          </button>`;
+        }
+
+        html += '</div>'; // end day-view
+      });
+    });
+
+    html += '</div>'; // end main
+    panel.innerHTML = html;
+
+    // Restore check states
+    PHASES[pi].schedule.forEach((week, wi) => {
+      week.forEach((session, di) => {
+        session.exercises.forEach(ex => {
+          if (S.done[ex.id]) {
+            const card = document.getElementById(`ec-${ex.id}`);
+            const chk  = document.getElementById(`ck-${ex.id}`);
+            if (card) card.classList.add('done');
+            if (chk)  chk.textContent = '✓';
+          }
+          if (S.weights[ex.id]) {
+            const inp = document.getElementById(`wt-${ex.id}`);
+            if (inp) inp.value = S.weights[ex.id];
+          }
+        });
+      });
+    });
+  });
+}
+
+function buildExCard(pi, wi, di, ex) {
+  const isDone = !!S.done[ex.id];
+  const wtVal  = S.weights[ex.id] || '';
+  const catClass = ex.cat === 'str' ? 'str' : ex.cat === 'cnd' ? 'cnd' : ex.cat === 'acc' ? 'acc' : '';
+  const onclick = ex.isWarmup ? '' : `onclick="toggleEx('${ex.id}')"`;
+
+  return `<div class="ex-card ${catClass}${isDone?' done':''}" id="ec-${ex.id}" ${onclick}>
+    <div class="ex-chk" id="ck-${ex.id}">${isDone ? '✓' : ''}</div>
+    <div class="ex-ico">${ex.ico}</div>
+    <div class="ex-info">
+      <div class="ex-name">${ex.name}</div>
+      ${ex.detail ? `<div class="ex-detail">${ex.detail}</div>` : ''}
+      ${ex.tip    ? `<div class="ex-tip">${ex.tip}</div>` : ''}
+      ${ex.weighted ? `<div class="ex-wt">
+        <input type="number" id="wt-${ex.id}" placeholder="lbs" step="5" value="${wtVal}"
+          onclick="event.stopPropagation()"
+          oninput="saveWeight('${ex.id}',this.value)">
+        <span>lbs</span>
+      </div>` : ''}
+    </div>
+    <div class="ex-scheme">${ex.scheme}</div>
+  </div>`;
+}
+
+// ─── NAVIGATION ────────────────────────────────────────────────────────────
+let curPhase = 0;
+let curDay   = {};  // 'pi-wi' -> di
+
+function switchPhase(pi) {
+  curPhase = pi;
+  S.currentPhase = pi;
+  saveState();
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`panel-${pi}`).classList.add('active');
+  document.getElementById(`ptab-${pi}`).classList.add('active');
+  document.getElementById(`nav-p${pi}`).classList.add('active');
+  refreshHeader();
+}
+
+function showDay(pi, wi, di) {
+  const key = `${pi}-${wi}`;
+  curDay[key] = di;
+
+  // Hide all day views in this week
+  PHASES[pi].schedule[wi].forEach((s, d) => {
+    const dv = document.getElementById(`dv-${pi}-${wi}-${d}`);
+    const db = document.getElementById(`db-${pi}-${wi}-${d}`);
+    if (dv) dv.classList.remove('active');
+    if (db) { db.classList.remove('active'); }
+  });
+
+  const dv = document.getElementById(`dv-${pi}-${wi}-${di}`);
+  const db = document.getElementById(`db-${pi}-${wi}-${di}`);
+  if (dv) dv.classList.add('active');
+  if (db) { db.classList.add('active'); }
+
+  // Scroll into view
+  setTimeout(() => db?.scrollIntoView({ inline:'center', behavior:'smooth' }), 100);
+}
+
+// ─── INTERACTIONS ───────────────────────────────────────────────────────────
+function toggleEx(id) {
+  S.done[id] = !S.done[id];
+  const card = document.getElementById(`ec-${id}`);
+  const chk  = document.getElementById(`ck-${id}`);
+  if (card) card.classList.toggle('done', S.done[id]);
+  if (chk)  chk.textContent = S.done[id] ? '✓' : '';
+  saveState();
+  if (S.done[id]) toast('✓ Done');
+}
+
+function saveWeight(id, val) {
+  if (val) S.weights[id] = val;
+  else delete S.weights[id];
+  saveState();
+}
+
+function completeSession(pi, wi, di) {
+  const key  = `${pi}-${wi}-${di}`;
+  S.sessions[key] = true;
+
+  // Stats
+  S.totalSessions++;
+  const today = new Date().toISOString().split('T')[0];
+  if (S.lastSessionDate) {
+    const last = new Date(S.lastSessionDate);
+    const now  = new Date(today);
+    const diff = Math.round((now - last) / 86400000);
+    S.streak = diff <= 2 ? S.streak + 1 : 1;
+  } else {
+    S.streak = 1;
+  }
+  S.lastSessionDate = today;
+
+  // Update UI
+  const btn = document.getElementById(`donebtn-${pi}-${wi}-${di}`);
+  const db  = document.getElementById(`db-${pi}-${wi}-${di}`);
+  if (btn) { btn.textContent = '✓ Session Complete'; btn.classList.add('completed'); btn.disabled = true; }
+  if (db)  { db.classList.remove('active'); db.classList.add('done'); db.querySelector('.db-tick').textContent = '✓'; }
+
+  saveState();
+  refreshHeader();
+  refreshProgress();
+  toast('Session logged! 💪', 'green');
+}
+
+// ─── PROTEIN ────────────────────────────────────────────────────────────────
+function checkProteinReset() {
+  const today = new Date().toISOString().split('T')[0];
+  if (S.proteinDate !== today) { S.protein = 0; S.proteinDate = today; saveState(); }
+}
+
+function addProtein() {
+  const inp = document.getElementById('p-input');
+  const val = parseInt(inp.value);
+  if (!val || val <= 0) return;
+  S.protein += val;
+  inp.value = '';
+  saveState();
+  refreshProtein();
+  if (S.protein >= PROTEIN_TARGET) toast('Protein target hit! 💪', 'steel');
+  else toast(`+${val}g protein added`);
+}
+
+function resetProtein() {
+  S.protein = 0;
+  S.proteinDate = new Date().toISOString().split('T')[0];
+  saveState();
+  refreshProtein();
+}
+
+function refreshProtein() {
+  const pct = Math.min(100, Math.round(S.protein / PROTEIN_TARGET * 100));
+  document.getElementById('p-fill').style.width = pct + '%';
+  document.getElementById('p-val').textContent  = `${S.protein} / ${PROTEIN_TARGET}g`;
+}
+
+// ─── REFRESH ────────────────────────────────────────────────────────────────
+function refreshHeader() {
+  const phaseNames = ['Starter','Build','Strength','Recomp'];
+  document.getElementById('hdr-sessions').textContent = S.totalSessions;
+  document.getElementById('hdr-streak').textContent   = S.streak;
+  document.getElementById('hdr-phase').textContent    = phaseNames[curPhase] || 'Starter';
+}
+
+function refreshProgress() {
+  // Count total non-rest sessions across all phases
+  let total = 0, done = 0;
+  PHASES.forEach((phase, pi) => {
+    phase.schedule.forEach((week, wi) => {
+      week.forEach((session, di) => {
+        if (session.type !== 'rest') {
+          total++;
+          if (S.sessions[`${pi}-${wi}-${di}`]) done++;
+        }
+      });
+    });
+  });
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('prog-label').textContent = `${done} of ${total} sessions logged`;
+}
+
+// ─── STORAGE ────────────────────────────────────────────────────────────────
+function saveState() {
+  try { localStorage.setItem('alex_program', JSON.stringify(S)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('alex_program');
+    if (raw) {
+      const l = JSON.parse(raw);
+      S = {
+        currentPhase:    l.currentPhase    || 0,
+        done:            l.done            || {},
+        sessions:        l.sessions        || {},
+        weights:         l.weights         || {},
+        protein:         l.protein         || 0,
+        proteinDate:     l.proteinDate     || '',
+        totalSessions:   l.totalSessions   || 0,
+        lastSessionDate: l.lastSessionDate || '',
+        streak:          l.streak          || 0,
+      };
+    }
+  } catch(e) {}
+}
+
+// ─── TOAST ──────────────────────────────────────────────────────────────────
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = `toast${type?' '+type:''} show`;
+  setTimeout(() => el.classList.remove('show'), 2300);
+}
+</script>
+</body>
+</html>
