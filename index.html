@@ -16,7 +16,6 @@
     --chalk:   #E8E4DC;
     --mid:     #888;
     --ghost:   #444;
-    --moss:    #5A7A3A;
     --moss-lt: #8ABB5A;
     --gold:    #C8963A;
     --rust:    #C04828;
@@ -25,6 +24,7 @@
     --warm:    #C8845A;
     --sage:    #5A8A6A;
     --fire:    #E85D20;
+    --studio:  #7A5AAA;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -51,7 +51,6 @@
 
   * { position:relative; z-index:1; }
 
-  /* ── HEADER ── */
   header {
     padding: 3rem 1.5rem 2rem;
     max-width: 680px;
@@ -97,7 +96,6 @@
     max-width: 420px;
   }
 
-  /* ── SECTION ── */
   .section {
     max-width: 680px;
     margin: 0 auto;
@@ -120,7 +118,6 @@
     content:''; flex:1; height:1px; background: var(--border);
   }
 
-  /* ── TOOL CARDS ── */
   .tools-list {
     display: flex;
     flex-direction: column;
@@ -145,7 +142,6 @@
   .tool-card:hover { border-color:var(--border2); background:#181818; transform:translateY(-1px); }
   .tool-card:active { transform:scale(.98); background:#161616; }
 
-  /* Featured card — slightly more prominent */
   .tool-card.featured {
     border-color: #2A2A2A;
     background: #161616;
@@ -208,6 +204,7 @@
   .tag-wellbeing  { color: var(--warm); }
   .tag-home       { color: var(--sage); }
   .tag-personal   { color: var(--fire); }
+  .tag-studio     { color: var(--studio); }
 
   .tool-arrow {
     color: var(--ghost);
@@ -218,7 +215,6 @@
 
   .tool-card:hover .tool-arrow { color:var(--chalk); transform:translateX(3px); }
 
-  /* ── FOOTER ── */
   footer {
     max-width: 680px;
     margin: 0 auto;
@@ -254,14 +250,13 @@
 <header>
   <div class="site-label">GlobalSkynetAdmin · Tools</div>
   <h1>Personal<br><span class="dim">Tools</span></h1>
-  <p class="header-desc">Fitness, meal plans, wellbeing, photography, home, and family tools. Built for real use — phone-friendly, no login required.</p>
+  <p class="header-desc">Fitness, meal plans, wellbeing, studio, photography, home, and family tools. Built for real use — phone-friendly, no login required.</p>
 </header>
 
-<!-- ALEX'S PROGRAM — personal section -->
+<!-- ALEX'S PROGRAM -->
 <div class="section">
   <div class="section-label">Alex's Program</div>
   <div class="tools-list">
-
     <a class="tool-card featured" href="alexs-program.html">
       <div class="tool-icon">🔥</div>
       <div class="tool-info">
@@ -274,7 +269,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
   </div>
 </div>
 
@@ -282,7 +276,6 @@
 <div class="section">
   <div class="section-label">Fitness</div>
   <div class="tools-list">
-
     <a class="tool-card" href="workout-routine.html">
       <div class="tool-icon">💪</div>
       <div class="tool-info">
@@ -295,7 +288,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
     <a class="tool-card" href="starting-strength.html">
       <div class="tool-icon">🏋️</div>
       <div class="tool-info">
@@ -308,7 +300,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
   </div>
 </div>
 
@@ -316,7 +307,6 @@
 <div class="section">
   <div class="section-label">Meal Plans</div>
   <div class="tools-list">
-
     <a class="tool-card" href="salad-week-v2.html">
       <div class="tool-icon">🥗</div>
       <div class="tool-info">
@@ -329,7 +319,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
     <a class="tool-card" href="fresh-week.html">
       <div class="tool-icon">🍓</div>
       <div class="tool-info">
@@ -342,7 +331,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
   </div>
 </div>
 
@@ -350,7 +338,6 @@
 <div class="section">
   <div class="section-label">Wellbeing</div>
   <div class="tools-list">
-
     <a class="tool-card" href="pause.html">
       <div class="tool-icon">🍃</div>
       <div class="tool-info">
@@ -363,7 +350,25 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
+  </div>
+</div>
 
+<!-- STUDIO -->
+<div class="section">
+  <div class="section-label">Studio</div>
+  <div class="tools-list">
+    <a class="tool-card" href="audio-cheat-sheet.html">
+      <div class="tool-icon">🎙</div>
+      <div class="tool-info">
+        <div class="tool-name">Audio Cheat Sheet</div>
+        <div class="tool-desc">Rodecaster Pro 2 + SM7B settings · Manual Override solo profile · Asses in Armchairs duo profile · gate fix · Adobe Audition chain</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-studio">Studio</span>
+        <span class="tool-tag tag-mobile">Reference</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
   </div>
 </div>
 
@@ -371,7 +376,6 @@
 <div class="section">
   <div class="section-label">Home</div>
   <div class="tools-list">
-
     <a class="tool-card" href="spring-reset.html">
       <div class="tool-icon">🌿</div>
       <div class="tool-info">
@@ -384,7 +388,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
   </div>
 </div>
 
@@ -392,7 +395,6 @@
 <div class="section">
   <div class="section-label">Photography</div>
   <div class="tools-list">
-
     <a class="tool-card" href="photography-field-log.html">
       <div class="tool-icon">📷</div>
       <div class="tool-info">
@@ -405,7 +407,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
   </div>
 </div>
 
@@ -413,7 +414,6 @@
 <div class="section">
   <div class="section-label">Kids</div>
   <div class="tools-list">
-
     <a class="tool-card" href="wilder-chore-chart.html">
       <div class="tool-icon">⭐</div>
       <div class="tool-info">
@@ -426,7 +426,6 @@
       </div>
       <div class="tool-arrow">›</div>
     </a>
-
   </div>
 </div>
 
