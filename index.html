@@ -24,6 +24,7 @@
     --star:    #F1C40F;
     --warm:    #C8845A;
     --sage:    #5A8A6A;
+    --fire:    #E85D20;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -144,6 +145,13 @@
   .tool-card:hover { border-color:var(--border2); background:#181818; transform:translateY(-1px); }
   .tool-card:active { transform:scale(.98); background:#161616; }
 
+  /* Featured card — slightly more prominent */
+  .tool-card.featured {
+    border-color: #2A2A2A;
+    background: #161616;
+  }
+  .tool-card.featured:hover { border-color:#383838; background:#1C1C1C; }
+
   .tool-icon {
     font-size: 1.75rem;
     flex-shrink: 0;
@@ -192,13 +200,14 @@
     white-space: nowrap;
   }
 
-  .tag-fitness   { color: var(--rust); }
-  .tag-food      { color: var(--gold); }
-  .tag-field     { color: var(--moss-lt); }
-  .tag-mobile    { color: var(--sky); }
-  .tag-kids      { color: var(--star); }
-  .tag-wellbeing { color: var(--warm); }
-  .tag-home      { color: var(--sage); }
+  .tag-fitness    { color: var(--rust); }
+  .tag-food       { color: var(--gold); }
+  .tag-field      { color: var(--moss-lt); }
+  .tag-mobile     { color: var(--sky); }
+  .tag-kids       { color: var(--star); }
+  .tag-wellbeing  { color: var(--warm); }
+  .tag-home       { color: var(--sage); }
+  .tag-personal   { color: var(--fire); }
 
   .tool-arrow {
     color: var(--ghost);
@@ -248,13 +257,34 @@
   <p class="header-desc">Fitness, meal plans, wellbeing, photography, home, and family tools. Built for real use — phone-friendly, no login required.</p>
 </header>
 
+<!-- ALEX'S PROGRAM — personal section -->
+<div class="section">
+  <div class="section-label">Alex's Program</div>
+  <div class="tools-list">
+
+    <a class="tool-card featured" href="alexs-program.html">
+      <div class="tool-icon">🔥</div>
+      <div class="tool-info">
+        <div class="tool-name">Alex's Program</div>
+        <div class="tool-desc">4-phase body recomp · cut fat · build upper body · incline bench, rows, overhead press, KB conditioning · protein tracker · streak counter</div>
+      </div>
+      <div class="tool-meta">
+        <span class="tool-tag tag-personal">Personal</span>
+        <span class="tool-tag tag-mobile">Mobile</span>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+</div>
+
 <!-- FITNESS -->
 <div class="section">
   <div class="section-label">Fitness</div>
   <div class="tools-list">
 
     <a class="tool-card" href="workout-routine.html">
-      <div class="tool-icon">🔥</div>
+      <div class="tool-icon">💪</div>
       <div class="tool-info">
         <div class="tool-name">Fat Burn Home</div>
         <div class="tool-desc">5-day bodyweight fat-burn program · 20–30 min · zero equipment · interval timer</div>
@@ -275,19 +305,6 @@
       <div class="tool-meta">
         <span class="tool-tag tag-fitness">Fitness</span>
         <span class="tool-tag tag-fitness">Barbell</span>
-      </div>
-      <div class="tool-arrow">›</div>
-    </a>
-
-    <a class="tool-card" href="iron-three.html">
-      <div class="tool-icon">⚙️</div>
-      <div class="tool-info">
-        <div class="tool-name">Iron Three</div>
-        <div class="tool-desc">Barbell · kettlebell · bodyweight strength · 5-day · no planks · weight logging</div>
-      </div>
-      <div class="tool-meta">
-        <span class="tool-tag tag-fitness">Fitness</span>
-        <span class="tool-tag tag-fitness">Strength</span>
       </div>
       <div class="tool-arrow">›</div>
     </a>
