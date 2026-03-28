@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Street Tacos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --chili:    #8B2E0F;
+    --chili-lt: #C4522A;
+    --gold:     #C07B2A;
+    --gold-lt:  #E8A84A;
+    --cream:    #FAF5EC;
+    --warm:     #F2E8D8;
+    --paper:    #EDE0C8;
+    --ink:      #1E1810;
+    --mid:      #5A4A38;
+    --ghost:    #9A8A78;
+    --rule:     #D8CCBA;
+    --green:    #3D6B3A;
+    --green-lt: #6A9E66;
+    --white:    #FFFDF8;
+
+    --chicken-accent: #C07B2A;
+    --chicken-bg:     #FDF0DC;
+    --pork-accent:    #8B2E0F;
+    --pork-bg:        #F8E8E0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--chili);
+    color: var(--cream);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 90% 20%, rgba(192,123,42,0.25) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(139,46,15,0.4) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  header::after {
+    content: '🌮';
+    position: absolute;
+    right: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(-15deg);
+    font-size: clamp(4rem, 10vw, 8rem);
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .header-kicker {
+    font-size: 0.62rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-lt);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 7vw, 4.5rem);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em {
+    display: block;
+    font-style: italic;
+    color: var(--gold-lt);
+  }
+
+  .header-sub {
+    font-size: 0.82rem;
+    color: rgba(250,245,236,0.65);
+    margin-top: 1rem;
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  /* ── PROTEIN TOGGLE ── */
+  .toggle-bar {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.75rem 2.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .toggle-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    flex-shrink: 0;
+  }
+
+  .toggle-btns {
+    display: flex;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    border-radius: 50px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .toggle-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: transparent;
+    color: var(--ghost);
+  }
+
+  .toggle-btn.active-chicken {
+    background: var(--gold);
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(192,123,42,0.35);
+  }
+
+  .toggle-btn.active-pork {
+    background: var(--chili);
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(139,46,15,0.35);
+  }
+
+  .protein-note {
+    font-size: 0.75rem;
+    color: var(--ghost);
+    font-style: italic;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 720px) {
+    .main { grid-template-columns: 1fr; padding: 1.5rem 1.25rem 3rem; }
+    .toggle-bar { padding: 1.5rem 1.25rem 0; }
+    header { padding: 2rem 1.25rem 1.75rem; }
+    header::after { display: none; }
+  }
+
+  /* ── SECTION HEADINGS ── */
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* ── INGREDIENT PANEL ── */
+  .ingredient-note {
+    background: var(--warm);
+    border-left: 3px solid var(--gold);
+    padding: 0.75rem 1rem;
+    font-size: 0.76rem;
+    color: var(--mid);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .ingredient-note.pork-note {
+    border-color: var(--chili);
+  }
+
+  .ingredient-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .ingredient-group-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+
+  .ingredient-group-label.pork-label {
+    color: var(--chili);
+  }
+
+  .ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--rule);
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 2px;
+    padding-left: 4px;
+  }
+
+  .ingredient-item:hover { background: var(--warm); }
+
+  .ingredient-item.checked .ing-name {
+    text-decoration: line-through;
+    color: var(--ghost);
+  }
+
+  .ingredient-item.checked .ing-amount {
+    color: var(--ghost);
+  }
+
+  .ing-name {
+    font-size: 0.82rem;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+
+  .ing-amount {
+    font-size: 0.75rem;
+    color: var(--mid);
+    white-space: nowrap;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  /* ── STEPS ── */
+  .steps-col {}
+
+  .step {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+    cursor: pointer;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 2px;
+    transition: background 0.2s;
+  }
+
+  .step.pork-step .step-num {
+    background: var(--chili);
+  }
+
+  .step.done .step-num {
+    background: var(--green);
+  }
+
+  .step.done .step-title {
+    text-decoration: line-through;
+    color: var(--ghost);
+  }
+
+  .step.done .step-body {
+    color: var(--ghost);
+  }
+
+  .step-content { flex: 1; }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    transition: color 0.2s;
+  }
+
+  .step-body {
+    font-size: 0.82rem;
+    line-height: 1.75;
+    color: var(--mid);
+    transition: color 0.2s;
+  }
+
+  .step-tip {
+    display: inline-block;
+    margin-top: 0.5rem;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    padding: 0.35rem 0.65rem;
+    font-size: 0.72rem;
+    color: var(--mid);
+    border-radius: 4px;
+    font-style: italic;
+  }
+
+  /* ── TIMER BADGE ── */
+  .timer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.68rem;
+    color: var(--mid);
+    margin-top: 0.4rem;
+    font-weight: 500;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {}
+
+  .sidebar-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .sidebar-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── SALSA CARD ── */
+  .salsa-step {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+    align-items: flex-start;
+  }
+
+  .salsa-num {
+    flex-shrink: 0;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.62rem;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  .salsa-text {
+    font-size: 0.78rem;
+    line-height: 1.65;
+    color: var(--mid);
+  }
+
+  /* ── GARNISH CARD ── */
+  .garnish-list {
+    list-style: none;
+  }
+
+  .garnish-list li {
+    font-size: 0.8rem;
+    color: var(--mid);
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .garnish-list li::before {
+    content: '·';
+    color: var(--gold);
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  /* ── NOTES CARD ── */
+  .note-item {
+    font-size: 0.78rem;
+    color: var(--mid);
+    line-height: 1.65;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .note-item:last-child { border-bottom: none; }
+
+  .note-item strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .progress-bar-outer {
+    flex: 1;
+    height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .progress-bar-inner.pork-bar { background: var(--chili); }
+
+  .progress-text {
+    font-size: 0.68rem;
+    color: var(--ghost);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  /* ── HIDDEN SECTIONS ── */
+  .chicken-only, .pork-only { transition: opacity 0.2s; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--ghost);
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-kicker">Al Pastor · SLC Style · Home Kitchen</div>
+    <h1>Special<em>Street Tacos</em></h1>
+    <p class="header-sub">Chunga's-inspired al pastor — sweet citrus marinade, high-heat char, creamy green salsa. Choose your protein below.</p>
+  </div>
+</header>
+
+<div class="toggle-bar">
+  <span class="toggle-label">Protein</span>
+  <div class="toggle-btns">
+    <button class="toggle-btn active-chicken" id="btn-chicken" onclick="setProtein('chicken')">🐔 Chicken</button>
+    <button class="toggle-btn" id="btn-pork" onclick="setProtein('pork')">🐷 Pork</button>
+  </div>
+  <span class="protein-note" id="protein-note">Boneless thighs · leaner · quick cook</span>
+</div>
+
+<div class="main">
+
+  <!-- LEFT: STEPS -->
+  <div class="steps-col">
+
+    <div class="progress-wrap">
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progress-bar"></div>
+      </div>
+      <span class="progress-text" id="progress-text">0 / 6 steps done</span>
+    </div>
+
+    <div class="section-label">The Method</div>
+
+    <!-- STEP 1 -->
+    <div class="step" id="step-1" onclick="toggleStep(1)">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Toast &amp; soak the chilies</div>
+        <div class="step-body">
+          Dry-toast 5 guajillo chilies in a pan over medium heat, pressing down for about 30 seconds per side until fragrant. Remove stems and seeds, then soak in boiling water for 20 minutes until softened.
+        </div>
+        <span class="timer-badge">⏱ 20 min soak</span>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step-2" onclick="toggleStep(2)">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Blend the marinade</div>
+        <div class="step-body">
+          Blend soaked guajillos, 2 tbsp achiote paste, ½ cup canned pineapple juice, ¼ cup OJ, 2 tbsp honey or agave, ¼ cup apple cider vinegar, 5 garlic cloves, half a white onion, 2 chipotles in adobo, 1 tsp cumin, 1 tsp Mexican oregano, and a pinch of ground cloves. Blend until silky. Strain if needed.
+        </div>
+        <div class="step-tip chicken-only">Canned pineapple juice only — fresh bromelain will turn chicken mushy.</div>
+        <div class="step-tip pork-only" style="display:none">Fresh or canned pineapple juice both work for pork — the fat content handles the enzymes.</div>
+      </div>
+    </div>
+
+    <!-- STEP 3: PROTEIN-SPECIFIC -->
+    <div class="step" id="step-3" onclick="toggleStep(3)">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title chicken-only">Slice &amp; marinate the chicken</div>
+        <div class="step-title pork-only" style="display:none">Slice &amp; marinate the pork</div>
+        <div class="step-body chicken-only">
+          Slice 2 lbs boneless skinless chicken thighs into 1-inch strips. Coat thoroughly in marinade. Refrigerate at least 4 hours — overnight (up to 18 hrs) is ideal.
+        </div>
+        <div class="step-body pork-only" style="display:none">
+          Slice 2 lbs pork shoulder (pork butt) into ½-inch slabs or bite-sized chunks, cutting against the grain. Coat thoroughly in marinade. Refrigerate at least 6 hours — overnight (up to 24 hrs) is ideal for maximum penetration.
+        </div>
+        <span class="timer-badge">⏱ <span class="marinate-time">4–18 hrs</span></span>
+      </div>
+    </div>
+
+    <!-- STEP 4: PROTEIN-SPECIFIC COOK -->
+    <div class="step" id="step-4" onclick="toggleStep(4)">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title chicken-only">High-heat cook</div>
+        <div class="step-title pork-only" style="display:none">High-heat cook</div>
+
+        <div class="step-body chicken-only">
+          <strong>Oven:</strong> Preheat to 425°F. Spread chicken and 1 cup pineapple chunks on a sheet pan in a single layer. Roast 20–22 min, then broil 3–5 min to char the edges.<br><br>
+          <strong>Cast iron:</strong> Sear in batches over high heat to 165°F internal. Chop into small pieces, return to pan with a splash of reserved marinade for a quick glaze.
+        </div>
+        <div class="step-body pork-only" style="display:none">
+          <strong>Oven:</strong> Preheat to 425°F. Spread pork and 1 cup pineapple chunks on a sheet pan. Roast 25–30 min, then broil 4–6 min until edges char and fat crisps.<br><br>
+          <strong>Cast iron:</strong> Sear pork chunks in batches over high heat — pork needs more time than chicken, 4–5 min per side, to render the fat and get real char. Chop and glaze with reserved marinade.
+        </div>
+
+        <span class="timer-badge">⏱ <span class="cook-time">~25 min</span></span>
+        <div class="step-tip chicken-only">The broil is not optional — that's where the trompo char comes from.</div>
+        <div class="step-tip pork-only" style="display:none">Don't rush the fat rendering. Crispy pork fat edges = the whole point.</div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="step-5" onclick="toggleStep(5)">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Char the tortillas</div>
+        <div class="step-body">
+          Warm small corn tortillas directly on a gas flame or dry griddle until slightly charred on each side. Keep warm in a folded towel.
+        </div>
+        <span class="timer-badge">⏱ ~1 min per tortilla</span>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step" id="step-6" onclick="toggleStep(6)">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-title">Assemble</div>
+        <div class="step-body">
+          Layer meat and a chunk of grilled pineapple on each tortilla. Top with finely diced white onion, fresh cilantro, a squeeze of lime, and a spoonful of creamy green salsa.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- RIGHT: SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- INGREDIENTS -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">Ingredients</div>
+      <p style="font-size:0.68rem;color:var(--ghost);margin-bottom:1rem;">Tap to check off as you shop.</p>
+
+      <!-- MARINADE -->
+      <div class="ingredient-group">
+        <div class="ingredient-group-label" id="ing-marinade-label">Marinade</div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Guajillo chilies (dried)</span><span class="ing-amount">5</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Achiote paste</span><span class="ing-amount">2 tbsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name" id="ing-juice">Canned pineapple juice</span><span class="ing-amount">½ cup</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Orange juice</span><span class="ing-amount">¼ cup</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Honey or agave syrup</span><span class="ing-amount">2 tbsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Apple cider vinegar</span><span class="ing-amount">¼ cup</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Garlic cloves</span><span class="ing-amount">5</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">White onion</span><span class="ing-amount">1 (split use)</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Chipotles in adobo</span><span class="ing-amount">2</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Cumin</span><span class="ing-amount">1 tsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Mexican oregano</span><span class="ing-amount">1 tsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Ground cloves</span><span class="ing-amount">pinch</span></div>
+      </div>
+
+      <!-- PROTEIN -->
+      <div class="ingredient-group">
+        <div class="ingredient-group-label" id="ing-protein-label">Protein</div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name" id="ing-protein-name">Boneless skinless chicken thighs</span><span class="ing-amount">2 lbs</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Pineapple chunks</span><span class="ing-amount">1 cup</span></div>
+      </div>
+
+      <!-- SALSA -->
+      <div class="ingredient-group">
+        <div class="ingredient-group-label" id="ing-salsa-label">Creamy Green Salsa</div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Tomatillos</span><span class="ing-amount">6</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Serrano or jalapeño</span><span class="ing-amount">1</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Ripe avocado</span><span class="ing-amount">1</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Garlic clove</span><span class="ing-amount">1</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Fresh cilantro</span><span class="ing-amount">handful</span></div>
+      </div>
+
+      <!-- ASSEMBLY -->
+      <div class="ingredient-group">
+        <div class="ingredient-group-label" id="ing-assembly-label">Assembly</div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Small corn tortillas</span><span class="ing-amount">12</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Limes</span><span class="ing-amount">2</span></div>
+      </div>
+    </div>
+
+    <!-- CREAMY GREEN SALSA -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">Creamy Green Salsa</div>
+      <div class="salsa-step">
+        <div class="salsa-num">1</div>
+        <div class="salsa-text">Simmer 6 tomatillos and 1 serrano/jalapeño in water ~10 min until skins soften and blister.</div>
+      </div>
+      <div class="salsa-step">
+        <div class="salsa-num">2</div>
+        <div class="salsa-text">Drain. Blend with 1 garlic clove, a handful of cilantro, and 1 ripe avocado. Salt to taste.</div>
+      </div>
+      <div class="salsa-step">
+        <div class="salsa-num">3</div>
+        <div class="salsa-text">Chill until serving. The avocado gives it the creamy texture — no dairy needed.</div>
+      </div>
+    </div>
+
+    <!-- GARNISH -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">On Every Taco</div>
+      <ul class="garnish-list">
+        <li>Diced white onion (fine chop)</li>
+        <li>Fresh cilantro</li>
+        <li>Grilled pineapple chunk</li>
+        <li>Fresh lime squeeze</li>
+        <li>Spoonful of creamy green salsa</li>
+      </ul>
+    </div>
+
+    <!-- NOTES -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title" id="notes-title">Chicken Notes</div>
+      <div class="note-item chicken-only"><strong>Thighs, not breasts.</strong> They hold up to high heat without drying out.</div>
+      <div class="note-item chicken-only"><strong>Canned pineapple juice only</strong> in the marinade. Fresh pineapple has bromelain — it'll turn chicken chalky if left too long. Fresh pineapple is fine as a garnish.</div>
+      <div class="note-item chicken-only"><strong>Don't skip the broil.</strong> That final 3–5 min is what mimics the trompo char.</div>
+      <div class="note-item pork-only" style="display:none"><strong>Pork shoulder preferred.</strong> High fat + connective tissue = thermal resilience. It won't dry out on you.</div>
+      <div class="note-item pork-only" style="display:none"><strong>Fresh or canned juice</strong> both work for pork — the fat content handles the bromelain.</div>
+      <div class="note-item pork-only" style="display:none"><strong>Don't rush the fat.</strong> Pork al pastor lives or dies on rendered, crisped fat edges. Give it the heat it needs.</div>
+      <div class="note-item pork-only" style="display:none"><strong>Longer marinate = better.</strong> 12–24 hours lets the achiote and chili really saturate the meat.</div>
+    </div>
+
+  </div><!-- /sidebar -->
+</div><!-- /main -->
+
+<footer>
+  <span>Special Street Tacos · Al Pastor · Home Kitchen Edition</span>
+  <span>Chunga's SLC Inspired</span>
+</footer>
+
+<script>
+  let currentProtein = 'chicken';
+  let stepsDone = new Set();
+  const totalSteps = 6;
+
+  function setProtein(protein) {
+    currentProtein = protein;
+
+    // Toggle buttons
+    document.getElementById('btn-chicken').className = 'toggle-btn';
+    document.getElementById('btn-pork').className = 'toggle-btn';
+    document.getElementById('btn-' + protein).className = 'toggle-btn active-' + protein;
+
+    // Show/hide content
+    document.querySelectorAll('.chicken-only').forEach(el => el.style.display = protein === 'chicken' ? '' : 'none');
+    document.querySelectorAll('.pork-only').forEach(el => el.style.display = protein === 'pork' ? '' : 'none');
+
+    // Update step num colors
+    document.querySelectorAll('.step').forEach(s => {
+      s.querySelectorAll('.step-num').forEach(n => {
+        if (!s.classList.contains('done')) {
+          n.style.background = protein === 'pork' ? 'var(--chili)' : 'var(--gold)';
+        }
+      });
+    });
+
+    // Update progress bar color
+    const bar = document.getElementById('progress-bar');
+    bar.className = 'progress-bar-inner' + (protein === 'pork' ? ' pork-bar' : '');
+
+    // Update ingredient labels
+    const labelColor = protein === 'pork' ? 'var(--chili)' : 'var(--gold)';
+    ['ing-marinade-label','ing-protein-label','ing-salsa-label','ing-assembly-label'].forEach(id => {
+      document.getElementById(id).style.color = labelColor;
+    });
+
+    // Update protein name
+    document.getElementById('ing-protein-name').textContent =
+      protein === 'pork' ? 'Pork shoulder (pork butt)' : 'Boneless skinless chicken thighs';
+
+    // Update juice note
+    document.getElementById('ing-juice').textContent =
+      protein === 'pork' ? 'Pineapple juice (fresh or canned)' : 'Canned pineapple juice';
+
+    // Update notes title
+    document.getElementById('notes-title').textContent =
+      protein === 'pork' ? 'Pork Notes' : 'Chicken Notes';
+
+    // Update protein note under toggle
+    document.getElementById('protein-note').textContent =
+      protein === 'pork' ? 'Pork shoulder · rich fat · deep char' : 'Boneless thighs · leaner · quick cook';
+
+    // Update marinate time
+    document.querySelector('.marinate-time').textContent =
+      protein === 'pork' ? '6–24 hrs' : '4–18 hrs';
+
+    // Update cook time
+    document.querySelector('.cook-time').textContent =
+      protein === 'pork' ? '~30 min' : '~25 min';
+  }
+
+  function toggleStep(n) {
+    const el = document.getElementById('step-' + n);
+    if (stepsDone.has(n)) {
+      stepsDone.delete(n);
+      el.classList.remove('done');
+      const num = el.querySelector('.step-num');
+      num.style.background = currentProtein === 'pork' ? 'var(--chili)' : 'var(--gold)';
+      num.textContent = n;
+    } else {
+      stepsDone.add(n);
+      el.classList.add('done');
+      const num = el.querySelector('.step-num');
+      num.style.background = 'var(--green)';
+      num.textContent = '✓';
+    }
+    updateProgress();
+  }
+
+  function toggleIng(el) {
+    el.classList.toggle('checked');
+  }
+
+  function updateProgress() {
+    const done = stepsDone.size;
+    const pct = (done / totalSteps) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = done + ' / ' + totalSteps + ' steps done';
+  }
+</script>
+
+</body>
+</html>
