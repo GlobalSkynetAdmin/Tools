@@ -164,6 +164,61 @@
     font-style: italic;
   }
 
+  /* ── SERVING ADJUSTER ── */
+  .serving-adjuster {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    border-radius: 50px;
+    padding: 4px 4px 4px 0.85rem;
+  }
+
+  .serving-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    white-space: nowrap;
+  }
+
+  .serving-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    min-width: 1.5rem;
+    text-align: center;
+  }
+
+  .serving-sub {
+    font-size: 0.6rem;
+    color: var(--ghost);
+    white-space: nowrap;
+  }
+
+  .serving-btn {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--rule);
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    font-weight: 500;
+  }
+
+  .serving-btn:hover { background: var(--ghost); color: var(--white); }
+  .serving-btn:disabled { opacity: 0.3; cursor: default; }
+
   /* ── MAIN LAYOUT ── */
   .main {
     max-width: 960px;
@@ -508,6 +563,14 @@
     <button class="toggle-btn" id="btn-pork" onclick="setProtein('pork')">🐷 Pork</button>
   </div>
   <span class="protein-note" id="protein-note">Boneless thighs · leaner · quick cook</span>
+
+  <div class="serving-adjuster">
+    <span class="serving-label">Serves</span>
+    <button class="serving-btn" id="btn-minus" onclick="changeServings(-1)">−</button>
+    <span class="serving-count" id="serving-count">4</span>
+    <button class="serving-btn" id="btn-plus" onclick="changeServings(1)">+</button>
+    <span class="serving-sub" id="serving-tacos">12 tacos</span>
+  </div>
 </div>
 
 <div class="main">
@@ -623,42 +686,42 @@
       <!-- MARINADE -->
       <div class="ingredient-group">
         <div class="ingredient-group-label" id="ing-marinade-label">Marinade</div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Guajillo chilies (dried)</span><span class="ing-amount">5</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Achiote paste</span><span class="ing-amount">2 tbsp</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name" id="ing-juice">Canned pineapple juice</span><span class="ing-amount">½ cup</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Orange juice</span><span class="ing-amount">¼ cup</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Honey or agave syrup</span><span class="ing-amount">2 tbsp</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Apple cider vinegar</span><span class="ing-amount">¼ cup</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Garlic cloves</span><span class="ing-amount">5</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">White onion</span><span class="ing-amount">1 (split use)</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Chipotles in adobo</span><span class="ing-amount">2</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Cumin</span><span class="ing-amount">1 tsp</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Mexican oregano</span><span class="ing-amount">1 tsp</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Ground cloves</span><span class="ing-amount">pinch</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Guajillo chilies (dried)</span><span class="ing-amount" data-base="5" data-unit=""> 5</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Achiote paste</span><span class="ing-amount" data-base="2" data-unit="tbsp">2 tbsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name" id="ing-juice">Canned pineapple juice</span><span class="ing-amount" data-base="0.5" data-unit="cup">½ cup</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Orange juice</span><span class="ing-amount" data-base="0.25" data-unit="cup">¼ cup</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Honey or agave syrup</span><span class="ing-amount" data-base="2" data-unit="tbsp">2 tbsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Apple cider vinegar</span><span class="ing-amount" data-base="0.25" data-unit="cup">¼ cup</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Garlic cloves</span><span class="ing-amount" data-base="5" data-unit=""> 5</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">White onion</span><span class="ing-amount" data-base="1" data-unit="" data-label="(split use)">1 (split use)</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Chipotles in adobo</span><span class="ing-amount" data-base="2" data-unit=""> 2</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Cumin</span><span class="ing-amount" data-base="1" data-unit="tsp">1 tsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Mexican oregano</span><span class="ing-amount" data-base="1" data-unit="tsp">1 tsp</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Ground cloves</span><span class="ing-amount" data-base="0" data-unit="">pinch</span></div>
       </div>
 
       <!-- PROTEIN -->
       <div class="ingredient-group">
         <div class="ingredient-group-label" id="ing-protein-label">Protein</div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name" id="ing-protein-name">Boneless skinless chicken thighs</span><span class="ing-amount">2 lbs</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Pineapple chunks</span><span class="ing-amount">1 cup</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name" id="ing-protein-name">Boneless skinless chicken thighs</span><span class="ing-amount" data-base="2" data-unit="lbs">2 lbs</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Pineapple chunks</span><span class="ing-amount" data-base="1" data-unit="cup">1 cup</span></div>
       </div>
 
       <!-- SALSA -->
       <div class="ingredient-group">
         <div class="ingredient-group-label" id="ing-salsa-label">Creamy Green Salsa</div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Tomatillos</span><span class="ing-amount">6</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Serrano or jalapeño</span><span class="ing-amount">1</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Ripe avocado</span><span class="ing-amount">1</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Garlic clove</span><span class="ing-amount">1</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Fresh cilantro</span><span class="ing-amount">handful</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Tomatillos</span><span class="ing-amount" data-base="6" data-unit=""> 6</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Serrano or jalapeño</span><span class="ing-amount" data-base="1" data-unit=""> 1</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Ripe avocado</span><span class="ing-amount" data-base="1" data-unit=""> 1</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Garlic clove</span><span class="ing-amount" data-base="1" data-unit=""> 1</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Fresh cilantro</span><span class="ing-amount" data-base="0" data-unit="">handful</span></div>
       </div>
 
       <!-- ASSEMBLY -->
       <div class="ingredient-group">
         <div class="ingredient-group-label" id="ing-assembly-label">Assembly</div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Small corn tortillas</span><span class="ing-amount">12</span></div>
-        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Limes</span><span class="ing-amount">2</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Small corn tortillas</span><span class="ing-amount" data-base="12" data-unit=""> 12</span></div>
+        <div class="ingredient-item" onclick="toggleIng(this)"><span class="ing-name">Limes</span><span class="ing-amount" data-base="2" data-unit=""> 2</span></div>
       </div>
     </div>
 
@@ -715,6 +778,47 @@
   let currentProtein = 'chicken';
   let stepsDone = new Set();
   const totalSteps = 6;
+  let currentServings = 4;
+  const baseServings = 4;
+
+  function changeServings(delta) {
+    const next = currentServings + delta;
+    if (next < 1 || next > 20) return;
+    currentServings = next;
+    document.getElementById('serving-count').textContent = currentServings;
+    const tacos = Math.round(currentServings * 3);
+    document.getElementById('serving-tacos').textContent = tacos + ' tacos';
+    document.getElementById('btn-minus').disabled = currentServings <= 1;
+    document.getElementById('btn-plus').disabled = currentServings >= 20;
+    updateIngredients();
+  }
+
+  function formatAmount(base, multiplier) {
+    if (base === 0) return null; // pinch / handful — fixed
+    const val = base * multiplier;
+    // Nice fraction display
+    if (val === 0.25) return '¼';
+    if (val === 0.5)  return '½';
+    if (val === 0.75) return '¾';
+    if (val === 1.5)  return '1½';
+    if (val === 2.5)  return '2½';
+    if (val === 3.5)  return '3½';
+    if (Number.isInteger(val)) return val.toString();
+    // Round to 2 decimal places and clean up
+    return parseFloat(val.toFixed(2)).toString();
+  }
+
+  function updateIngredients() {
+    const multiplier = currentServings / baseServings;
+    document.querySelectorAll('.ing-amount[data-base]').forEach(el => {
+      const base = parseFloat(el.dataset.base);
+      const unit = el.dataset.unit || '';
+      const label = el.dataset.label || '';
+      const formatted = formatAmount(base, multiplier);
+      if (formatted === null) return; // leave pinch/handful alone
+      el.textContent = formatted + (unit ? ' ' + unit : '') + (label ? ' ' + label : '');
+    });
+  }
 
   function setProtein(protein) {
     currentProtein = protein;
