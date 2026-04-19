@@ -71,24 +71,14 @@
     border-radius:10px; padding:.5rem .7rem; text-align:center; min-width:62px;
   }
   .counter-val { font-family:'Nunito',sans-serif; font-size:1.35rem; font-weight:900; line-height:1; }
-  .counter-val.gold  { color:var(--gold); }
-  .counter-val.teal  { color:var(--teal); }
+  .counter-val.gold { color:var(--gold); }
+  .counter-val.teal { color:var(--teal); }
   .counter-lbl { font-size:.56rem; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); margin-top:.15rem; }
 
   .hero { text-align:center; }
   .hero-title { font-family:'Nunito',sans-serif; font-size:clamp(1.5rem,4.5vw,2.2rem); font-weight:900; line-height:1; letter-spacing:-.02em; }
   .hero-title .star { color:var(--gold); }
   .hero-sub { font-size:.72rem; color:var(--mid); margin-top:.25rem; }
-
-  .pay-banner {
-    background:linear-gradient(90deg,rgba(46,204,113,.12),rgba(52,152,219,.12));
-    border:1px solid rgba(46,204,113,.25); border-radius:8px;
-    padding:.6rem .85rem;
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem;
-  }
-  .pay-banner-lbl   { font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); }
-  .pay-banner-dates { font-family:'Nunito',sans-serif; font-size:.82rem; font-weight:700; color:var(--chalk); }
-  .pay-banner-next  { font-size:.7rem; color:var(--green); font-weight:600; }
 
   /* ── EARNINGS STRIP ── */
   .earn-strip {
@@ -97,7 +87,7 @@
   }
   .earn-block { padding:.6rem .4rem; text-align:center; border-right:1px solid var(--border); }
   .earn-block:last-child { border-right:none; }
-  .earn-val { font-family:'Nunito',sans-serif; font-size:1.15rem; font-weight:900; line-height:1; }
+  .earn-val { font-family:'Nunito',sans-serif; font-size:1.1rem; font-weight:900; line-height:1; }
   .earn-val.green  { color:var(--green); }
   .earn-val.red    { color:var(--red); }
   .earn-val.orange { color:var(--orange); }
@@ -108,44 +98,41 @@
   .prog-wrap { background:var(--surface); padding:.5rem 1rem .65rem; border-bottom:2px solid var(--border); }
   .prog-labels { display:flex; justify-content:space-between; font-size:.6rem; color:var(--mid); margin-bottom:.3rem; }
   .prog-track  { background:var(--border); border-radius:20px; height:7px; overflow:hidden; }
-  .prog-fill   { height:100%; border-radius:20px; background:linear-gradient(90deg,var(--green-dk),var(--green)); transition:width .4s ease; min-width:3px; }
+  .prog-fill   { height:100%; border-radius:20px; background:linear-gradient(90deg,var(--green-dk),var(--green)); transition:width .4s ease; }
 
   /* ── WEEK TABS ── */
-  .week-tabs { display:flex; background:var(--surface); border-bottom:2px solid var(--border); overflow-x:auto; scrollbar-width:none; }
-  .week-tabs::-webkit-scrollbar { display:none; }
-  .week-tab { flex:1; min-width:100px; background:none; border:none; border-bottom:3px solid transparent; padding:.7rem .5rem; cursor:pointer; text-align:center; transition:all .15s; }
-  .wt-label { font-family:'Nunito',sans-serif; font-size:.72rem; font-weight:800; text-transform:uppercase; color:var(--ghost); display:block; }
-  .wt-dates { font-size:.58rem; color:var(--ghost); display:block; margin-top:.1rem; }
+  .week-tabs { display:flex; background:var(--surface); border-bottom:2px solid var(--border); }
+  .week-tab  { flex:1; background:none; border:none; border-bottom:3px solid transparent; padding:.75rem .5rem; cursor:pointer; text-align:center; transition:all .15s; }
+  .wt-label  { font-family:'Nunito',sans-serif; font-size:.78rem; font-weight:800; text-transform:uppercase; color:var(--ghost); display:block; }
+  .wt-sub    { font-size:.6rem; color:var(--ghost); display:block; margin-top:.1rem; }
   .week-tab.active .wt-label { color:var(--green); }
   .week-tab.active { border-bottom-color:var(--green); }
-  .week-tab.active .wt-dates { color:var(--mid); }
+  .week-tab.active .wt-sub { color:var(--mid); }
 
-  /* ── MAIN ── */
-  .main { padding:.75rem; padding-bottom:5.5rem; }
-  .week-panel { display:none; animation:fadeUp .2s ease; }
-  .week-panel.active { display:block; }
+  /* ── PANELS ── */
+  .panel { display:none; animation:fadeUp .2s ease; }
+  .panel.active { display:block; }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
   /* ── DAY SCROLL ── */
+  .main { padding:.75rem; padding-bottom:5.5rem; }
+
   .day-scroll { display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.5rem; margin-bottom:.75rem; scrollbar-width:none; }
   .day-scroll::-webkit-scrollbar { display:none; }
 
   .day-btn {
     flex-shrink:0; min-width:52px;
     background:var(--card); border:2px solid var(--border);
-    border-radius:10px; padding:.45rem .55rem;
+    border-radius:10px; padding:.5rem .55rem;
     cursor:pointer; text-align:center; transition:all .12s; user-select:none;
   }
   .day-btn:active { transform:scale(.93); }
-  .day-btn.today   { border-color:rgba(52,152,219,.6); }
   .day-btn.active  { border-color:var(--blue); background:rgba(52,152,219,.15); }
   .day-btn.allDone { border-color:var(--green); background:rgba(46,204,113,.08); }
 
-  .db-name { font-family:'Nunito',sans-serif; font-size:.65rem; font-weight:800; text-transform:uppercase; color:var(--mid); display:block; }
-  .db-num  { font-family:'Nunito',sans-serif; font-size:1rem; font-weight:900; color:var(--chalk); display:block; line-height:1; margin:.1rem 0; }
-  .db-mon  { font-size:.52rem; color:var(--ghost); display:block; }
-  .db-earn { font-size:.6rem; font-weight:700; color:var(--gold); display:block; margin-top:.1rem; }
+  .db-name { font-family:'Nunito',sans-serif; font-size:.7rem; font-weight:800; text-transform:uppercase; color:var(--mid); display:block; }
+  .db-earn { font-size:.65rem; font-weight:700; color:var(--gold); display:block; margin-top:.25rem; }
 
   .day-btn.active  .db-name { color:var(--blue); }
   .day-btn.allDone .db-name { color:var(--green); }
@@ -159,11 +146,10 @@
     background:var(--card); border:1px solid var(--border); border-radius:10px;
     padding:.75rem .9rem; margin-bottom:.65rem; gap:.5rem;
   }
-  .dh-dayname { font-family:'Nunito',sans-serif; font-size:1.2rem; font-weight:900; line-height:1; }
-  .dh-date    { font-size:.7rem; color:var(--mid); margin-top:.15rem; }
+  .dh-dayname { font-family:'Nunito',sans-serif; font-size:1.25rem; font-weight:900; line-height:1; }
   .dh-right   { display:flex; flex-direction:column; align-items:flex-end; gap:.3rem; }
 
-  .night-badge { font-size:.58rem; letter-spacing:.08em; text-transform:uppercase; padding:.18rem .45rem; border-radius:20px; border:1px solid currentColor; font-weight:700; }
+  .night-badge { font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; padding:.2rem .5rem; border-radius:20px; border:1px solid currentColor; font-weight:700; }
   .badge-school   { color:var(--blue); }
   .badge-weekend  { color:var(--purple); }
 
@@ -189,24 +175,19 @@
 
   .chore-icon { font-size:1.3rem; flex-shrink:0; }
   .chore-info { flex:1; }
-  .chore-name { font-family:'Nunito',sans-serif; font-size:.88rem; font-weight:800; color:var(--chalk); line-height:1.2; }
-  .chore-desc { font-size:.65rem; color:var(--mid); margin-top:.1rem; line-height:1.3; }
+  .chore-name { font-family:'Nunito',sans-serif; font-size:.9rem; font-weight:800; color:var(--chalk); line-height:1.2; }
+  .chore-desc { font-size:.66rem; color:var(--mid); margin-top:.1rem; line-height:1.3; }
   .chore-pay  { font-family:'Nunito',sans-serif; font-size:1rem; font-weight:900; color:var(--gold); flex-shrink:0; text-align:right; }
-  .chore-pay .sub { display:block; font-size:.5rem; letter-spacing:.06em; text-transform:uppercase; color:var(--mid); font-weight:600; margin-top:.06rem; }
+  .chore-pay .sub { display:block; font-size:.52rem; letter-spacing:.06em; text-transform:uppercase; color:var(--mid); font-weight:600; margin-top:.06rem; }
 
   /* ── DEDUCTION BOXES ── */
   .ded-section { margin-top:.6rem; display:flex; flex-direction:column; gap:.45rem; }
 
-  .ded-box {
-    border-radius:12px; padding:.75rem .9rem;
-  }
+  .ded-box { border-radius:12px; padding:.75rem .9rem; }
   .ded-box.bedtime  { background:rgba(231,76,60,.07);  border:1px solid rgba(231,76,60,.22); }
   .ded-box.attitude { background:rgba(230,126,34,.07); border:1px solid rgba(230,126,34,.28); }
 
-  .ded-hdr {
-    font-family:'Nunito',sans-serif; font-size:.65rem; font-weight:800;
-    letter-spacing:.08em; text-transform:uppercase; margin-bottom:.5rem;
-  }
+  .ded-hdr { font-family:'Nunito',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.5rem; }
   .ded-hdr.red    { color:var(--red); }
   .ded-hdr.orange { color:var(--orange); }
 
@@ -221,16 +202,13 @@
     cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .12s;
   }
   .d-btn:active { transform:scale(.88); }
-  .d-btn.red:active    { background:var(--red);    border-color:var(--red); }
-  .d-btn.orange:active { background:var(--orange); border-color:var(--orange); }
 
   .d-count { font-family:'Nunito',sans-serif; font-size:1rem; font-weight:900; min-width:16px; text-align:center; }
   .d-count.red    { color:var(--red); }
   .d-count.orange { color:var(--orange); }
-  .d-amt   { font-family:'Nunito',sans-serif; font-size:.78rem; font-weight:800; white-space:nowrap; }
+  .d-amt { font-family:'Nunito',sans-serif; font-size:.8rem; font-weight:800; white-space:nowrap; }
   .d-amt.red    { color:var(--red); }
   .d-amt.orange { color:var(--orange); }
-
   .capped-note { font-size:.6rem; color:var(--ghost); margin-top:.35rem; font-style:italic; }
 
   /* ── PAYDAY PANEL ── */
@@ -243,7 +221,7 @@
   }
   .bp-lbl    { font-size:.62rem; letter-spacing:.15em; text-transform:uppercase; color:var(--mid); margin-bottom:.35rem; }
   .bp-amount { font-family:'Nunito',sans-serif; font-size:3rem; font-weight:900; color:var(--green); line-height:1; letter-spacing:-.02em; }
-  .bp-date   { font-size:.7rem; color:var(--mid); margin-top:.35rem; }
+  .bp-sub    { font-size:.7rem; color:var(--mid); margin-top:.35rem; }
 
   .savings-banner {
     text-align:center; padding:1rem;
@@ -254,7 +232,6 @@
   .sb-amount { font-family:'Nunito',sans-serif; font-size:1.85rem; font-weight:900; color:var(--teal); line-height:1; }
   .sb-sub    { font-size:.68rem; color:var(--mid); margin-top:.25rem; }
 
-  /* savings job card */
   .savings-job-card {
     background:var(--card); border:2px solid var(--teal-dk); border-radius:12px;
     padding:.85rem .95rem; margin-bottom:.75rem;
@@ -274,22 +251,20 @@
 
   .sj-info { flex:1; }
   .sj-name { font-family:'Nunito',sans-serif; font-size:.9rem; font-weight:800; color:var(--chalk); }
-  .sj-desc { font-size:.66rem; color:var(--mid); margin-top:.1rem; line-height:1.3; }
-  .sj-note { font-size:.6rem; color:var(--teal); margin-top:.12rem; }
+  .sj-desc { font-size:.68rem; color:var(--mid); margin-top:.1rem; line-height:1.3; }
+  .sj-note { font-size:.62rem; color:var(--teal); margin-top:.12rem; }
   .sj-pay  { font-family:'Nunito',sans-serif; font-size:1rem; font-weight:900; color:var(--teal); flex-shrink:0; text-align:right; }
   .sj-pay .sub { display:block; font-size:.5rem; letter-spacing:.06em; text-transform:uppercase; color:var(--mid); font-weight:600; margin-top:.06rem; }
 
-  /* summary */
   .sum-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1rem 1.1rem; margin-bottom:.75rem; }
   .sum-title { font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:900; margin-bottom:.8rem; }
-  .sum-row { display:flex; align-items:center; justify-content:space-between; padding:.42rem 0; border-bottom:1px solid var(--border); font-size:.78rem; }
+  .sum-row { display:flex; align-items:center; justify-content:space-between; padding:.42rem 0; border-bottom:1px solid var(--border); font-size:.8rem; }
   .sum-row:last-child { border-bottom:none; }
   .sum-lbl { color:var(--mid); }
-  .sum-val  { font-family:'Nunito',sans-serif; font-weight:800; font-size:.86rem; }
+  .sum-val  { font-family:'Nunito',sans-serif; font-weight:800; font-size:.88rem; }
   .sum-val.green  { color:var(--green); }
   .sum-val.red    { color:var(--red); }
   .sum-val.orange { color:var(--orange); }
-  .sum-val.gold   { color:var(--gold); }
   .sum-val.teal   { color:var(--teal); }
   .sum-val.ghost  { color:var(--ghost); font-weight:600; font-style:italic; }
 
@@ -302,7 +277,7 @@
 
   .export-btn {
     width:100%; border-radius:10px;
-    font-family:'Nunito',sans-serif; font-size:.85rem; font-weight:800;
+    font-family:'Nunito',sans-serif; font-size:.86rem; font-weight:800;
     letter-spacing:.03em; padding:.82rem; cursor:pointer;
     transition:all .15s; margin-bottom:.5rem;
     border:2px solid transparent;
@@ -319,7 +294,7 @@
   }
   .reset-btn:active { background:rgba(231,76,60,.15); border-color:var(--red); color:var(--red); }
 
-  /* toast */
+  /* ── TOAST ── */
   .toast {
     position:fixed; bottom:5.5rem; left:50%;
     transform:translateX(-50%) translateY(10px);
@@ -334,7 +309,7 @@
   .toast.orange { background:var(--orange); }
   .toast.teal   { background:var(--teal-dk); }
 
-  /* bottom nav */
+  /* ── BOTTOM NAV ── */
   .bottom-nav {
     position:fixed; bottom:0; left:0; right:0;
     background:var(--bg); border-top:2px solid var(--border);
@@ -345,13 +320,6 @@
   .nav-icon { font-size:1.25rem; }
   .nav-lbl  { font-family:'Nunito',sans-serif; font-size:.54rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--ghost); transition:color .12s; }
   .nav-btn.active .nav-lbl { color:var(--green); }
-
-  /* print */
-  @media print {
-    body * { visibility:hidden !important; }
-    #print-area, #print-area * { visibility:visible !important; }
-    #print-area { position:fixed; top:0; left:0; width:100%; background:white !important; color:black !important; padding:1.5rem; font-family:'Nunito Sans',Arial,sans-serif; }
-  }
 
   @media (max-width:380px) {
     .earn-strip { grid-template-columns:1fr 1fr; }
@@ -364,8 +332,8 @@
 <header>
   <div class="header-row">
     <div class="counter-box">
-      <div class="counter-val gold" id="hdr-days">—</div>
-      <div class="counter-lbl">Days to<br>Payday</div>
+      <div class="counter-val gold" id="hdr-earned">$0</div>
+      <div class="counter-lbl">Period<br>Earned</div>
     </div>
     <div class="hero">
       <div class="hero-title"><span class="star">⭐</span> Wilder's Chores <span class="star">⭐</span></div>
@@ -375,13 +343,6 @@
       <div class="counter-val teal" id="hdr-savings">$0</div>
       <div class="counter-lbl">Savings<br>Period</div>
     </div>
-  </div>
-  <div class="pay-banner">
-    <div>
-      <div class="pay-banner-lbl">Current Pay Period</div>
-      <div class="pay-banner-dates" id="banner-dates">—</div>
-    </div>
-    <div class="pay-banner-next" id="banner-next">—</div>
   </div>
 </header>
 
@@ -414,22 +375,34 @@
   </div>
 </div>
 
-<div class="week-tabs" id="week-tabs"></div>
-<div id="week-panels-wrap"></div>
+<div class="week-tabs">
+  <button class="week-tab active" id="wtab-0" onclick="showWeek(0)">
+    <span class="wt-label">Week 1</span>
+    <span class="wt-sub">Mon – Sun</span>
+  </button>
+  <button class="week-tab" id="wtab-1" onclick="showWeek(1)">
+    <span class="wt-label">Week 2</span>
+    <span class="wt-sub">Mon – Sun</span>
+  </button>
+</div>
+
+<!-- WEEK PANELS -->
+<div class="panel active" id="wp-0"><div class="main" id="main-0"></div></div>
+<div class="panel"        id="wp-1"><div class="main" id="main-1"></div></div>
 
 <!-- PAYDAY PANEL -->
 <div class="payday-panel" id="payday-panel">
 
   <div class="submit-notice">
     <strong>📋 Timecard Instructions</strong>
-    On Sunday night at the end of Week 2, print this page and hand it to Dad.
+    On Sunday night at the end of Week 2, export the CSV and print it to hand to Dad.
     Dad pays you out on Thursday when he gets his paycheck. Then hit Reset to start your next two weeks!
   </div>
 
   <div class="big-payout">
     <div class="bp-lbl">💰 Cash Payout — Dad Pays This Thursday</div>
     <div class="bp-amount" id="pay-total">$0.00</div>
-    <div class="bp-date" id="pay-date">Payday: —</div>
+    <div class="bp-sub">Hand the printed CSV to Dad on Sunday night</div>
   </div>
 
   <div class="savings-banner">
@@ -459,23 +432,17 @@
   </div>
 
   <div class="sum-card">
-    <div class="sum-title">📄 Print &amp; Export</div>
-    <div style="font-size:.73rem;color:var(--mid);line-height:1.6;margin-bottom:.85rem;">
-      Print your pay stub Sunday night and hand it to Dad. Or download the CSV for records.
+    <div class="sum-title">📄 Export &amp; Print</div>
+    <div style="font-size:.74rem;color:var(--mid);line-height:1.6;margin-bottom:.85rem;">
+      Download the CSV — it opens in Google Sheets or Excel. Print it from there and hand it to Dad on Sunday night.
     </div>
-    <button class="export-btn green" onclick="doPrint()">🖨️ Print Pay Stub</button>
+    <button class="export-btn green" onclick="doPrintable()">🖨️ Open Printable Pay Stub</button>
     <button class="export-btn gold"  onclick="doCSV()">📊 Download CSV</button>
-  </div>
-
-  <div class="sum-card">
-    <div class="sum-title">📅 Upcoming Paydays</div>
-    <div id="payday-schedule"></div>
   </div>
 
   <button class="reset-btn" onclick="doReset()">🔄 Start New Pay Period</button>
 </div>
 
-<div id="print-area" style="display:none;"></div>
 <div class="toast" id="toast"></div>
 
 <div class="bottom-nav">
@@ -491,32 +458,23 @@
 </div>
 
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────
-// Period 1: Mon Mar 16 – Sun Mar 29 → Payday Thu Apr 2
-// Each subsequent period starts the Monday after the previous Sunday end
-const PERIOD_START_1 = new Date('2026-03-16T00:00:00');
-const PAYDAY_1       = new Date('2026-04-02T00:00:00');
-const PERIOD_DAYS    = 14;
-const PAYDAY_OFFSET  = 4;   // Sunday end + 4 days = Thursday payday
+// ─── CONFIG ───────────────────────────────────────────────────────────────
+const BEDTIME_DED    = 0.25;
+const ATTITUDE_DED   = 0.75;
+const ATTITUDE_MAX   = 1;
+const SAVINGS_AMT    = 5.00;
+const MAX_PERIOD     = 20.00;
 
-const BEDTIME_DED_AMT  = 0.25;
-const ATTITUDE_DED_AMT = 0.75;
-const ATTITUDE_MAX_DAY = 1;   // max attitude deductions per day
-const SAVINGS_AMT      = 5.00;
-const MAX_WEEKLY       = 10.00;
-
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const DSHORT = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const DFULL  = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-const MSHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-// School nights = nights BEFORE school days
-// School days = Mon Tue Wed Thu → school nights = Sun Mon Tue Wed = indices 6,0,1,2
-const SCHOOL_NIGHTS = new Set([6, 0, 1, 2]); // Sun=6, Mon=0, Tue=1, Wed=2
+// School nights — bedtime rule applies night BEFORE school
+// School days Mon-Thu → school nights Sun(6), Mon(0), Tue(1), Wed(2)
+const SCHOOL_NIGHTS = new Set([6, 0, 1, 2]);
 
-// ─── CHORES ──────────────────────────────────────────────────────────────
-// Daily chores appear every day
+// ─── CHORES ───────────────────────────────────────────────────────────────
 const DAILY = [
-  { id:'read',   icon:'📚', name:'20-Minute Reading',  desc:'Read any book for 20 minutes — no screens count', pay:0.50 },
+  { id:'read',   icon:'📚', name:'20-Minute Reading',  desc:'Read any book for 20 minutes',                    pay:0.50 },
   { id:'room',   icon:'🏠', name:'Tidy Your Room',     desc:'Pick up, put away, floor clear, surfaces tidy',   pay:0.35 },
   { id:'bed',    icon:'🛏️', name:'Make Your Bed',       desc:'Sheets straight, pillow fluffed, blanket smooth', pay:0.15 },
   { id:'pickup', icon:'🧹', name:'Pick Up Your Stuff', desc:'Anything that belongs to you goes back where it belongs', pay:0.10 },
@@ -524,15 +482,12 @@ const DAILY = [
   { id:'pet',    icon:'🐾', name:'Pet Care',            desc:'Feed, water, and check on the pets',              pay:0.15 },
 ];
 
-// Weekly chores appear on specific days only
-// days: 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun
+// days: 0=Mon … 6=Sun
 const WEEKLY = [
-  { id:'curb',    icon:'🚛', name:'Take Trash to Curb', desc:'Help Dad take the bins to the curb for pickup',   pay:0.25, days:[1]    },  // Tuesday
-  { id:'laundry', icon:'👕', name:'Fold & Put Away Laundry', desc:'Fold your clean clothes and put them away properly', pay:0.15, days:[2] }, // Wednesday
-  { id:'vacuum',  icon:'🫧', name:'Vacuum or Sweep',    desc:'Your room and any area Mom or Dad points to',     pay:0.15, days:[4]    },  // Friday
+  { id:'curb',    icon:'🚛', name:'Trash to Curb',           desc:'Help Dad take the bins to the curb',             pay:0.25, days:[1]      },
+  { id:'laundry', icon:'👕', name:'Fold & Put Away Laundry', desc:'Fold your clean clothes and put them away',       pay:0.15, days:[2]      },
+  { id:'vacuum',  icon:'🫧', name:'Vacuum or Sweep',         desc:'Your room and anywhere Mom or Dad points to',     pay:0.15, days:[4]      },
 ];
-
-// Max daily earnings check: DAILY = $1.35/day × 7 = $9.45 + WEEKLY = $0.55 = $10.00/week ✓
 
 const SAVINGS_JOBS = [
   'Help clean the kitchen counters and stovetop',
@@ -557,28 +512,6 @@ let S = {
   savingsDone: false,
 };
 
-// ─── DATE HELPERS ─────────────────────────────────────────────────────────
-function sod(d)    { const r=new Date(d); r.setHours(0,0,0,0); return r; }
-function addD(d,n) { const r=new Date(d); r.setDate(r.getDate()+n); return r; }
-function fmtS(d)   { return `${MSHORT[d.getMonth()]} ${d.getDate()}`; }
-function fmtF(d)   { return `${MSHORT[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`; }
-
-function getCurrentPeriodIndex() {
-  const today = sod(new Date());
-  const first = sod(new Date(PERIOD_START_1));
-  if (today < first) return 0;
-  return Math.floor((today - first) / (PERIOD_DAYS * 86400000));
-}
-
-function getPeriodStart(idx) { return addD(PERIOD_START_1, idx * PERIOD_DAYS); }
-function getPeriodEnd(idx)   { return addD(getPeriodStart(idx), PERIOD_DAYS - 1); }
-function getPayday(idx)      { return addD(getPeriodEnd(idx), PAYDAY_OFFSET); }
-
-function getPeriod() {
-  const idx = getCurrentPeriodIndex();
-  return { idx, periodStart: getPeriodStart(idx), periodEnd: getPeriodEnd(idx), payday: getPayday(idx) };
-}
-
 // ─── INIT ─────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   loadState();
@@ -586,61 +519,36 @@ window.addEventListener('DOMContentLoaded', () => {
     S.savingsJob = SAVINGS_JOBS[Math.floor(Math.random() * SAVINGS_JOBS.length)];
     saveState();
   }
-  buildUI();
-  buildSchedule();
+  buildWeeks();
   refreshAll();
-  autoToday();
-  setInterval(refreshHeader, 60000);
+  showDay(0, 0); // default to Week 1 Monday
 });
 
-// ─── BUILD UI ─────────────────────────────────────────────────────────────
-function buildUI() {
-  const { periodStart } = getPeriod();
-  document.getElementById('week-tabs').innerHTML = '';
-  document.getElementById('week-panels-wrap').innerHTML = '';
-
+// ─── BUILD ─────────────────────────────────────────────────────────────────
+function buildWeeks() {
   for (let w = 0; w < 2; w++) {
-    const wStart = addD(periodStart, w * 7); // always Monday
-    const wEnd   = addD(wStart, 6);          // always Sunday
+    const wrap = document.getElementById(`main-${w}`);
+    if (!wrap) continue;
+    let html = '';
 
-    // Tab
-    const tab = document.createElement('button');
-    tab.className = `week-tab${w===0?' active':''}`;
-    tab.id = `wtab-${w}`;
-    tab.onclick = () => showWeek(w);
-    tab.innerHTML = `<span class="wt-label">Week ${w+1}</span><span class="wt-dates">${fmtS(wStart)} – ${fmtS(wEnd)}</span>`;
-    document.getElementById('week-tabs').appendChild(tab);
-
-    // Panel
-    const panel = document.createElement('div');
-    panel.className = `week-panel${w===0?' active':''}`;
-    panel.id = `wp-${w}`;
-
-    let html = `<div class="main"><div class="day-scroll" id="ds-${w}">`;
-
+    // Day scroll
+    html += `<div class="day-scroll" id="ds-${w}">`;
     for (let d = 0; d < 7; d++) {
-      const date = addD(wStart, d); // d=0→Mon, d=6→Sun
       html += `<div class="day-btn" id="db-${w}-${d}" onclick="showDay(${w},${d})">
         <span class="db-name">${DSHORT[d]}</span>
-        <span class="db-num">${date.getDate()}</span>
-        <span class="db-mon">${MSHORT[date.getMonth()]}</span>
         <span class="db-earn" id="de-${w}-${d}">$0.00</span>
       </div>`;
     }
     html += '</div>';
 
+    // Day views
     for (let d = 0; d < 7; d++) {
-      const date      = addD(wStart, d);
-      const isSchoolNight = SCHOOL_NIGHTS.has(d);
-      const isToday   = sod(date).getTime() === sod(new Date()).getTime();
-
-      // Chore cards
+      const isSchool = SCHOOL_NIGHTS.has(d);
       let cards = '';
-      DAILY.forEach(c  => { cards += mkCard(w, d, c); });
+      DAILY.forEach(c => { cards += mkCard(w, d, c); });
       WEEKLY.forEach(c => { if (c.days.includes(d)) cards += mkCard(w, d, c); });
 
-      // Deduction section
-      const bedtimeHTML = isSchoolNight ? `
+      const bedtimeHTML = isSchool ? `
         <div class="ded-box bedtime">
           <div class="ded-hdr red">🌙 Bedtime Rule — School Night</div>
           <div class="ded-row">
@@ -649,42 +557,40 @@ function buildUI() {
               <div class="ded-desc">30+ min past bedtime = -$0.25 each time</div>
             </div>
             <div class="ded-ctrl">
-              <button class="d-btn red" onclick="adjBedtime(event,${w},${d},-1)">−</button>
+              <button class="d-btn" onclick="adjBedtime(event,${w},${d},-1)">−</button>
               <div class="d-count red" id="bdc-${w}-${d}">0</div>
-              <button class="d-btn red" onclick="adjBedtime(event,${w},${d},1)">+</button>
+              <button class="d-btn" onclick="adjBedtime(event,${w},${d},1)">+</button>
               <div class="d-amt red" id="bda-${w}-${d}">-$0.00</div>
             </div>
           </div>
         </div>` : '';
 
-      // Attitude deduction — every day, capped at 1
       const attitudeHTML = `
         <div class="ded-box attitude">
           <div class="ded-hdr orange">😤 Attitude — Rudeness to Parents</div>
           <div class="ded-row">
             <div>
               <div class="ded-name">Rude Behavior</div>
-              <div class="ded-desc">Being disrespectful or rude = -$0.75</div>
+              <div class="ded-desc">Being disrespectful = -$0.75 · Max 1 per day</div>
             </div>
             <div class="ded-ctrl">
-              <button class="d-btn orange" onclick="adjAttitude(event,${w},${d},-1)">−</button>
+              <button class="d-btn" onclick="adjAttitude(event,${w},${d},-1)">−</button>
               <div class="d-count orange" id="adc-${w}-${d}">0</div>
-              <button class="d-btn orange" onclick="adjAttitude(event,${w},${d},1)">+</button>
+              <button class="d-btn" onclick="adjAttitude(event,${w},${d},1)">+</button>
               <div class="d-amt orange" id="ada-${w}-${d}">-$0.00</div>
             </div>
           </div>
-          <div class="capped-note">Max 1 deduction per day · -$0.75 maximum</div>
         </div>`;
 
       html += `<div class="day-view" id="dv-${w}-${d}">
         <div class="day-header">
           <div>
-            <div class="dh-dayname">${DFULL[d]}${isToday ? ' 📍' : ''}</div>
-            <div class="dh-date">${fmtF(date)}</div>
+            <div class="dh-dayname">${DAYS[d]}</div>
+            <div style="font-size:.68rem;color:var(--mid);margin-top:.15rem;">Week ${w+1}</div>
           </div>
           <div class="dh-right">
-            <span class="night-badge ${isSchoolNight ? 'badge-school' : 'badge-weekend'}">
-              ${isSchoolNight ? '🏫 School Night' : '🎉 Free Night'}
+            <span class="night-badge ${isSchool ? 'badge-school' : 'badge-weekend'}">
+              ${isSchool ? '🏫 School Night' : '🎉 Free Night'}
             </span>
             <div class="dh-earned" id="dhe-${w}-${d}">$0.00</div>
           </div>
@@ -697,9 +603,8 @@ function buildUI() {
       </div>`;
     }
 
-    html += '</div>';
-    panel.innerHTML = html;
-    document.getElementById('week-panels-wrap').appendChild(panel);
+    wrap.innerHTML = html;
+    refreshWeekUI(w);
   }
 }
 
@@ -720,7 +625,7 @@ let curW = 0, curD = [0, 0];
 
 function showWeek(w) {
   curW = w;
-  document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.week-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('payday-panel').style.display = 'none';
   document.getElementById(`wp-${w}`).classList.add('active');
@@ -731,15 +636,15 @@ function showWeek(w) {
 
 function showDay(w, d) {
   curD[w] = d;
-  document.querySelectorAll(`#wp-${w} .day-view`).forEach(v => v.classList.remove('active'));
+  document.querySelectorAll(`#main-${w} .day-view`).forEach(v => v.classList.remove('active'));
   document.querySelectorAll(`#ds-${w} .day-btn`).forEach(b => b.classList.remove('active'));
   document.getElementById(`dv-${w}-${d}`)?.classList.add('active');
   document.getElementById(`db-${w}-${d}`)?.classList.add('active');
-  refreshDay(w, d);
+  refreshDayUI(w, d);
 }
 
 function showPayday() {
-  document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('payday-panel').style.display = 'block';
   setNav('nav-pay');
   refreshPayday();
@@ -753,49 +658,29 @@ function setNav(id) {
   if (id === 'nav-w2') document.getElementById('wtab-1')?.classList.add('active');
 }
 
-function autoToday() {
-  const { periodStart } = getPeriod();
-  const today = sod(new Date());
-  for (let w = 0; w < 2; w++) {
-    const wStart = addD(periodStart, w * 7);
-    for (let d = 0; d < 7; d++) {
-      if (sod(addD(wStart, d)).getTime() === today.getTime()) {
-        showWeek(w); showDay(w, d);
-        setTimeout(() => document.getElementById(`db-${w}-${d}`)?.scrollIntoView({ inline:'center', behavior:'smooth' }), 150);
-        return;
-      }
-    }
-  }
-  showDay(0, 0);
-}
-
 // ─── INTERACTIONS ─────────────────────────────────────────────────────────
 function toggleChore(w, d, id, pay) {
   const k = `${d}-${id}`;
   if (S.weeks[w].chores[k]) { delete S.weeks[w].chores[k]; }
   else { S.weeks[w].chores[k] = true; toast(`✓ +$${pay.toFixed(2)} earned!`); }
-  saveState(); refreshDay(w, d); refreshAll();
+  saveState(); refreshDayUI(w, d); refreshAll();
 }
 
 function adjBedtime(e, w, d, delta) {
   e.stopPropagation();
   const cur = S.weeks[w].bedtime[d] || 0;
   S.weeks[w].bedtime[d] = Math.max(0, cur + delta);
-  if (delta > 0) toast(`🌙 -$${BEDTIME_DED_AMT.toFixed(2)} bedtime deduction`, 'red');
-  saveState(); refreshDay(w, d); refreshAll();
+  if (delta > 0) toast(`🌙 -$${BEDTIME_DED.toFixed(2)} deduction`, 'red');
+  saveState(); refreshDayUI(w, d); refreshAll();
 }
 
 function adjAttitude(e, w, d, delta) {
   e.stopPropagation();
   const cur = S.weeks[w].attitude[d] || 0;
-  const next = Math.min(ATTITUDE_MAX_DAY, Math.max(0, cur + delta));
-  if (delta > 0 && cur >= ATTITUDE_MAX_DAY) {
-    toast('Max 1 attitude deduction per day', 'orange');
-    return;
-  }
-  S.weeks[w].attitude[d] = next;
-  if (delta > 0) toast(`😤 -$${ATTITUDE_DED_AMT.toFixed(2)} attitude deduction`, 'orange');
-  saveState(); refreshDay(w, d); refreshAll();
+  if (delta > 0 && cur >= ATTITUDE_MAX) { toast('Max 1 attitude deduction per day', 'orange'); return; }
+  S.weeks[w].attitude[d] = Math.max(0, cur + delta);
+  if (delta > 0) toast(`😤 -$${ATTITUDE_DED.toFixed(2)} deduction`, 'orange');
+  saveState(); refreshDayUI(w, d); refreshAll();
 }
 
 function toggleSavingsJob() {
@@ -811,50 +696,37 @@ function choreEarn(w, d) {
   WEEKLY.forEach(c => { if (c.days.includes(d) && S.weeks[w].chores[`${d}-${c.id}`]) t += c.pay; });
   return t;
 }
-function bedtimeDed(w, d)  { return (S.weeks[w].bedtime[d]  || 0) * BEDTIME_DED_AMT; }
-function attitudeDed(w, d) { return (S.weeks[w].attitude[d] || 0) * ATTITUDE_DED_AMT; }
+function bedtimeDed(w, d)  { return (S.weeks[w].bedtime[d]  || 0) * BEDTIME_DED; }
+function attitudeDed(w, d) { return (S.weeks[w].attitude[d] || 0) * ATTITUDE_DED; }
 function netDay(w, d)      { return Math.max(0, choreEarn(w,d) - bedtimeDed(w,d) - attitudeDed(w,d)); }
 function earnW(w)          { let t=0; for(let d=0;d<7;d++) t+=netDay(w,d); return t; }
-
-function totalBedtime()  { let t=0; for(let w=0;w<2;w++) for(let d=0;d<7;d++) t+=bedtimeDed(w,d);  return t; }
-function totalAttitude() { let t=0; for(let w=0;w<2;w++) for(let d=0;d<7;d++) t+=attitudeDed(w,d); return t; }
-function totalEarn()     { return earnW(0) + earnW(1); }
-function totalSav()      { return S.savingsDone ? SAVINGS_AMT : 0; }
+function totalBedtime()    { let t=0; for(let w=0;w<2;w++) for(let d=0;d<7;d++) t+=bedtimeDed(w,d); return t; }
+function totalAttitude()   { let t=0; for(let w=0;w<2;w++) for(let d=0;d<7;d++) t+=attitudeDed(w,d); return t; }
+function totalEarn()       { return earnW(0) + earnW(1); }
+function totalSav()        { return S.savingsDone ? SAVINGS_AMT : 0; }
 
 // ─── REFRESH ──────────────────────────────────────────────────────────────
 function refreshAll() {
-  refreshHeader();
-  refreshStrip();
-  for (let w=0; w<2; w++) for (let d=0; d<7; d++) refreshBtn(w, d);
-}
+  const earned  = totalEarn();
+  const bed     = totalBedtime();
+  const att     = totalAttitude();
+  const net     = Math.max(0, earned - bed - att);
+  const pct     = Math.min(100, Math.round(earned / MAX_PERIOD * 100));
 
-function refreshHeader() {
-  const { periodStart, periodEnd, payday } = getPeriod();
-  const today    = sod(new Date());
-  const daysLeft = Math.max(0, Math.ceil((payday - today) / 86400000));
-  document.getElementById('hdr-days').textContent     = daysLeft;
-  document.getElementById('hdr-savings').textContent  = `$${totalSav().toFixed(0)}`;
-  document.getElementById('banner-dates').textContent = `${fmtS(periodStart)} – ${fmtS(periodEnd)}`;
-  document.getElementById('banner-next').textContent  = `Payday: ${fmtF(payday)}`;
-}
-
-function refreshStrip() {
-  const earned   = totalEarn();
-  const bedtime  = totalBedtime();
-  const attitude = totalAttitude();
-  const net      = Math.max(0, earned - bedtime - attitude);
-  const pct      = Math.min(100, Math.round(earned / (MAX_WEEKLY * 2) * 100));
+  document.getElementById('hdr-earned').textContent    = `$${net.toFixed(0)}`;
+  document.getElementById('hdr-savings').textContent   = `$${totalSav().toFixed(0)}`;
   document.getElementById('disp-earned').textContent   = `$${earned.toFixed(2)}`;
-  document.getElementById('disp-bedtime').textContent  = `-$${bedtime.toFixed(2)}`;
-  document.getElementById('disp-attitude').textContent = `-$${attitude.toFixed(2)}`;
+  document.getElementById('disp-bedtime').textContent  = `-$${bed.toFixed(2)}`;
+  document.getElementById('disp-attitude').textContent = `-$${att.toFixed(2)}`;
   document.getElementById('disp-net').textContent      = `$${net.toFixed(2)}`;
   document.getElementById('prog-fill').style.width     = pct + '%';
   document.getElementById('prog-pct').textContent      = pct + '%';
+
+  for (let w = 0; w < 2; w++) for (let d = 0; d < 7; d++) refreshBtn(w, d);
 }
 
-function refreshDay(w, d) {
-  // Chore cards
-  const ids = [...DAILY.map(c=>c.id), ...WEEKLY.filter(c=>c.days.includes(d)).map(c=>c.id)];
+function refreshDayUI(w, d) {
+  const ids = [...DAILY.map(c => c.id), ...WEEKLY.filter(c => c.days.includes(d)).map(c => c.id)];
   ids.forEach(id => {
     const done = !!S.weeks[w].chores[`${d}-${id}`];
     document.getElementById(`cc-${w}-${d}-${id}`)?.classList.toggle('done', done);
@@ -862,20 +734,19 @@ function refreshDay(w, d) {
     if (ck) ck.textContent = done ? '✓' : '';
   });
 
-  // Bedtime
-  const bt = S.weeks[w].bedtime[d] || 0;
-  const bdc = document.getElementById(`bdc-${w}-${d}`); if (bdc) bdc.textContent = bt;
-  const bda = document.getElementById(`bda-${w}-${d}`); if (bda) bda.textContent = bt > 0 ? `-$${(bt*BEDTIME_DED_AMT).toFixed(2)}` : '-$0.00';
-
-  // Attitude
+  const bt = S.weeks[w].bedtime[d]  || 0;
   const at = S.weeks[w].attitude[d] || 0;
+  const bdc = document.getElementById(`bdc-${w}-${d}`); if (bdc) bdc.textContent = bt;
+  const bda = document.getElementById(`bda-${w}-${d}`); if (bda) bda.textContent = bt > 0 ? `-$${(bt*BEDTIME_DED).toFixed(2)}` : '-$0.00';
   const adc = document.getElementById(`adc-${w}-${d}`); if (adc) adc.textContent = at;
-  const ada = document.getElementById(`ada-${w}-${d}`); if (ada) ada.textContent = at > 0 ? `-$${(at*ATTITUDE_DED_AMT).toFixed(2)}` : '-$0.00';
-
-  // Day header earned
+  const ada = document.getElementById(`ada-${w}-${d}`); if (ada) ada.textContent = at > 0 ? `-$${(at*ATTITUDE_DED).toFixed(2)}` : '-$0.00';
   const dhe = document.getElementById(`dhe-${w}-${d}`); if (dhe) dhe.textContent = `$${netDay(w,d).toFixed(2)}`;
 
   refreshBtn(w, d);
+}
+
+function refreshWeekUI(w) {
+  for (let d = 0; d < 7; d++) refreshDayUI(w, d);
 }
 
 function refreshBtn(w, d) {
@@ -883,32 +754,23 @@ function refreshBtn(w, d) {
   if (!btn) return;
   const de = document.getElementById(`de-${w}-${d}`);
   if (de) de.textContent = `$${netDay(w,d).toFixed(2)}`;
-
-  const ids = [...DAILY.map(c=>c.id), ...WEEKLY.filter(c=>c.days.includes(d)).map(c=>c.id)];
+  const ids = [...DAILY.map(c => c.id), ...WEEKLY.filter(c => c.days.includes(d)).map(c => c.id)];
   const allDone = ids.length > 0 && ids.every(id => !!S.weeks[w].chores[`${d}-${id}`]);
-
-  if (!btn.classList.contains('active')) {
-    btn.classList.toggle('allDone', allDone);
-    const { periodStart } = getPeriod();
-    const isToday = sod(addD(addD(periodStart, w*7), d)).getTime() === sod(new Date()).getTime();
-    btn.classList.toggle('today', isToday && !allDone);
-  }
+  if (!btn.classList.contains('active')) btn.classList.toggle('allDone', allDone);
 }
 
 function refreshPayday() {
-  const { payday } = getPeriod();
   const w1 = earnW(0), w2 = earnW(1);
-  const bt = totalBedtime(), at = totalAttitude();
-  const net = Math.max(0, (w1+w2) - bt - at);
+  const bed = totalBedtime(), att = totalAttitude();
+  const net = Math.max(0, (w1+w2) - bed - att);
   const sav = totalSav();
 
-  document.getElementById('pay-total').textContent    = `$${net.toFixed(2)}`;
-  document.getElementById('pay-savings').textContent  = `$${sav.toFixed(2)}`;
-  document.getElementById('pay-date').textContent     = `Payday: ${fmtF(payday)}`;
-  document.getElementById('s-w1').textContent         = `$${w1.toFixed(2)}`;
-  document.getElementById('s-w2').textContent         = `$${w2.toFixed(2)}`;
-  document.getElementById('s-bedtime').textContent    = `-$${bt.toFixed(2)}`;
-  document.getElementById('s-attitude').textContent   = `-$${at.toFixed(2)}`;
+  document.getElementById('pay-total').textContent   = `$${net.toFixed(2)}`;
+  document.getElementById('pay-savings').textContent = `$${sav.toFixed(2)}`;
+  document.getElementById('s-w1').textContent        = `$${w1.toFixed(2)}`;
+  document.getElementById('s-w2').textContent        = `$${w2.toFixed(2)}`;
+  document.getElementById('s-bedtime').textContent   = `-$${bed.toFixed(2)}`;
+  document.getElementById('s-attitude').textContent  = `-$${att.toFixed(2)}`;
 
   const savEl = document.getElementById('s-sav');
   if (S.savingsDone) { savEl.textContent = `$${SAVINGS_AMT.toFixed(2)} ✓`; savEl.className = 'sum-val teal'; }
@@ -919,46 +781,37 @@ function refreshPayday() {
   const desc = document.getElementById('sj-desc'); if (desc) desc.textContent  = S.savingsJob || 'Job to be assigned by Mom or Dad';
 }
 
-function buildSchedule() {
-  const el = document.getElementById('payday-schedule'); if (!el) return;
-  let html = '';
-  for (let i = 0; i < 8; i++) {
-    const ps = getPeriodStart(i), pe = getPeriodEnd(i), pd = getPayday(i);
-    html += `<div class="sum-row">
-      <span class="sum-lbl">${fmtS(ps)} – ${fmtS(pe)}</span>
-      <span class="sum-val gold">${fmtF(pd)}</span>
-    </div>`;
-  }
-  el.innerHTML = html;
-}
-
 // ─── RESET ────────────────────────────────────────────────────────────────
 function doReset() {
-  if (!confirm('Start a new pay period?\nMake sure Dad has already paid you for this period first!')) return;
+  if (!confirm('Start a new pay period? This clears all chores and deductions.\nMake sure Dad has already paid you first!')) return;
   S = {
     weeks:       [{ chores:{}, bedtime:{}, attitude:{} }, { chores:{}, bedtime:{}, attitude:{} }],
     savingsJob:  SAVINGS_JOBS[Math.floor(Math.random() * SAVINGS_JOBS.length)],
     savingsDone: false,
   };
-  saveState(); buildUI(); buildSchedule(); refreshAll(); refreshPayday(); autoToday();
+  saveState();
+  buildWeeks();
+  refreshAll();
+  refreshPayday();
+  showWeek(0);
+  showDay(0, 0);
   toast('New pay period started! 🎉');
 }
 
 // ─── STORAGE ──────────────────────────────────────────────────────────────
 function saveState() {
-  try { localStorage.setItem('wilder_cc', JSON.stringify(S)); } catch(e) {}
+  try { localStorage.setItem('wilder_cc_v4', JSON.stringify(S)); } catch(e) {}
 }
 function loadState() {
   try {
-    const raw = localStorage.getItem('wilder_cc');
+    const raw = localStorage.getItem('wilder_cc_v4');
     if (raw) {
       const l = JSON.parse(raw);
       S = {
-        weeks: l.weeks || [{ chores:{}, bedtime:{}, attitude:{} }, { chores:{}, bedtime:{}, attitude:{} }],
+        weeks:       l.weeks       || [{ chores:{}, bedtime:{}, attitude:{} }, { chores:{}, bedtime:{}, attitude:{} }],
         savingsJob:  l.savingsJob  || '',
         savingsDone: !!l.savingsDone,
       };
-      // Ensure both weeks have all three sub-objects
       for (let w = 0; w < 2; w++) {
         if (!S.weeks[w]) S.weeks[w] = { chores:{}, bedtime:{}, attitude:{} };
         if (!S.weeks[w].chores)   S.weeks[w].chores   = {};
@@ -969,121 +822,161 @@ function loadState() {
   } catch(e) {}
 }
 
-// ─── PRINT ────────────────────────────────────────────────────────────────
-function doPrint() {
-  const { periodStart, periodEnd, payday } = getPeriod();
+// ─── PRINTABLE PAY STUB ───────────────────────────────────────────────────
+// Opens a clean white page in a new tab — user can print from there
+function doPrintable() {
   const w1 = earnW(0), w2 = earnW(1);
-  const bt = totalBedtime(), at = totalAttitude();
-  const net = Math.max(0, (w1+w2)-bt-at), sav = totalSav();
+  const bed = totalBedtime(), att = totalAttitude();
+  const net = Math.max(0, (w1+w2) - bed - att);
+  const sav = totalSav();
 
   let rows = '';
   for (let w = 0; w < 2; w++) {
-    const wStart = addD(periodStart, w*7);
-    rows += `<tr style="background:#e8f5e9"><td colspan="5" style="padding:5px 8px;font-weight:900;font-size:12px;color:#1b5e20">WEEK ${w+1} — ${fmtS(wStart)} to ${fmtS(addD(wStart,6))}</td></tr>`;
+    rows += `<tr style="background:#e8f5e9">
+      <td colspan="5" style="padding:6px 8px;font-weight:900;font-size:12px;color:#1b5e20;font-family:Arial,sans-serif">
+        WEEK ${w+1} — ${w===0 ? 'Monday through Sunday' : 'Monday through Sunday'}
+      </td>
+    </tr>`;
     for (let d = 0; d < 7; d++) {
-      const date = addD(wStart, d);
       const done = [];
       DAILY.forEach(c  => { if (S.weeks[w].chores[`${d}-${c.id}`]) done.push(c.name); });
       WEEKLY.forEach(c => { if (c.days.includes(d) && S.weeks[w].chores[`${d}-${c.id}`]) done.push(c.name); });
-      const btd = bedtimeDed(w,d), atd = attitudeDed(w,d), nd = netDay(w,d);
-      if (!done.length && !btd && !atd) continue;
-      rows += `<tr>
-        <td style="padding:3px 8px;font-weight:700;font-size:11px">${DFULL[d]} ${fmtS(date)}</td>
-        <td style="padding:3px 8px;font-size:10px;color:#444">${done.join(', ')||'—'}</td>
-        <td style="padding:3px 8px;font-size:10px;color:#c62828">${btd>0?`-$${btd.toFixed(2)} bedtime`:''}</td>
-        <td style="padding:3px 8px;font-size:10px;color:#e67e22">${atd>0?`-$${atd.toFixed(2)} attitude`:''}</td>
-        <td style="padding:3px 8px;font-weight:700;text-align:right;color:#2e7d32">$${nd.toFixed(2)}</td>
+      const bt = bedtimeDed(w,d), at = attitudeDed(w,d), nd = netDay(w,d);
+      if (!done.length && !bt && !at) continue;
+      rows += `<tr style="border-bottom:1px solid #eee">
+        <td style="padding:4px 8px;font-weight:700;font-size:11px;font-family:Arial,sans-serif">${DAYS[d]}</td>
+        <td style="padding:4px 8px;font-size:10px;color:#444;font-family:Arial,sans-serif">${done.join(', ') || '—'}</td>
+        <td style="padding:4px 8px;font-size:10px;color:#c62828;font-family:Arial,sans-serif">${bt > 0 ? `-$${bt.toFixed(2)} bedtime` : ''}</td>
+        <td style="padding:4px 8px;font-size:10px;color:#e67e22;font-family:Arial,sans-serif">${at > 0 ? `-$${at.toFixed(2)} attitude` : ''}</td>
+        <td style="padding:4px 8px;font-weight:700;text-align:right;color:#2e7d32;font-family:Arial,sans-serif">$${nd.toFixed(2)}</td>
       </tr>`;
     }
   }
 
-  const stub = `
-  <div style="font-family:'Nunito Sans',Arial,sans-serif;max-width:620px;margin:0 auto;padding:20px;border:2px solid #2e7d32;border-radius:10px">
-    <div style="text-align:center;padding-bottom:14px;margin-bottom:14px;border-bottom:2px solid #eee">
-      <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#888">Pay Stub · Submitted Sunday</div>
-      <div style="font-size:26px;font-weight:900;margin:4px 0">⭐ Wilder's Chore Chart ⭐</div>
-      <div style="font-size:12px;color:#555">
-        Work Period: ${fmtF(periodStart)} – ${fmtF(periodEnd)}<br>
-        <strong>Payday: Thursday ${fmtF(payday)}</strong>
-      </div>
-    </div>
-    <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:14px">
-      <thead><tr style="background:#2e7d32;color:white">
-        <th style="padding:5px 8px;text-align:left">Day</th>
-        <th style="padding:5px 8px;text-align:left">Chores Done</th>
-        <th style="padding:5px 8px;text-align:left">Bedtime</th>
-        <th style="padding:5px 8px;text-align:left">Attitude</th>
-        <th style="padding:5px 8px;text-align:right">Earned</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <table style="width:100%;font-size:12px;border-top:2px solid #eee;padding-top:10px">
-      <tr><td style="padding:3px 0;color:#555">Week 1 Chores</td><td style="text-align:right;font-weight:700;color:#2e7d32">$${w1.toFixed(2)}</td></tr>
-      <tr><td style="padding:3px 0;color:#555">Week 2 Chores</td><td style="text-align:right;font-weight:700;color:#2e7d32">$${w2.toFixed(2)}</td></tr>
-      <tr><td style="padding:3px 0;color:#555">Bedtime Deductions</td><td style="text-align:right;font-weight:700;color:#c62828">-$${bt.toFixed(2)}</td></tr>
-      <tr><td style="padding:3px 0;color:#555">Attitude Deductions</td><td style="text-align:right;font-weight:700;color:#e67e22">-$${at.toFixed(2)}</td></tr>
-      ${sav>0
-        ? `<tr><td style="padding:3px 0;color:#555">Savings Bonus (${S.savingsJob})</td><td style="text-align:right;font-weight:700;color:#00695c">✓ Done</td></tr>`
-        : `<tr><td style="padding:3px 0;color:#aaa">Savings Bonus Job</td><td style="text-align:right;color:#aaa">Not completed</td></tr>`
-      }
-      <tr style="border-top:2px solid #2e7d32">
-        <td style="padding:8px 0;font-weight:900;font-size:15px">💵 CASH — Dad Pays Wilder</td>
-        <td style="text-align:right;font-weight:900;font-size:20px;color:#2e7d32">$${net.toFixed(2)}</td>
-      </tr>
-      <tr style="background:#e0f7f4">
-        <td style="padding:7px 6px;font-weight:900;color:#00695c">🏦 Dad Transfers to Wilder's Savings</td>
-        <td style="text-align:right;font-weight:900;font-size:16px;color:#00695c;padding:7px 6px">$${sav.toFixed(2)}</td>
-      </tr>
-    </table>
-    <div style="text-align:center;margin-top:16px;padding-top:10px;border-top:1px solid #eee;font-size:10px;color:#aaa">
-      Great work Wilder! Keep it up. 🌟
-    </div>
-  </div>`;
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Wilder's Pay Stub</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 24px; max-width: 640px; margin: 0 auto; color: #111; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #2e7d32; color: white; padding: 6px 8px; text-align: left; font-size: 11px; }
+    th:last-child { text-align: right; }
+    .summary-row td { padding: 4px 0; font-size: 12px; }
+    .summary-row td:last-child { text-align: right; font-weight: 700; }
+    @media print { body { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #eee">
+    <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:4px">Pay Stub · Submit Sunday Night</div>
+    <div style="font-size:28px;font-weight:900;margin:4px 0">⭐ Wilder's Chore Chart ⭐</div>
+    <div style="font-size:12px;color:#555">Two-Week Pay Period · Payday: Thursday</div>
+  </div>
 
-  const el = document.getElementById('print-area');
-  el.innerHTML = stub; el.style.display = 'block';
-  window.print();
-  el.style.display = 'none';
+  <table style="margin-bottom:20px">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Chores Completed</th>
+        <th>Bedtime</th>
+        <th>Attitude</th>
+        <th style="text-align:right">Earned</th>
+      </tr>
+    </thead>
+    <tbody>${rows || '<tr><td colspan="5" style="padding:12px 8px;color:#aaa;text-align:center">No chores logged yet</td></tr>'}</tbody>
+  </table>
+
+  <table style="border-top:2px solid #eee;padding-top:12px">
+    <tr class="summary-row"><td>Week 1 Chores</td><td style="color:#2e7d32">$${w1.toFixed(2)}</td></tr>
+    <tr class="summary-row"><td>Week 2 Chores</td><td style="color:#2e7d32">$${w2.toFixed(2)}</td></tr>
+    <tr class="summary-row"><td>Bedtime Deductions</td><td style="color:#c62828">-$${bed.toFixed(2)}</td></tr>
+    <tr class="summary-row"><td>Attitude Deductions</td><td style="color:#e67e22">-$${att.toFixed(2)}</td></tr>
+    <tr class="summary-row"><td>Savings Bonus Job</td><td style="color:#${S.savingsDone ? '00897b">✓ Done' : 'aaa">Not completed'}</td></tr>
+    <tr style="border-top:2px solid #2e7d32">
+      <td style="padding:10px 0;font-weight:900;font-size:16px">💵 CASH — Dad Pays Wilder</td>
+      <td style="text-align:right;font-weight:900;font-size:22px;color:#2e7d32;padding:10px 0">$${net.toFixed(2)}</td>
+    </tr>
+    <tr style="background:#e0f7f4">
+      <td style="padding:8px 6px;font-weight:900;color:#00695c">🏦 Dad Transfers to Savings</td>
+      <td style="text-align:right;font-weight:900;font-size:18px;color:#00695c;padding:8px 6px">$${sav.toFixed(2)}</td>
+    </tr>
+  </table>
+
+  <div style="text-align:center;margin-top:20px;padding-top:12px;border-top:1px solid #eee;font-size:10px;color:#aaa">
+    Great work Wilder! Keep it up. 🌟
+  </div>
+  <script>window.onload = function(){ window.print(); }<\/script>
+</body>
+</html>`;
+
+  // Build as a data URI — no popup blocker issues
+  const encoded = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+  const a = document.createElement('a');
+  a.href = encoded;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  toast('Pay stub opened — print from there!', 'teal');
 }
 
 // ─── CSV ──────────────────────────────────────────────────────────────────
 function doCSV() {
-  const { periodStart, periodEnd, payday } = getPeriod();
   const w1 = earnW(0), w2 = earnW(1);
-  const bt = totalBedtime(), at = totalAttitude();
-  const net = Math.max(0,(w1+w2)-bt-at), sav = totalSav();
+  const bed = totalBedtime(), att = totalAttitude();
+  const net = Math.max(0, (w1+w2) - bed - att);
+  const sav = totalSav();
 
-  const hdr = ['Work Period Start','Work Period End','Payday','Week','Day','Date','Chores Completed','Chore Earnings','Bedtime Deductions','Attitude Deductions','Day Net'];
+  const q = arr => arr.map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+
+  const hdr = ['Week','Day','Chores Completed','Chore Earnings','Bedtime Deductions','Attitude Deductions','Day Net'];
   const rows = [];
 
   for (let w = 0; w < 2; w++) {
-    const wStart = addD(periodStart, w*7);
     for (let d = 0; d < 7; d++) {
-      const date = addD(wStart, d);
       const done = []; let ce = 0;
-      DAILY.forEach(c  => { if (S.weeks[w].chores[`${d}-${c.id}`]) { done.push(c.name); ce+=c.pay; } });
-      WEEKLY.forEach(c => { if (c.days.includes(d) && S.weeks[w].chores[`${d}-${c.id}`]) { done.push(c.name); ce+=c.pay; } });
-      const btd = bedtimeDed(w,d), atd = attitudeDed(w,d), nd = netDay(w,d);
-      rows.push([fmtF(periodStart), fmtF(periodEnd), fmtF(payday), `Week ${w+1}`, DFULL[d], fmtF(date),
-        done.join('; ')||'None', ce.toFixed(2),
-        btd>0?`-${btd.toFixed(2)}`:'0.00',
-        atd>0?`-${atd.toFixed(2)}`:'0.00',
-        nd.toFixed(2)]);
+      DAILY.forEach(c  => { if (S.weeks[w].chores[`${d}-${c.id}`]) { done.push(c.name); ce += c.pay; } });
+      WEEKLY.forEach(c => { if (c.days.includes(d) && S.weeks[w].chores[`${d}-${c.id}`]) { done.push(c.name); ce += c.pay; } });
+      const bt = bedtimeDed(w,d), at = attitudeDed(w,d), nd = netDay(w,d);
+      rows.push([
+        `Week ${w+1}`, DAYS[d],
+        done.join('; ') || 'None',
+        ce.toFixed(2),
+        bt > 0 ? `-${bt.toFixed(2)}` : '0.00',
+        at > 0 ? `-${at.toFixed(2)}` : '0.00',
+        nd.toFixed(2),
+      ]);
     }
   }
 
-  rows.push([], ['=== SUMMARY ==='],
-    ['Period Start','Period End','Payday','Week 1','Week 2','Bedtime Ded','Attitude Ded','Cash Payout','Savings Job','Savings Amt'],
-    [fmtF(periodStart), fmtF(periodEnd), fmtF(payday), w1.toFixed(2), w2.toFixed(2),
-     (-bt).toFixed(2), (-at).toFixed(2), net.toFixed(2), S.savingsJob||'', sav.toFixed(2)]);
+  const summaryHdr = ['Week 1 Earned','Week 2 Earned','Bedtime Deductions','Attitude Deductions','Cash Payout','Savings Job','Savings Amount'];
+  const summaryRow = [
+    w1.toFixed(2), w2.toFixed(2),
+    bed > 0 ? `-${bed.toFixed(2)}` : '0.00',
+    att > 0 ? `-${att.toFixed(2)}` : '0.00',
+    net.toFixed(2),
+    S.savingsJob || '',
+    sav.toFixed(2),
+  ];
 
-  const csv = [hdr.join(','), ...rows.map(r => Array.isArray(r) ? r.map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(',') : r)].join('\n');
-  const fname = `wilder-chores-${fmtF(periodStart).replace(/,/g,'').replace(/ /g,'-')}.csv`;
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href=url; a.download=fname;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  const csv = [
+    q(hdr),
+    ...rows.map(r => q(r)),
+    '',
+    '"=== SUMMARY ==="',
+    q(summaryHdr),
+    q(summaryRow),
+  ].join('\n');
+
+  const blob  = new Blob([csv], { type:'text/csv' });
+  const url   = URL.createObjectURL(blob);
+  const a     = document.createElement('a');
+  a.href = url; a.download = 'wilder-chores.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
   toast('CSV downloaded ✓', 'teal');
 }
 
@@ -1091,8 +984,8 @@ function doCSV() {
 function toast(msg, type='') {
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.className   = `toast${type?' '+type:''} show`;
-  setTimeout(() => el.classList.remove('show'), 2300);
+  el.className   = `toast${type ? ' '+type : ''} show`;
+  setTimeout(() => el.classList.remove('show'), 2500);
 }
 </script>
 </body>
